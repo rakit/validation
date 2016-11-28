@@ -1,6 +1,10 @@
 Rakit\Validation - PHP Data Validation
 =========================================
 
+[![Build Status](https://img.shields.io/travis/rakit/validation.svg?style=flat-square)](https://travis-ci.org/rakit/validation)
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://doge.mit-license.org)
+
+
 PHP Standalone library for validating data. Inspired by `Illuminate\Validation` Laravel.
 
 ## Example
