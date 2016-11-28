@@ -1,0 +1,9 @@
+<phpunit bootstrap="vendor/autoload.php">
+    <testsuites>
+        <testsuite name="Block">
+            <file>tests/Rules/RequiredTest.php</file>
+            <file>tests/Rules/EmailTest.php</file>
+            <file>tests/ValidatorTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
