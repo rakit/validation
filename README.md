@@ -22,7 +22,7 @@ $validator->setMessages([
 ]);
 
 // add your own Rule
-$validator->setValidator('unique', YourOwnUniqueValidator); // this class must extends Rakit\Validation\Rule
+$validator->setValidator('unique', new YourOwnUniqueValidator); // this class must extends Rakit\Validation\Rule
 
 $validation = $validator->validate($_POST + $_FILES, [
 	'email' => 'required|email',
