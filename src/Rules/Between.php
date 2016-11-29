@@ -11,7 +11,7 @@ class Between extends Rule
 
     public function check($value, array $params)
     {
-        $this->assertParamsCount($params, 2);
+        $this->requireParamsCount($params, 2);
         $min = (int) $params[0];
         $max = (int) $params[1];
         if (is_int($value)) {

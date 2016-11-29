@@ -47,7 +47,7 @@ abstract class Rule
         return $this->message;
     }
 
-    protected function assertParamsCount(array $params, $min_count)
+    protected function requireParamsCount(array $params, $min_count)
     {
         $count = count($params);
         if ($count < $min_count) {

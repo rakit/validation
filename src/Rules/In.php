@@ -11,7 +11,7 @@ class In extends Rule
 
     public function check($value, array $params)
     {
-        $this->assertParamsCount($params, 1);
+        $this->requireParamsCount($params, 1);
         return in_array($value, $params);
     }
 

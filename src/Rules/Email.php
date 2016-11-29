@@ -11,7 +11,7 @@ class Email extends Rule
 
     public function check($value, array $params)
     {
-        return empty($value) OR (filter_var($value, FILTER_VALIDATE_EMAIL) !== false);
+        return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
     }
 
 }

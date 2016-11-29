@@ -22,7 +22,7 @@ $validation = $validator->validate($_POST, [
 	// also can be used like this
 	'avatar' => [
 		'required',
-		$validator('uploaded_file')->maxSize('1M')->fileTypes('jpg','png','jpeg')
+		$validator('uploaded_file')->maxSize('1M')->fileTypes('png|jpeg')
 	]
 ]);
 

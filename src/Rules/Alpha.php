@@ -11,7 +11,7 @@ class Alpha extends Rule
 
     public function check($value, array $params)
     {
-        return preg_match("/^[a-z]*$/i", $value) > 0;
+        return is_string($value) && preg_match('/^[\pL\pM]+$/u', $value);
     }
 
 }

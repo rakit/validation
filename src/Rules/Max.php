@@ -11,7 +11,7 @@ class Max extends Rule
 
     public function check($value, array $params)
     {
-        $this->assertParamsCount($params, 1);
+        $this->requireParamsCount($params, 1);
         $max = (int) $params[0];
         if (is_int($value)) {
             return $value <= $max;

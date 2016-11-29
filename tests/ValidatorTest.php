@@ -55,7 +55,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
             'email' => 'required|email'
         ]);
 
-        $this->assertEquals($validation->errors()->count(), 1);
+        $this->assertEquals($validation->errors()->count(), 2);
 
         $first_error = $validation->errors()->first('email');
         $this->assertEquals($first_error, 'Email harus diisi');

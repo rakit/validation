@@ -4,10 +4,10 @@ namespace Rakit\Validation\Rules;
 
 use Rakit\Validation\Rule;
 
-class AlphaDash extends Rule
+class AlphaNum extends Rule
 {
 
-    protected $message = "The :attribute only allows a-z, 0-8, _ and -";
+    protected $message = "The :attribute only allows alphabet and numeric";
 
     public function check($value, array $params)
     {
@@ -15,7 +15,7 @@ class AlphaDash extends Rule
             return false;
         }
 
-        return preg_match('/^[\pL\pM\pN_-]+$/u', $value) > 0;
+        return preg_match('/^[\pL\pM\pN]+$/u', $value) > 0;
     }
 
 }

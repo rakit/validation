@@ -11,7 +11,7 @@ class RequiredIf extends Rule
 
     public function check($value, array $params)
     {
-        $this->assertParamsCount($params, 1);
+        $this->requireParamsCount($params, 1);
         $another_value = $this->validation->getValue($params[0]);
         $validator = $this->validation->getValidator();
         $required_validator = $validator('required');

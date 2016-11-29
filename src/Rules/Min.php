@@ -11,7 +11,7 @@ class Min extends Rule
 
     public function check($value, array $params)
     {
-        $this->assertParamsCount($params, 1);
+        $this->requireParamsCount($params, 1);
         $min = (int) $params[0];
         if (is_int($value)) {
             return $value >= $min;

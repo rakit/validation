@@ -67,6 +67,7 @@ class Validator
             'email'             => new Rules\Email,
             'alpha'             => new Rules\Alpha,
             'numeric'           => new Rules\Numeric,
+            'alpha_num'         => new Rules\AlphaNum,
             'alpha_dash'        => new Rules\AlphaDash,
             'in'                => new Rules\In,
             'not_in'            => new Rules\NotIn,
@@ -75,7 +76,11 @@ class Validator
             'between'           => new Rules\Between,
             'url'               => new Rules\Url,
             'ip'                => new Rules\Ip,
+            'ipv4'              => new Rules\Ipv4,
+            'ipv6'              => new Rules\Ipv6,
             'array'             => new Rules\TypeArray,
+            'same'              => new Rules\Same,
+            'uploaded_file'     => new Rules\UploadedFile,
         ];
 
         foreach($base_validators as $key => $validator) {
