@@ -32,6 +32,17 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
         ], []));
     }
 
+    public function testUploadError()
+    {
+        $this->assertFalse($this->rule->check([
+            'name' => '',
+            'type' => '',
+            'size' => '',
+            'tmp_name' => '',
+            'error' => 5
+        ], []));
+    }
+
     public function testMaxSize()
     {
         $rule = new UploadedFile;
