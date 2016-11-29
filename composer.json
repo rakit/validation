@@ -1,10 +1,22 @@
 {
-    "autoload": {
-    		"psr-4": {
-    				"Rakit\\Validation\\": "src"
-    		}
-    },
-    "require-dev": {
-        "phpunit/phpunit": "4.*"
+  "name": "rakit/validation",
+  "description": "PHP Laravel like standalone validation library",
+  "license": "MIT",
+  "authors": [
+    {
+      "email": "emsifa@gmail.com",
+      "name": "Muhammad Syifa"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Rakit\\Validation\\": "src"
+    }
+  },
+  "require": {
+    "php": ">=5.0.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.*"
+  }
 }

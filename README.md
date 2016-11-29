@@ -1,5 +1,5 @@
-Rakit\Validation - PHP Data Validation
-=========================================
+Rakit Validation - PHP Standalone Validation Library
+======================================================
 
 [![Build Status](https://img.shields.io/travis/rakit/validation.svg?style=flat-square)](https://travis-ci.org/rakit/validation)
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://doge.mit-license.org)
@@ -13,9 +13,18 @@ PHP Standalone library for validating data. Inspired by `Illuminate\Validation` 
 
 use Rakit\Validation\Validator;
 
-$validator = new Validator;
-$validation = $validator->validate($_POST, [
-	'username' => 'required|alphadash',
+$validator = new Validator();
+
+// localization? use this
+$validator->setMessages([
+	'required' => ':attribute tidak boleh kosong',
+	'email' => ':attribute bukan email yang valid'
+]);
+
+// add your own Rule
+$validator->setValidator('unique', YourOwnUniqueValidator); // this class must extends Rakit\Validation\Rule
+
+$validation = $validator->validate($_POST + $_FILES, [
 	'email' => 'required|email',
 	'password' => 'required|min:6', // using rule parameter
 	'confirm_password' => 'required|same:password',
@@ -23,7 +32,15 @@ $validation = $validator->validate($_POST, [
 	'avatar' => [
 		'required',
 		$validator('uploaded_file')->maxSize('1M')->fileTypes('png|jpeg')
-	]
+	],
+	'username' => [
+		'required',
+		'min:6',
+		// yes. you can build your own validator to support this way 
+		$validator('unique')->table('users')->ignore('id', $user_id),
+		// and also this way
+		'unique:users,username,'.$user_id
+	],
 ]);
 
 // handling errors
@@ -39,7 +56,3 @@ if ($validation->fails()) {
 }
 
 ```
-
-## Coming Soon
-
-This is just beginning. Still need some feature and tests.
