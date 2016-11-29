@@ -117,7 +117,9 @@ class Validation
         $Validator = $this->getValidator();
 
         foreach($rules as $i => $rule) {
+            if (empty($rule)) continue;
             $params = [];
+            
             if (is_string($rule)) {
                 list($rulename, $params) = $this->parseRule($rule);
                 $validator = $Validator($rulename);

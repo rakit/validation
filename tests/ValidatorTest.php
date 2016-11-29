@@ -46,6 +46,20 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($validation->fails());
     }
 
+    public function testSkipEmptyRule()
+    {
+        $validation = $this->validator->validate([
+            'email' => 'emsifa@gmail.com'
+        ], [
+            'email' => [
+                null,
+                'email'
+            ]
+        ]);
+
+        $this->assertTrue($validation->passes());
+    }
+
     public function testValidationMessages()
     {
         $validation = $this->validator->make([
