@@ -59,6 +59,13 @@ class UploadedFile extends Rule
             return false;
         }
 
+        // we validate this in Required rule
+        if ($value['error'] == UPLOAD_ERR_NO_FILE) {
+            return true;
+        }
+
+        if ($value['error']) return false;
+
         if ($this->min_size) {
             $min_size = $this->getBytes($this->min_size);
             if ($value['size'] < $min_size) {
@@ -89,14 +96,13 @@ class UploadedFile extends Rule
     public static function isUploadedFile($value)
     {
         if(!is_array($value)) return false;
-        if(!empty($value['error'])) return false;
 
-        $required_keys = ['name', 'type', 'tmp_name', 'size'];
+        $required_keys = ['name', 'type', 'tmp_name', 'size', 'error'];
         foreach($required_keys as $key) {
             if(!isset($value[$key])) return false;
         }
 
-        return true;
+        return $value;
     }
 
 

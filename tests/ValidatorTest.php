@@ -60,6 +60,30 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($validation->passes());
     }
 
+    public function testRequireUploadedFile()
+    {
+        $empty_file = [
+            'name' => '',
+            'type' => '',
+            'size' => '',
+            'tmp_name' => '',
+            'error' => UPLOAD_ERR_NO_FILE
+        ];
+        $v1 = $this->validator->validate([
+            'file' => $empty_file
+        ], [
+            'file' => 'required|uploaded_file'
+        ]);
+        $this->assertFalse($v1->passes());
+
+        $v2 = $this->validator->validate([
+            'file' => $empty_file
+        ], [
+            'file' => 'uploaded_file'
+        ]);
+        $this->assertTrue($v2->passes());
+    }
+
     public function testValidationMessages()
     {
         $validation = $this->validator->make([
