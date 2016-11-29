@@ -62,4 +62,22 @@ class ErrorBag
         return implode($glue, $this->all($format));
     }
 
+    public function firstOfAll()
+    {
+        $messages = [];
+        foreach($this->messages as $key => $key_messages) {
+            $messages[] = $this->first($key);
+        }
+        return $messages;
+    }
+
+    public function lastOfAll()
+    {
+        $messages = [];
+        foreach($this->messages as $key => $key_messages) {
+            $messages[] = $this->last($key);
+        }
+        return $messages;
+    }
+
 }
