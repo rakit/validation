@@ -31,7 +31,10 @@ $validation = $validator->validate($_POST + $_FILES, [
 	// also can be used like this
 	'avatar' => [
 		'required',
-		$validator('uploaded_file')->maxSize('1M')->fileTypes('png|jpeg')
+		$validator('uploaded_file')
+			->maxSize('1M')
+			->fileTypes('png|jpeg')
+			->message('Custom validation message')
 	],
 	'username' => [
 		'required',

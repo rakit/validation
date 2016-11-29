@@ -40,6 +40,7 @@ abstract class Rule
     public function setMessage($message)
     {
         $this->message = $message;
+        return $this;
     }    
 
     public function getMessage()
