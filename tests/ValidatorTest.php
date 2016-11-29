@@ -48,19 +48,24 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
     public function testValidationMessages()
     {
-        $this->validator->setMessage('required', ':attribute harus diisi');
-        $validation = $this->validator->validate([
+        $validation = $this->validator->make([
             'email' => ''
         ], [
             'email' => 'required|email'
+        ], [
+            'email.required' => 'Kolom email tidak boleh kosong',
+            'required' => ':attribute harus diisi'
         ]);
+
+        $validation->setAlias('email', 'e-mail');
+        $validation->validate();
 
         $this->assertEquals($validation->errors()->count(), 2);
 
         $first_error = $validation->errors()->first('email');
-        $this->assertEquals($first_error, 'Email harus diisi');
+        $this->assertEquals($first_error, 'Kolom email tidak boleh kosong');
         $error_required = $validation->errors()->get('email', 'required');
-        $this->assertEquals($error_required, 'Email harus diisi');
+        $this->assertEquals($error_required, 'Kolom email tidak boleh kosong');
     }
 
 }
