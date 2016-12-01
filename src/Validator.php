@@ -80,6 +80,7 @@ class Validator
             'ipv6'              => new Rules\Ipv6,
             'array'             => new Rules\TypeArray,
             'same'              => new Rules\Same,
+            'regex'             => new Rules\Regex,
             'uploaded_file'     => new Rules\UploadedFile,
         ];
 

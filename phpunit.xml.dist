@@ -16,6 +16,7 @@
             <file>tests/Rules/IpTest.php</file>
             <file>tests/Rules/Ipv4Test.php</file>
             <file>tests/Rules/Ipv6Test.php</file>
+            <file>tests/Rules/RegexTest.php</file>
             <file>tests/Rules/TypeArrayTest.php</file>
             <file>tests/Rules/UploadedFileTest.php</file>
             <file>tests/ValidatorTest.php</file>
