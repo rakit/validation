@@ -92,7 +92,6 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         ]);
         $this->assertFalse($v1->passes());
 
-
         $v2 = $this->validator->validate([
             'something' => 10
         ], [
