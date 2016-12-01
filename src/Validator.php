@@ -84,6 +84,7 @@ class Validator
             'date'              => new Rules\Date,
             'accepted'          => new Rules\Accepted,
             'present'           => new Rules\Present,
+            'different'         => new Rules\Different,
             'uploaded_file'     => new Rules\UploadedFile,
         ];
 
