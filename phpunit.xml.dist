@@ -18,6 +18,7 @@
             <file>tests/Rules/Ipv6Test.php</file>
             <file>tests/Rules/RegexTest.php</file>
             <file>tests/Rules/DateTest.php</file>
+            <file>tests/Rules/AcceptedTest.php</file>
             <file>tests/Rules/TypeArrayTest.php</file>
             <file>tests/Rules/UploadedFileTest.php</file>
             <file>tests/ValidatorTest.php</file>
