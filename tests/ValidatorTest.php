@@ -84,6 +84,23 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($v2->passes());
     }
 
+    public function testRulePresent()
+    {
+        $v1 = $this->validator->validate([
+        ], [
+            'something' => 'present'
+        ]);
+        $this->assertFalse($v1->passes());
+
+
+        $v2 = $this->validator->validate([
+            'something' => 10
+        ], [
+            'something' => 'present'
+        ]);
+        $this->assertTrue($v2->passes());
+    }
+
     public function testValidationMessages()
     {
         $validation = $this->validator->make([

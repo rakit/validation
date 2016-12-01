@@ -83,6 +83,7 @@ class Validator
             'regex'             => new Rules\Regex,
             'date'              => new Rules\Date,
             'accepted'          => new Rules\Accepted,
+            'present'           => new Rules\Present,
             'uploaded_file'     => new Rules\UploadedFile,
         ];
 

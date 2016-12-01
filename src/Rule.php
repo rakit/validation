@@ -6,6 +6,8 @@ abstract class Rule
 {
     protected $key;
 
+    protected $attribute;
+
     protected $validation;
 
     protected $message = "The :attribute is invalid";
@@ -25,6 +27,16 @@ abstract class Rule
     public function getKey()
     {
         return $this->key ?: get_class($this);
+    }
+
+    public function setAttribute($attribute)
+    {
+        $this->attribute = $attribute;
+    }
+
+    public function getAttribute()
+    {
+        return $this->attribute ?: get_class($this);
     }
 
     public function getParams()

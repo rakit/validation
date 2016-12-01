@@ -46,6 +46,7 @@ class Validation
         foreach($rules as $rule) {
             $validator = $rule['validator'];
             $params = $rule['params'];
+            $validator->setAttribute($attribute);
             $validator->setValidation($this);
             
             $valid = $validator->check($value, $params);
