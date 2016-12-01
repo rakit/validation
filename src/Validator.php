@@ -81,6 +81,8 @@ class Validator
             'array'             => new Rules\TypeArray,
             'same'              => new Rules\Same,
             'regex'             => new Rules\Regex,
+            'date'              => new Rules\Date,
+            'accepted'          => new Rules\Accepted,
             'uploaded_file'     => new Rules\UploadedFile,
         ];
 
