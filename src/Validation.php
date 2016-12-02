@@ -164,6 +164,11 @@ class Validation
         $this->attributes[$attribute] = $alias;
     }
 
+    public function setAliases($aliases)
+    {
+        $this->attributes = array_merge($this->attributes, $aliases);
+    }
+
     public function passes()
     {
         return $this->errors->count() == 0;
