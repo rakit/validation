@@ -183,7 +183,7 @@ $validation_b = $validator->validate($dataset_b, $rules_for_dataset_b);
 #### Custom Messages for Validation
 
 Sometimes you may want to set custom messages for specific validation.
-To do this you can set your custom messages as 3rd argument of `$validator->make` or `$validator->message` like this:
+To do this you can set your custom messages as 3rd argument of `$validator->make` or `$validator->validate` like this:
 
 ```php
 $validator = new Validator;
