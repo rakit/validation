@@ -251,7 +251,184 @@ $validation_a->validate();
 
 ## Available Rules
 
-Soon ...
+Below is list of all available validation rules
+
+* [required](#rule-required)
+* [required_if](#rule-required_if)
+* [uploaded_file](#rule-uploaded_file)
+* [email](#rule-email)
+* [alpha](#rule-alpha)
+* [numeric](#rule-numeric)
+* [alpha_num](#rule-alpha_num)
+* [alpha_dash](#rule-alpha_dash)
+* [in](#rule-in)
+* [not_in](#rule-not_in)
+* [min](#rule-min)
+* [max](#rule-max)
+* [between](#rule-between)
+* [url](#rule-url)
+* [ip](#rule-ip)
+* [ipv4](#rule-ipv4)
+* [ipv6](#rule-ipv6)
+* [array](#rule-array)
+* [same](#rule-same)
+* [regex](#rule-regex)
+* [date](#rule-date)
+* [accepted](#rule-accepted)
+* [present](#rule-present)
+* [different](#rule-different)
+
+<a id="rule-required"></a>
+#### required
+
+The field under this validation must be present and not 'empty'.
+
+Here are some examples:
+| Value         | Valid |
+|---------------|-------|
+| `'something'` | true  |
+| `'0'`         | true  |
+| `0`           | true  |
+| `[0]`         | true  |
+| `[null]`      | true  |
+| null          | false |
+| []            | false |
+| ''            | false |
+
+For uploaded file, `$_FILES['key']['error']` must not `UPLOAD_ERR_NO_FILE`.
+
+<a id="rule-required_if"></a>
+#### required_if:another_field,value_1,value_2,...
+
+The field under this rule must be present and not empty if the anotherfield field is equal to any value.
+
+For example `required_if:something,1,yes,on` will be required if `something` value is one of `1`, `'1'`, `'yes'`, or `'on'`. 
+
+<a id="rule-uploaded_file"></a>
+#### uploaded_file:min_size,max_size,file_type_a,file_type_b,...
+
+This rule will validate `$_FILES` data, but not for multiple uploaded files. 
+Field under this rule must be following rules below to be valid:
+
+* `$_FILES['key']['error']` must be `UPLOAD_ERR_OK` or `UPLOAD_ERR_NO_FILE`. For `UPLOAD_ERR_NO_FILE` you can validate it with `required` rule. 
+* If min size is given, uploaded file size **MUST NOT** be lower than min size.
+* If max size is given, uploaded file size **MUST NOT** be higher than min size.
+* If file types is given, mime type must be one of those given types.
+
+Here are some examples:
+
+| Definition                             | Explanation                                                                                   |
+|----------------------------------------|-----------------------------------------------------------------------------------------------|
+| `uploaded_file`                        | Uploaded file is optional. When it is not empty, it must be `ERR_UPLOAD_OK`.                  |
+| `required|uploaded_file`               | Uploaded file is required, and it must be `ERR_UPLOAD_OK`.                                    |
+| `uploaded_file:0,1M`                   | uploaded file size must be between 0 - 1 MB, but uploaded file are optional                   |
+| `required|uploaded_file:0,1M,png,jpeg` | uploaded file size must be between 0 - 1MB and mime types must be `image/jpeg` or `image/png` |
+
+<a id="rule-email"></a>
+#### email
+
+The field under this validation must be valid email address.
+
+<a id="rule-alpha"></a>
+#### alpha
+
+The field under this rule must be entirely alphabetic characters.
+
+<a id="rule-numeric"></a>
+#### numeric
+
+The field under this rule must be numeric.
+
+<a id="rule-alpha_num"></a>
+#### alpha_num
+
+The field under this rule must be entirely alpha-numeric characters.
+
+<a id="rule-alpha_dash"></a>
+#### alpha_dash
+
+The field under this rule may have alpha-numeric characters, as well as dashes and underscores.
+
+<a id="rule-in"></a>
+#### in
+
+The field under this rule must be included in the given list of values.
+
+<a id="rule-not_in"></a>
+#### not_in
+
+The field under this rule must not be included in the given list of values.
+
+<a id="rule-min"></a>
+#### min
+
+soon ...
+
+<a id="rule-max"></a>
+#### max
+
+soon ...
+
+<a id="rule-between"></a>
+#### between
+
+soon ...
+
+<a id="rule-url"></a>
+#### url
+
+soon ...
+
+<a id="rule-ip"></a>
+#### ip
+
+soon ...
+
+<a id="rule-ipv4"></a>
+#### ipv4
+
+soon ...
+
+<a id="rule-ipv6"></a>
+#### ipv6
+
+soon ...
+
+<a id="rule-array"></a>
+#### array
+
+soon ...
+
+<a id="rule-same"></a>
+#### same
+
+soon ...
+
+<a id="rule-regex"></a>
+#### regex
+
+soon ...
+
+<a id="rule-date"></a>
+#### date
+
+soon ...
+
+<a id="rule-accepted"></a>
+#### accepted
+
+soon ...
+
+<a id="rule-present"></a>
+#### present
+
+soon ...
+
+<a id="rule-different"></a>
+#### different
+
+soon ...
+
 
 ## Register/Modify Rule
 
