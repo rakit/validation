@@ -11,14 +11,16 @@ class RequiredIf extends Rule
 
     public function check($value, array $params)
     {
-        $this->requireParamsCount($params, 1);
-        $another_value = $this->validation->getValue($params[0]);
+        $this->requireParamsCount($params, 2);
+        $another_attr = array_shift($params);
+        $another_values = $params;
+        $another_value = $this->validation->getValue($another_attr);
+
         $validator = $this->validation->getValidator();
         $required_validator = $validator('required');
-        $a = $required_validator->check($another_value);
 
-        if ($a) {
-            return $required_validator->check($value); 
+        if (in_array($another_value, $another_values)) {
+            return $required_validator->check($value, []); 
         }
 
         return true;

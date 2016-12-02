@@ -51,9 +51,9 @@ class UploadedFile extends Rule
 
     public function check($value, array $params)
     {
-        if (isset($params[0])) $this->minSize($params[0]);
-        if (isset($params[1])) $this->maxSize($params[1]);
-        if (isset($params[2])) $this->fileTypes($params[2]);
+        if (count($params) > 0) $this->minSize(array_shift($params));
+        if (count($params) > 0) $this->maxSize(array_shift($params));
+        if (count($params) > 0) $this->fileTypes($params);
 
         if (!static::isUploadedFile($value)) {
             return false;
