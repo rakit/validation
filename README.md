@@ -284,6 +284,7 @@ Below is list of all available validation rules
 The field under this validation must be present and not 'empty'.
 
 Here are some examples:
+
 | Value         | Valid |
 |---------------|-------|
 | `'something'` | true  |
