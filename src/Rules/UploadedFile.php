@@ -55,6 +55,10 @@ class UploadedFile extends Rule
         if (count($params) > 0) $this->maxSize(array_shift($params));
         if (count($params) > 0) $this->fileTypes($params);
 
+        if (is_null($value)) {
+            return true;
+        }
+
         if (!static::isUploadedFile($value)) {
             return false;
         }
@@ -104,7 +108,6 @@ class UploadedFile extends Rule
 
         return $value;
     }
-
 
     protected function getBytes($size)
     {
