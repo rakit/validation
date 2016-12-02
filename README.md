@@ -22,7 +22,7 @@ composer require "rakit/validation"
 
 #### Usage
 
-There is two way to validating data with this library. Using `make` to make validation object, 
+There are two ways to validating data with this library. Using `make` to make validation object, 
 then validate it using `validate`. Or just use `validate`. 
 Examples:
 
