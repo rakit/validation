@@ -106,7 +106,7 @@ But you can set it anything you want with `setAlias` or `setAliases` method.
 Example:
 
 ```php
-$validator = new Validation;
+$validator = new Validator;
 
 // To set attribute alias, you should use `make` instead `validate`.
 $validation->make([
