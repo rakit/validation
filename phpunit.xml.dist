@@ -1,27 +1,7 @@
 <phpunit bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="Block">
-            <file>tests/Rules/RequiredTest.php</file>
-            <file>tests/Rules/EmailTest.php</file>
-            <file>tests/Rules/AlphaTest.php</file>
-            <file>tests/Rules/NumericTest.php</file>
-            <file>tests/Rules/AlphaNumTest.php</file>
-            <file>tests/Rules/AlphaDashTest.php</file>
-            <file>tests/Rules/InTest.php</file>
-            <file>tests/Rules/NotInTest.php</file>
-            <file>tests/Rules/MinTest.php</file>
-            <file>tests/Rules/MaxTest.php</file>
-            <file>tests/Rules/BetweenTest.php</file>
-            <file>tests/Rules/UrlTest.php</file>
-            <file>tests/Rules/IpTest.php</file>
-            <file>tests/Rules/Ipv4Test.php</file>
-            <file>tests/Rules/Ipv6Test.php</file>
-            <file>tests/Rules/RegexTest.php</file>
-            <file>tests/Rules/DateTest.php</file>
-            <file>tests/Rules/AcceptedTest.php</file>
-            <file>tests/Rules/TypeArrayTest.php</file>
-            <file>tests/Rules/UploadedFileTest.php</file>
-            <file>tests/ValidatorTest.php</file>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>
