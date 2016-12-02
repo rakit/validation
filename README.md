@@ -22,7 +22,7 @@ composer require "rakit/validation"
 
 #### Usage
 
-There is two way to validate. Using `make` to make validation object, 
+There is two way to validating data with this library. Using `make` to make validation object, 
 then validate it using `validate`. Or just use `validate`. 
 Examples:
 
@@ -313,10 +313,10 @@ Field under this rule must be following rules below to be valid:
 
 * `$_FILES['key']['error']` must be `UPLOAD_ERR_OK` or `UPLOAD_ERR_NO_FILE`. For `UPLOAD_ERR_NO_FILE` you can validate it with `required` rule. 
 * If min size is given, uploaded file size **MUST NOT** be lower than min size.
-* If max size is given, uploaded file size **MUST NOT** be higher than min size.
+* If max size is given, uploaded file size **MUST NOT** be higher than max size.
 * If file types is given, mime type must be one of those given types.
 
-Here are some examples:
+Here are some example definitions and explanations:
 
 | Definition                             | Explanation                                                                                   |
 |----------------------------------------|-----------------------------------------------------------------------------------------------|
