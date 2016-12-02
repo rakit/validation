@@ -378,58 +378,57 @@ soon ...
 <a id="rule-url"></a>
 #### url
 
-soon ...
+The field under this rule must be valid url format.
 
 <a id="rule-ip"></a>
 #### ip
 
-soon ...
+The field under this rule must be valid ipv4 or ipv6.
 
 <a id="rule-ipv4"></a>
 #### ipv4
 
-soon ...
+The field under this rule must be valid ipv4.
 
 <a id="rule-ipv6"></a>
 #### ipv6
 
-soon ...
+The field under this rule must be valid ipv6.
 
 <a id="rule-array"></a>
 #### array
 
-soon ...
+The field under this rule must be array.
 
 <a id="rule-same"></a>
-#### same
+#### same:another_field
 
-soon ...
+The field value under this rule must be same with `another_field` value.
 
 <a id="rule-regex"></a>
-#### regex
+#### regex:/your-regex/
 
-soon ...
+The field under this rule must be match with given regex.
 
 <a id="rule-date"></a>
-#### date
+#### date:format
 
-soon ...
+The field under this rule must be valid date format. Parameter `format` is optional, default format is `Y-m-d`.
 
 <a id="rule-accepted"></a>
 #### accepted
 
-soon ...
+The field under this rule must be one of `'on'`, `'yes'`, `'1'`, `'true'`, or `true`.
 
 <a id="rule-present"></a>
 #### present
 
-soon ...
+The field under this rule must be exists, whatever the value is.
 
 <a id="rule-different"></a>
-#### different
+#### different:another_field
 
-soon ...
-
+Opposite of `same`. The field value under this rule must be different with `another_field` value.
 
 ## Register/Modify Rule
 
