@@ -53,7 +53,7 @@ class Validator
     {
         $validator = $this->getValidator($rule);
         if (!$validator) {
-            throw new Exception("Validator '{$rule}' is not registered", 1);
+            throw new RuleNotFoundException("Validator '{$rule}' is not registered", 1);
         }
 
         return clone $validator;

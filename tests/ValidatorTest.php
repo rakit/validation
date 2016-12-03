@@ -143,4 +143,20 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($error_required, 'Kolom email tidak boleh kosong');
     }
 
+    /**
+     * @expectedException \Rakit\Validation\RuleNotFoundException
+     */
+    public function testNonExistentValidationRule()
+    {
+        $validation = $this->validator->make([
+            'name' => "some name"
+        ], [
+            'name' => 'required|xxx'
+        ],[
+            'name.required' => "Fill in your name",
+            'xxx' => "Oops"
+        ]);
+
+        $validation->validate();
+    }
 }
