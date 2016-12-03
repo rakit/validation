@@ -10,6 +10,8 @@ abstract class Rule
 
     protected $validation;
 
+    protected $params = [];
+
     protected $message = "The :attribute is invalid";
 
     abstract public function check($value, array $params);
@@ -41,7 +43,18 @@ abstract class Rule
 
     public function getParams()
     {
-        return [];
+        return $this->params;
+    }
+
+    public function setParams(array $params)
+    {
+        $this->params = $params;
+    }
+
+    public function mergeParams(array $params)
+    {
+        $current_params = $this->getParams();
+        return $params + $current_params;        
     }
 
     public function message($message)

@@ -11,7 +11,7 @@ class Present extends Rule
 
     public function check($value, array $params)
     {
-        return $this->validation->hasValue($this->attribute);
+        return $this->validation->hasValue($this->attribute->getKey());
     }
 
 }
