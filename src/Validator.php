@@ -93,4 +93,14 @@ class Validator
         }
     }
 
+    public function addValidator($ruleName, Rule $rule)
+    {
+        if (array_key_exists($ruleName, $this->validators)) {
+            throw new RuleQuashException(
+                "You cannot override a built in rule. You have to rename your rule"
+            );
+        }
+
+        $this->setValidator($ruleName, $rule);
+    }
 }

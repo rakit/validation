@@ -2,6 +2,9 @@
 
 use Rakit\Validation\Validator;
 
+require_once 'Fixtures/Json.php';
+require_once 'Fixtures/Required.php';
+
 class ValidatorTest extends PHPUnit_Framework_TestCase
 {
 
@@ -156,6 +159,35 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
             'name.required' => "Fill in your name",
             'xxx' => "Oops"
         ]);
+
+        $validation->validate();
+    }
+
+    public function testNewValidationRuleCanBeAdded()
+    {
+
+        $this->validator->addValidator('json', new Json());
+
+        $data = ['s' => json_encode(['name' => 'space x', 'human' => false])];
+
+        $validation = $this->validator->make($data, ['s' => 'json'], []);
+
+        $validation->validate();
+
+        $this->assertTrue($validation->passes());
+    }
+
+    /**
+     * @expectedException Rakit\Validation\RuleQuashException
+     */
+    public function testInternalValidationRuleCannotBeOverridden()
+    {
+
+        $this->validator->addValidator('required', new Required());
+
+        $data = ['s' => json_encode(['name' => 'space x', 'human' => false])];
+
+        $validation = $this->validator->make($data, ['s' => 'required'], []);
 
         $validation->validate();
     }
