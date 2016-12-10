@@ -138,7 +138,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation->setAlias('email', 'e-mail');
         $validation->validate();
 
-        $this->assertEquals($validation->errors()->count(), 2);
+        $this->assertEquals($validation->errors()->count(), 1);
 
         $first_error = $validation->errors()->first('email');
         $this->assertEquals($first_error, 'Kolom email tidak boleh kosong');
@@ -190,5 +190,37 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation = $this->validator->make($data, ['s' => 'required'], []);
 
         $validation->validate();
+    }
+
+    public function testIgnoreNextRulesWhenImplicitRulesFails()
+    {
+        $validation = $this->validator->validate([
+            'some_value' => 1
+        ], [
+            'required_field' => 'required|numeric|min:6',
+            'required_if_field' => 'required_if:some_value,1|numeric|min:6',
+            'must_present_field' => 'present|numeric|min:6',
+            'must_accepted_field' => 'accepted|numeric|min:6'
+        ]);
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->count(), 4);
+
+        $this->assertNotNull($errors->get('required_field', 'required'));
+        $this->assertNull($errors->get('required_field', 'numeric'));
+        $this->assertNull($errors->get('required_field', 'min'));
+
+        $this->assertNotNull($errors->get('required_if_field', 'required_if'));
+        $this->assertNull($errors->get('required_if_field', 'numeric'));
+        $this->assertNull($errors->get('required_if_field', 'min'));
+
+        $this->assertNotNull($errors->get('must_present_field', 'present'));
+        $this->assertNull($errors->get('must_present_field', 'numeric'));
+        $this->assertNull($errors->get('must_present_field', 'min'));
+
+        $this->assertNotNull($errors->get('must_accepted_field', 'accepted'));
+        $this->assertNull($errors->get('must_accepted_field', 'numeric'));
+        $this->assertNull($errors->get('must_accepted_field', 'min'));
     }
 }

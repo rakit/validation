@@ -6,6 +6,7 @@ use Rakit\Validation\Rule;
 
 class Accepted extends Rule
 {
+    protected $implicit = true;
 
     protected $message = "The :attribute must be accepted";
 
