@@ -10,6 +10,8 @@ abstract class Rule
 
     protected $validation;
 
+    protected $implicit = false;
+
     protected $params = [];
 
     protected $message = "The :attribute is invalid";
@@ -55,6 +57,11 @@ abstract class Rule
     {
         $current_params = $this->getParams();
         return $params + $current_params;        
+    }
+
+    public function isImplicit()
+    {
+        return $this->implicit === true;
     }
 
     public function message($message)

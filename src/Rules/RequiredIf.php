@@ -6,6 +6,7 @@ use Rakit\Validation\Rule;
 
 class RequiredIf extends Rule
 {
+    protected $implicit = true;
 
     protected $message = "The :attribute is required";
 
