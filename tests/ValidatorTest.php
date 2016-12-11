@@ -223,4 +223,33 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertNull($errors->get('must_accepted_field', 'numeric'));
         $this->assertNull($errors->get('must_accepted_field', 'min'));
     }
+
+    public function testIgnoreOtherRulesWhenAttributeIsNotRequired()
+    {
+        $validation = $this->validator->validate([], [
+            'optional_field' => 'ipv4|in:127.0.0.1',
+            'required_if_field' => 'required_if:some_value,1|email'
+        ]);
+
+        $this->assertTrue($validation->passes());
+    }
+
+    public function testDontIgnoreOtherRulesWhenAttributeIsRequired()
+    {
+        $validation = $this->validator->validate([
+            'optional_field' => 'have a value',
+            'required_if_field' => 'not valid email',
+            'some_value' => 1
+        ], [
+            'optional_field' => 'required|ipv4|in:127.0.0.1',
+            'required_if_field' => 'required_if:some_value,1|email'
+        ]);
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->count(), 3);
+        $this->assertNotNull($errors->get('optional_field', 'ipv4'));
+        $this->assertNotNull($errors->get('optional_field', 'in'));
+        $this->assertNotNull($errors->get('required_if_field', 'email'));
+    }
 }
