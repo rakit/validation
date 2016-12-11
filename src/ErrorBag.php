@@ -48,8 +48,8 @@ class ErrorBag
     public function all($format = ':message')
     {
         $messages = [];
-        foreach($this->messages as $key => $key_messages) {
-            foreach($key_messages as $msg) {
+        foreach($this->messages as $key => $keyMessages) {
+            foreach($keyMessages as $msg) {
                 $messages[] = str_replace(':message', $format, $msg);
             }
         }
@@ -65,7 +65,7 @@ class ErrorBag
     public function firstOfAll()
     {
         $messages = [];
-        foreach($this->messages as $key => $key_messages) {
+        foreach($this->messages as $key => $keyMessages) {
             $messages[] = $this->first($key);
         }
         return $messages;
@@ -74,7 +74,7 @@ class ErrorBag
     public function lastOfAll()
     {
         $messages = [];
-        foreach($this->messages as $key => $key_messages) {
+        foreach($this->messages as $key => $keyMessages) {
             $messages[] = $this->last($key);
         }
         return $messages;

@@ -55,8 +55,8 @@ abstract class Rule
 
     public function mergeParams(array $params)
     {
-        $current_params = $this->getParams();
-        return $params + $current_params;        
+        $currentParams = $this->getParams();
+        return $params + $currentParams;        
     }
 
     public function isImplicit()
@@ -80,12 +80,12 @@ abstract class Rule
         return $this->message;
     }
 
-    protected function requireParamsCount(array $params, $min_count)
+    protected function requireParamsCount(array $params, $minCount)
     {
         $count = count($params);
-        if ($count < $min_count) {
+        if ($count < $minCount) {
             $key = $this->getKey() ?: get_class($this);
-            throw new \InvalidArgumentException("Rule {$key} requires at least ".$min_count." parameters", 1);
+            throw new \InvalidArgumentException("Rule {$key} requires at least ".$minCount." parameters", 1);
         }        
     }
 
