@@ -2,6 +2,9 @@
 
 namespace Rakit\Validation;
 
+use Rakit\Validation\Rules\After;
+use Rakit\Validation\Rules\Before;
+
 class Validator
 {
 
@@ -86,6 +89,8 @@ class Validator
             'present'           => new Rules\Present,
             'different'         => new Rules\Different,
             'uploaded_file'     => new Rules\UploadedFile,
+            'before'            => new Before,
+            'after'             => new After
         ];
 
         foreach($base_validators as $key => $validator) {
