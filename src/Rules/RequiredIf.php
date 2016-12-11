@@ -4,7 +4,7 @@ namespace Rakit\Validation\Rules;
 
 use Rakit\Validation\Rule;
 
-class RequiredIf extends Rule
+class RequiredIf extends Required
 {
     protected $implicit = true;
 
@@ -21,6 +21,7 @@ class RequiredIf extends Rule
         $required_validator = $validator('required');
 
         if (in_array($another_value, $another_values)) {
+            $this->setAttributeAsRequired();
             return $required_validator->check($value, []); 
         }
 

@@ -13,6 +13,8 @@ class Attribute
 
     protected $validation;
 
+    protected $required = false;
+
     public function __construct(Validation $validation, $key, $alias = null, array $rules = array())
     {
         $this->validation = $validation;
@@ -45,9 +47,14 @@ class Attribute
         return isset($this->rules[$rule_key]);
     }
 
+    public function setRequired($required)
+    {
+        $this->required = $required;
+    }
+
     public function isRequired()
     {
-        return $this->hasRule('required');
+        return $this->required === true;
     }
 
     public function getKey()

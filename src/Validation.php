@@ -2,6 +2,8 @@
 
 namespace Rakit\Validation;
 
+use Rakit\Validation\Rules\Required;
+
 class Validation
 {
 
@@ -59,8 +61,13 @@ class Validation
         $value = $this->getValue($key_attribute);
 
         foreach($rules as $rule_validator) {
+            if ($this->ruleIsOptional($attribute, $rule_validator)) {
+                continue;
+            }
+
             $params = $rule_validator->getParams();
             $valid = $rule_validator->check($value, $params);
+            
             if (!$valid) {
                 $rulename = $rule_validator->getKey();
                 $message = $this->resolveMessage($attribute, $value, $params, $rule_validator);
@@ -71,6 +78,13 @@ class Validation
                 }
             }
         }
+    }
+
+    protected function ruleIsOptional(Attribute $attribute, Rule $rule)
+    {
+        return false === $attribute->isRequired() AND 
+            false === $rule->isImplicit() AND 
+            false === $rule instanceof Required;
     }
 
     protected function resolveAttributeName($key_attribute)
