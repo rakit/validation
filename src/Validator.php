@@ -61,7 +61,7 @@ class Validator
 
     protected function registerBaseValidators()
     {
-        $base_validators = [
+        $baseValidator = [
             'required'          => new Rules\Required,
             'required_if'       => new Rules\RequiredIf,
             'email'             => new Rules\Email,
@@ -88,7 +88,7 @@ class Validator
             'uploaded_file'     => new Rules\UploadedFile,
         ];
 
-        foreach($base_validators as $key => $validator) {
+        foreach($baseValidator as $key => $validator) {
             $this->setValidator($key, $validator);
         }
     }
