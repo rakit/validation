@@ -2,27 +2,24 @@
 
 namespace Rakit\Validation\Rules;
 
-use Exception;
 use Rakit\Validation\Rule;
 
 class After extends Rule
 {
 
+    use DateUtils;
+
     public function check($value, array $param)
     {
 
-        if ((strtotime($value) === false) || (strtotime($param[0]) === false)) {
+        if (!$this->isValidDate($value)){
+            throw $this->throwException($value);
+        }
 
-            throw new Exception(
-                "Expected a valid date, got {$value} instead. 2016-12-08, 2016-12-02 14:58, tomorrow are considered valid dates"
-            );
+        if (!$this->isValidDate($param[0])) {
+            throw $this->throwException($param[0]);
         }
 
         return $this->getTimeStamp($param[0]) < $this->getTimeStamp($value);
-    }
-
-    protected function getTimeStamp($date)
-    {
-        return strtotime($date);
     }
 }

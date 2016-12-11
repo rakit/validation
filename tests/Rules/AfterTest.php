@@ -33,6 +33,14 @@ class AfterTest extends PHPUnit_Framework_TestCase
         $this->validator->check($date, ["tomorrow"]);
     }
 
+    /**
+     * @expectedException Exception
+     */
+    public function testUserProvidedParamCannotBeValidatedBecauseItIsInvalid()
+    {
+        $this->validator->check("now", ["to,morrow"]);
+    }
+
     public function getInvalidDates()
     {
         $now = new DateTime();
