@@ -226,19 +226,50 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
     public function testIgnoreOtherRulesWhenAttributeIsNotRequired()
     {
-        $validation = $this->validator->validate([], [
+        $validation = $this->validator->validate([
+            'an_empty_file' => [
+                'name' => '',
+                'type' => '',
+                'size' => '',
+                'tmp_name' => '',
+                'error' => UPLOAD_ERR_NO_FILE
+            ],
+            'required_if_field' => null,
+        ], [
+            'optional_field' => 'ipv4|in:127.0.0.1',
+            'required_if_field' => 'required_if:some_value,1|email',
+            'an_empty_file' => 'uploaded_file'
+        ]);
+
+        $this->assertTrue($validation->passes());
+    }
+
+    public function testDontIgnoreOtherRulesWhenValueIsNotEmpty()
+    {
+        $validation = $this->validator->validate([
+            'an_error_file' => [
+                'name' => 'foo',
+                'type' => 'text/plain',
+                'size' => 10000,
+                'tmp_name' => '/tmp/foo',
+                'error' => UPLOAD_ERR_CANT_WRITE
+            ],
+            'optional_field' => 'invalid ip address',
+            'required_if_field' => 'invalid email',
+        ], [
+            'an_error_file' => 'uploaded_file',
             'optional_field' => 'ipv4|in:127.0.0.1',
             'required_if_field' => 'required_if:some_value,1|email'
         ]);
 
-        $this->assertTrue($validation->passes());
+        $this->assertEquals($validation->errors()->count(), 4);
     }
 
     public function testDontIgnoreOtherRulesWhenAttributeIsRequired()
     {
         $validation = $this->validator->validate([
             'optional_field' => 'have a value',
-            'required_if_field' => 'not valid email',
+            'required_if_field' => 'invalid email',
             'some_value' => 1
         ], [
             'optional_field' => 'required|ipv4|in:127.0.0.1',
