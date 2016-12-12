@@ -163,7 +163,6 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation->validate();
     }
 
-<<<<<<< HEAD
     public function testBeforeRule()
     {
         $data = ["date" => (new DateTime())->format('Y-m-d')];
@@ -204,7 +203,8 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validator2->validate();
 
         $this->assertFalse($validator2->passes());
-=======
+    }
+        
     public function testNewValidationRuleCanBeAdded()
     {
 
@@ -324,6 +324,5 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($errors->get('optional_field', 'ipv4'));
         $this->assertNotNull($errors->get('optional_field', 'in'));
         $this->assertNotNull($errors->get('required_if_field', 'email'));
->>>>>>> master
     }
 }
