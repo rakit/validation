@@ -59,9 +59,10 @@ class Validation
         $attributeKey = $attribute->getKey();
         $rules = $attribute->getRules(); 
         $value = $this->getValue($attributeKey);
+        $isEmptyValue = $this->isEmptyValue($value);
 
         foreach($rules as $ruleValidator) {
-            if ($this->ruleIsOptional($attribute, $ruleValidator)) {
+            if ($isEmptyValue AND $this->ruleIsOptional($attribute, $ruleValidator)) {
                 continue;
             }
 
@@ -78,6 +79,12 @@ class Validation
                 }
             }
         }
+    }
+
+    protected function isEmptyValue($value)
+    {
+        $requiredValidator = new Required;
+        return false === $requiredValidator->check($value, []);
     }
 
     protected function ruleIsOptional(Attribute $attribute, Rule $rule)
