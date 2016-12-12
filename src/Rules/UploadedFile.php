@@ -10,26 +10,26 @@ class UploadedFile extends Rule
 
     protected $message = "The :attribute is not valid";
 
-    protected $max_size = null;
-    protected $min_size = null;
-    protected $allowed_types = [];
+    protected $maxSize = null;
+    protected $minSize = null;
+    protected $allowedTypes = [];
 
     public function maxSize($size)
     {
-        $this->max_size = $size;
+        $this->maxSize = $size;
         return $this;
     }
 
     public function minSize($size)
     {
-        $this->min_size = $size;
+        $this->minSize = $size;
         return $this;
     }
 
     public function sizeBetween($min, $max)
     {
-        $this->min_size = $min;
-        $this->max_size = $max;
+        $this->minSize = $min;
+        $this->maxSize = $max;
         return $this;
     }
 
@@ -39,14 +39,14 @@ class UploadedFile extends Rule
             $types = explode('|', $types);
         }
 
-        $this->allowed_types = $types;
+        $this->allowedTypes = $types;
 
         return $this;
     }
 
     public function getParams()
     {
-        return [$this->min_size, $this->max_size, $this->allowed_types];
+        return [$this->minSize, $this->maxSize, $this->allowedTypes];
     }
 
     public function check($value, array $params)
@@ -70,26 +70,26 @@ class UploadedFile extends Rule
 
         if ($value['error']) return false;
 
-        if ($this->min_size) {
-            $min_size = $this->getBytes($this->min_size);
-            if ($value['size'] < $min_size) {
+        if ($this->minSize) {
+            $minSize = $this->getBytes($this->minSize);
+            if ($value['size'] < $minSize) {
                 return false;
             }
         }
 
-        if ($this->max_size) {
-            $max_size = $this->getBytes($this->max_size);
-            if ($value['size'] > $max_size) {
+        if ($this->maxSize) {
+            $maxSize = $this->getBytes($this->maxSize);
+            if ($value['size'] > $maxSize) {
                 return false;
             }
         }
 
-        if (!empty($this->allowed_types)) {
+        if (!empty($this->allowedTypes)) {
             $guesser = new MimeTypeGuesser;
             $ext = $guesser->getExtension($value['type']);
             unset($guesser);
 
-            if (!in_array($ext, $this->allowed_types)) {
+            if (!in_array($ext, $this->allowedTypes)) {
                 return false;
             }
         }

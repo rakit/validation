@@ -12,9 +12,9 @@ class Same extends Rule
     public function check($value, array $params)
     {
         $this->requireParamsCount($params, 1);
-        $another_value = $this->validation->getValue($params[0]);
+        $anotherValue = $this->validation->getValue($params[0]);
 
-        return $value == $another_value;
+        return $value == $anotherValue;
     }
 
 }

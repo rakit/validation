@@ -2,6 +2,9 @@
 
 use Rakit\Validation\Validator;
 
+require_once 'Fixtures/Json.php';
+require_once 'Fixtures/Required.php';
+
 class ValidatorTest extends PHPUnit_Framework_TestCase
 {
 
@@ -135,7 +138,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation->setAlias('email', 'e-mail');
         $validation->validate();
 
-        $this->assertEquals($validation->errors()->count(), 2);
+        $this->assertEquals($validation->errors()->count(), 1);
 
         $first_error = $validation->errors()->first('email');
         $this->assertEquals($first_error, 'Kolom email tidak boleh kosong');
@@ -160,6 +163,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation->validate();
     }
 
+<<<<<<< HEAD
     public function testBeforeRule()
     {
         $data = ["date" => (new DateTime())->format('Y-m-d')];
@@ -200,5 +204,126 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validator2->validate();
 
         $this->assertFalse($validator2->passes());
+=======
+    public function testNewValidationRuleCanBeAdded()
+    {
+
+        $this->validator->addValidator('json', new Json());
+
+        $data = ['s' => json_encode(['name' => 'space x', 'human' => false])];
+
+        $validation = $this->validator->make($data, ['s' => 'json'], []);
+
+        $validation->validate();
+
+        $this->assertTrue($validation->passes());
+    }
+
+    /**
+     * @expectedException Rakit\Validation\RuleQuashException
+     */
+    public function testInternalValidationRuleCannotBeOverridden()
+    {
+
+        $this->validator->addValidator('required', new Required());
+
+        $data = ['s' => json_encode(['name' => 'space x', 'human' => false])];
+
+        $validation = $this->validator->make($data, ['s' => 'required'], []);
+
+        $validation->validate();
+    }
+
+    public function testIgnoreNextRulesWhenImplicitRulesFails()
+    {
+        $validation = $this->validator->validate([
+            'some_value' => 1
+        ], [
+            'required_field' => 'required|numeric|min:6',
+            'required_if_field' => 'required_if:some_value,1|numeric|min:6',
+            'must_present_field' => 'present|numeric|min:6',
+            'must_accepted_field' => 'accepted|numeric|min:6'
+        ]);
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->count(), 4);
+
+        $this->assertNotNull($errors->get('required_field', 'required'));
+        $this->assertNull($errors->get('required_field', 'numeric'));
+        $this->assertNull($errors->get('required_field', 'min'));
+
+        $this->assertNotNull($errors->get('required_if_field', 'required_if'));
+        $this->assertNull($errors->get('required_if_field', 'numeric'));
+        $this->assertNull($errors->get('required_if_field', 'min'));
+
+        $this->assertNotNull($errors->get('must_present_field', 'present'));
+        $this->assertNull($errors->get('must_present_field', 'numeric'));
+        $this->assertNull($errors->get('must_present_field', 'min'));
+
+        $this->assertNotNull($errors->get('must_accepted_field', 'accepted'));
+        $this->assertNull($errors->get('must_accepted_field', 'numeric'));
+        $this->assertNull($errors->get('must_accepted_field', 'min'));
+    }
+
+    public function testIgnoreOtherRulesWhenAttributeIsNotRequired()
+    {
+        $validation = $this->validator->validate([
+            'an_empty_file' => [
+                'name' => '',
+                'type' => '',
+                'size' => '',
+                'tmp_name' => '',
+                'error' => UPLOAD_ERR_NO_FILE
+            ],
+            'required_if_field' => null,
+        ], [
+            'optional_field' => 'ipv4|in:127.0.0.1',
+            'required_if_field' => 'required_if:some_value,1|email',
+            'an_empty_file' => 'uploaded_file'
+        ]);
+
+        $this->assertTrue($validation->passes());
+    }
+
+    public function testDontIgnoreOtherRulesWhenValueIsNotEmpty()
+    {
+        $validation = $this->validator->validate([
+            'an_error_file' => [
+                'name' => 'foo',
+                'type' => 'text/plain',
+                'size' => 10000,
+                'tmp_name' => '/tmp/foo',
+                'error' => UPLOAD_ERR_CANT_WRITE
+            ],
+            'optional_field' => 'invalid ip address',
+            'required_if_field' => 'invalid email',
+        ], [
+            'an_error_file' => 'uploaded_file',
+            'optional_field' => 'ipv4|in:127.0.0.1',
+            'required_if_field' => 'required_if:some_value,1|email'
+        ]);
+
+        $this->assertEquals($validation->errors()->count(), 4);
+    }
+
+    public function testDontIgnoreOtherRulesWhenAttributeIsRequired()
+    {
+        $validation = $this->validator->validate([
+            'optional_field' => 'have a value',
+            'required_if_field' => 'invalid email',
+            'some_value' => 1
+        ], [
+            'optional_field' => 'required|ipv4|in:127.0.0.1',
+            'required_if_field' => 'required_if:some_value,1|email'
+        ]);
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->count(), 3);
+        $this->assertNotNull($errors->get('optional_field', 'ipv4'));
+        $this->assertNotNull($errors->get('optional_field', 'in'));
+        $this->assertNotNull($errors->get('required_if_field', 'email'));
+>>>>>>> master
     }
 }

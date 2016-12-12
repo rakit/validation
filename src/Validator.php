@@ -64,7 +64,7 @@ class Validator
 
     protected function registerBaseValidators()
     {
-        $base_validators = [
+        $baseValidator = [
             'required'          => new Rules\Required,
             'required_if'       => new Rules\RequiredIf,
             'email'             => new Rules\Email,
@@ -93,9 +93,19 @@ class Validator
             'after'             => new After
         ];
 
-        foreach($base_validators as $key => $validator) {
+        foreach($baseValidator as $key => $validator) {
             $this->setValidator($key, $validator);
         }
     }
 
+    public function addValidator($ruleName, Rule $rule)
+    {
+        if (array_key_exists($ruleName, $this->validators)) {
+            throw new RuleQuashException(
+                "You cannot override a built in rule. You have to rename your rule"
+            );
+        }
+
+        $this->setValidator($ruleName, $rule);
+    }
 }

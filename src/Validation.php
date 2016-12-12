@@ -2,6 +2,8 @@
 
 namespace Rakit\Validation;
 
+use Rakit\Validation\Rules\Required;
+
 class Validation
 {
 
@@ -21,28 +23,28 @@ class Validation
         $this->inputs = $this->resolveInputAttributes($inputs);
         $this->messages = $messages;
         $this->errors = new ErrorBag;
-        foreach($rules as $key_attribute => $rules) {
-            $this->addAttribute($key_attribute, $rules);
+        foreach($rules as $attributeKey => $rules) {
+            $this->addAttribute($attributeKey, $rules);
         }
     }
 
-    public function addAttribute($key_attribute, $rules)
+    public function addAttribute($attributeKey, $rules)
     {
         $resolved_rules = $this->resolveRules($rules);
-        $attribute = new Attribute($this, $key_attribute, $this->getAlias($key_attribute), $resolved_rules);
-        $this->attributes[$key_attribute] = $attribute;
+        $attribute = new Attribute($this, $attributeKey, $this->getAlias($attributeKey), $resolved_rules);
+        $this->attributes[$attributeKey] = $attribute;
     }
 
-    public function getAttribute($key_attribute)
+    public function getAttribute($attributeKey)
     {
-        return isset($this->attributes[$key_attribute])? $this->attributes[$key_attribute] : null;
+        return isset($this->attributes[$attributeKey])? $this->attributes[$attributeKey] : null;
     }
 
     public function validate(array $inputs = array())
     {
         $this->errors = new ErrorBag; // reset error bag
         $this->inputs = array_merge($this->inputs, $this->resolveInputAttributes($inputs));
-        foreach($this->attributes as $key_attribute => $attribute) {
+        foreach($this->attributes as $attributeKey => $attribute) {
             $this->validateAttribute($attribute);
         }
     }
@@ -54,36 +56,59 @@ class Validation
 
     protected function validateAttribute(Attribute $attribute)
     {
-        $key_attribute = $attribute->getKey();
+        $attributeKey = $attribute->getKey();
         $rules = $attribute->getRules(); 
-        $value = $this->getValue($key_attribute);
+        $value = $this->getValue($attributeKey);
+        $isEmptyValue = $this->isEmptyValue($value);
 
-        foreach($rules as $rule_validator) {
-            $params = $rule_validator->getParams();
-            $valid = $rule_validator->check($value, $params);
+        foreach($rules as $ruleValidator) {
+            if ($isEmptyValue AND $this->ruleIsOptional($attribute, $ruleValidator)) {
+                continue;
+            }
+
+            $params = $ruleValidator->getParams();
+            $valid = $ruleValidator->check($value, $params);
+            
             if (!$valid) {
-                $rulename = $rule_validator->getKey();
-                $message = $this->resolveMessage($attribute, $value, $params, $rule_validator);
-                $this->errors->add($key_attribute, $rulename, $message);
+                $rulename = $ruleValidator->getKey();
+                $message = $this->resolveMessage($attribute, $value, $params, $ruleValidator);
+                $this->errors->add($attributeKey, $rulename, $message);
+
+                if ($ruleValidator->isImplicit()) {
+                    break;
+                }
             }
         }
     }
 
-    protected function resolveAttributeName($key_attribute)
+    protected function isEmptyValue($value)
     {
-        return isset($this->aliases[$key_attribute]) ? $this->aliases[$key_attribute] : ucfirst(str_replace('_', ' ', $key_attribute));
+        $requiredValidator = new Required;
+        return false === $requiredValidator->check($value, []);
+    }
+
+    protected function ruleIsOptional(Attribute $attribute, Rule $rule)
+    {
+        return false === $attribute->isRequired() AND 
+            false === $rule->isImplicit() AND 
+            false === $rule instanceof Required;
+    }
+
+    protected function resolveAttributeName($attributeKey)
+    {
+        return isset($this->aliases[$attributeKey]) ? $this->aliases[$attributeKey] : ucfirst(str_replace('_', ' ', $attributeKey));
     }
 
     protected function resolveMessage(Attribute $attribute, $value, array $params, Rule $validator)
     {
-        $key_attribute = $attribute->getKey();
-        $rule_key = $validator->getKey();
-        $alias = $attribute->getAlias() ?: $this->resolveAttributeName($key_attribute);
+        $attributeKey = $attribute->getKey();
+        $ruleKey = $validator->getKey();
+        $alias = $attribute->getAlias() ?: $this->resolveAttributeName($attributeKey);
         $message = $validator->getMessage(); // default rule message
         $message_keys = [
-            $key_attribute.'.'.$rule_key,
-            $key_attribute.'.*',
-            $rule_key
+            $attributeKey.'.'.$ruleKey,
+            $attributeKey.'.*',
+            $ruleKey
         ];
 
         foreach($message_keys as $key) {
@@ -128,7 +153,7 @@ class Validation
         }
 
         $resolved_rules = [];
-        $Validator = $this->getValidator();
+        $validatorFactory = $this->getValidator();
 
         foreach($rules as $i => $rule) {
             if (empty($rule)) continue;
@@ -136,13 +161,13 @@ class Validation
             
             if (is_string($rule)) {
                 list($rulename, $params) = $this->parseRule($rule);
-                $validator = $Validator($rulename);
+                $validator = $validatorFactory($rulename);
             } elseif($rule instanceof Rule) {
                 $validator = $rule;
                 $params = $rule->getParams();
             } else {
-                $rule_def = is_object($rule) ? get_class($rule) : gettype($rule);
-                throw new \Exception("Rule must be a string or Rakit\Validation\Rule instance. ".$rule_def." given", 1);
+                $ruleName = is_object($rule) ? get_class($rule) : gettype($rule);
+                throw new \Exception("Rule must be a string or Rakit\Validation\Rule instance. ".$ruleName." given", 1);
             }
 
             $validator->setParams($params);
@@ -171,14 +196,14 @@ class Validation
         array_merge($this->messages, $messages);
     }
 
-    public function setAlias($key_attribute, $alias)
+    public function setAlias($attributeKey, $alias)
     {
-        $this->aliases[$key_attribute] = $alias;
+        $this->aliases[$attributeKey] = $alias;
     }
 
-    public function getAlias($key_attribute)
+    public function getAlias($attributeKey)
     {
-        return isset($this->aliases[$key_attribute])? $this->aliases[$key_attribute] : null;
+        return isset($this->aliases[$attributeKey])? $this->aliases[$attributeKey] : null;
     }
 
     public function setAliases($aliases)
@@ -213,7 +238,7 @@ class Validation
 
     protected function resolveInputAttributes(array $inputs)
     {
-        $resolved_inputs = [];
+        $resolvedInputs = [];
         foreach($inputs as $key => $rules) {
             $exp = explode(':', $key);
             
@@ -222,10 +247,10 @@ class Validation
                 $this->aliases[$exp[0]] = $exp[1];
             }
 
-            $resolved_inputs[$exp[0]] = $rules;
+            $resolvedInputs[$exp[0]] = $rules;
         }
 
-        return $resolved_inputs;
+        return $resolvedInputs;
     }
 
 }

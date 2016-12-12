@@ -13,6 +13,8 @@ class Attribute
 
     protected $validation;
 
+    protected $required = false;
+
     public function __construct(Validation $validation, $key, $alias = null, array $rules = array())
     {
         $this->validation = $validation;
@@ -30,9 +32,9 @@ class Attribute
         $this->rules[$rule->getKey()] = $rule;
     }
 
-    public function getRule($rule_key)
+    public function getRule($ruleKey)
     {
-        return $this->hasRule($rule_key)? $this->rules[$rule_key] : null;
+        return $this->hasRule($ruleKey)? $this->rules[$ruleKey] : null;
     }
 
     public function getRules()
@@ -40,14 +42,19 @@ class Attribute
         return $this->rules;
     }
 
-    public function hasRule($rule_key)
+    public function hasRule($ruleKey)
     {
-        return isset($this->rules[$rule_key]);
+        return isset($this->rules[$ruleKey]);
+    }
+
+    public function setRequired($required)
+    {
+        $this->required = $required;
     }
 
     public function isRequired()
     {
-        return $this->hasRule('required');
+        return $this->required === true;
     }
 
     public function getKey()
