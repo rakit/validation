@@ -277,6 +277,8 @@ Below is list of all available validation rules
 * [accepted](#rule-accepted)
 * [present](#rule-present)
 * [different](#rule-different)
+* [after](#after)
+* [before](#before)
 
 <a id="rule-required"></a>
 #### required
@@ -430,6 +432,33 @@ The field under this rule must be exists, whatever the value is.
 
 Opposite of `same`. The field value under this rule must be different with `another_field` value.
 
+<a id="after"></a>
+#### after:tomorrow
+
+Anything that can be parsed by `strtotime` can be passed as a parameter to this rule. Valid examples include :
+- after:next week
+- after:2016-12-31
+- after:2016
+- after:2016-12-31 09:56:02
+
+<a id="before"></a>
+#### before:yesterday
+
+This also works the same way as the [after rule](#after). Pass anything that can be parsed by `strtotime`
+
 ## Register/Modify Rule
 
-Soon ...
+```php
+
+use Rakit\Validation\Validator;
+
+$validator = new Validator;
+
+
+$validator->addValidator('newRule, new NewRule()); // The new rule class must extend Rakit\Validation\Rule
+
+$data = [
+    'index' => 'required|newRule:something'
+]
+
+```
