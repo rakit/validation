@@ -7,13 +7,17 @@ use Rakit\Validation\Rule;
 class Between extends Rule
 {
 
-    protected $message = "The :attribute must be between :params[0] and :params[1]";
+    protected $message = "The :attribute must be between :min and :max";
 
-    public function check($value, array $params)
+    protected $fillable_params = ['min', 'max'];
+
+    public function check($value)
     {
-        $this->requireParamsCount($params, 2);
-        $min = (int) $params[0];
-        $max = (int) $params[1];
+        $this->requireParameters($this->fillable_params);
+
+        $min = (int) $this->parameter('min');
+        $max = (int) $this->parameter('max');
+        
         if (is_int($value)) {
             return $value >= $min AND $value <= $max;
         } elseif(is_string($value)) {

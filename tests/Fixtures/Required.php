@@ -4,7 +4,7 @@
 class Required extends \Rakit\Validation\Rule
 {
 
-    public function check($value, array $params)
+    public function check($value)
     {
         return true;
     }

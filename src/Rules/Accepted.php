@@ -10,7 +10,7 @@ class Accepted extends Rule
 
     protected $message = "The :attribute must be accepted";
 
-    public function check($value, array $params)
+    public function check($value)
     {
         $acceptables = ['yes', 'on', '1', 1, true, 'true'];
         return in_array($value, $acceptables, true);

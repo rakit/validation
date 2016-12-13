@@ -2,6 +2,8 @@
 
 namespace Rakit\Validation;
 
+use Rakit\Validation\MissingRequiredParameterException;
+
 abstract class Rule
 {
     protected $key;
@@ -14,9 +16,11 @@ abstract class Rule
 
     protected $params = [];
 
+    protected $fillable_params = [];
+
     protected $message = "The :attribute is invalid";
 
-    abstract public function check($value, array $params);
+    abstract public function check($value);
 
     public function setValidation(Validation $validation)
     {
@@ -43,20 +47,23 @@ abstract class Rule
         return $this->attribute ?: get_class($this);
     }
 
-    public function getParams()
+    public function getParameters()
     {
         return $this->params;
     }
 
-    public function setParams(array $params)
+    public function setParameters(array $params)
     {
-        $this->params = $params;
+        foreach($this->fillable_params as $key) {
+            if (empty($params)) break;
+            $this->params[$key] = array_shift($params);
+        }
+        return $this;
     }
 
-    public function mergeParams(array $params)
+    public function parameter($key)
     {
-        $currentParams = $this->getParams();
-        return $params + $currentParams;        
+        return isset($this->params[$key])? $this->params[$key] : null;
     }
 
     public function isImplicit()
@@ -80,13 +87,14 @@ abstract class Rule
         return $this->message;
     }
 
-    protected function requireParamsCount(array $params, $minCount)
+    protected function requireParameters(array $params)
     {
-        $count = count($params);
-        if ($count < $minCount) {
-            $key = $this->getKey() ?: get_class($this);
-            throw new \InvalidArgumentException("Rule {$key} requires at least ".$minCount." parameters", 1);
-        }        
+        foreach($params as $param) {
+            if (!isset($this->params[$param])) {
+                $rule = $this->getKey();
+                throw new MissingRequiredParameterException("Missing required parameter '{$param}' on rule '{$rule}'");
+            }
+        }
     }
 
 }

@@ -66,12 +66,11 @@ class Validation
                 continue;
             }
 
-            $params = $ruleValidator->getParams();
-            $valid = $ruleValidator->check($value, $params);
+            $valid = $ruleValidator->check($value);
             
             if (!$valid) {
                 $rulename = $ruleValidator->getKey();
-                $message = $this->resolveMessage($attribute, $value, $params, $ruleValidator);
+                $message = $this->resolveMessage($attribute, $value, $ruleValidator);
                 $this->errors->add($attributeKey, $rulename, $message);
 
                 if ($ruleValidator->isImplicit()) {
@@ -99,8 +98,9 @@ class Validation
         return isset($this->aliases[$attributeKey]) ? $this->aliases[$attributeKey] : ucfirst(str_replace('_', ' ', $attributeKey));
     }
 
-    protected function resolveMessage(Attribute $attribute, $value, array $params, Rule $validator)
+    protected function resolveMessage(Attribute $attribute, $value, Rule $validator)
     {
+        $params = $validator->getParameters();
         $attributeKey = $attribute->getKey();
         $ruleKey = $validator->getKey();
         $alias = $attribute->getAlias() ?: $this->resolveAttributeName($attributeKey);
@@ -118,14 +118,10 @@ class Validation
             }
         }
 
-        $vars = [
+        $vars = array_merge($params, [
             'attribute' => $alias,
             'value' => $value,
-        ];
-
-        foreach($params as $key => $value) {
-            $vars['params['.$key.']'] = $value;
-        }
+        ]);
 
         foreach($vars as $key => $value) {
             $value = $this->stringify($value);
@@ -161,16 +157,14 @@ class Validation
             
             if (is_string($rule)) {
                 list($rulename, $params) = $this->parseRule($rule);
-                $validator = $validatorFactory($rulename);
+                $validator = call_user_func_array($validatorFactory, array_merge([$rulename], $params));
             } elseif($rule instanceof Rule) {
                 $validator = $rule;
-                $params = $rule->getParams();
             } else {
                 $ruleName = is_object($rule) ? get_class($rule) : gettype($rule);
                 throw new \Exception("Rule must be a string or Rakit\Validation\Rule instance. ".$ruleName." given", 1);
             }
 
-            $validator->setParams($params);
 
             $resolved_rules[] = $validator;
         }

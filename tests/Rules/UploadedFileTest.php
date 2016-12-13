@@ -18,7 +18,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => filesize(__FILE__),
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
     }
 
     public function testNoUploadedFile()
@@ -29,7 +29,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => '',
             'tmp_name' => '',
             'error' => UPLOAD_ERR_NO_FILE
-        ], []));
+        ]));
     }
 
     public function testUploadError()
@@ -40,7 +40,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => '',
             'tmp_name' => '',
             'error' => 5
-        ], []));
+        ]));
     }
 
     public function testMaxSize()
@@ -54,7 +54,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => 1024*1024*1.1,
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
 
         $this->assertTrue($rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
@@ -62,7 +62,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => 1000000,
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
     }
 
     public function testMinSize()
@@ -76,7 +76,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => 1024, // 1K
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
 
         $this->assertTrue($rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
@@ -84,7 +84,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => 10*1024,
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
     }
 
 
@@ -99,7 +99,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => 1024, // 1K
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
 
         $this->assertTrue($rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
@@ -107,7 +107,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => 10*1024,
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
 
         $this->assertTrue($rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
@@ -115,7 +115,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => 10*1024,
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
     }
 
     public function testInvalids()
@@ -125,27 +125,27 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'size' => filesize(__FILE__),
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
 
         $this->assertFalse($this->rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'size' => filesize(__FILE__),
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
 
         $this->assertFalse($this->rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'text/plain',
             'tmp_name' => __FILE__,
             'error' => 0
-        ], []));
+        ]));
 
         $this->assertFalse($this->rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'text/plain',
             'size' => filesize(__FILE__),
-        ], []));
+        ]));
     }
 
 }

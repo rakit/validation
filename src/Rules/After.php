@@ -9,17 +9,23 @@ class After extends Rule
 
     use DateUtils;
 
-    public function check($value, array $param)
+    protected $message = "The :attribute must be a date after :time.";
+
+    protected $fillable_params = ['time'];
+
+    public function check($value)
     {
+        $this->requireParameters($this->fillable_params);
+        $time = $this->parameter('time');
 
         if (!$this->isValidDate($value)){
             throw $this->throwException($value);
         }
 
-        if (!$this->isValidDate($param[0])) {
-            throw $this->throwException($param[0]);
+        if (!$this->isValidDate($time)) {
+            throw $this->throwException($time);
         }
 
-        return $this->getTimeStamp($param[0]) < $this->getTimeStamp($value);
+        return $this->getTimeStamp($time) < $this->getTimeStamp($value);
     }
 }

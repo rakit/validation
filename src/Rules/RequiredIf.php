@@ -10,11 +10,19 @@ class RequiredIf extends Required
 
     protected $message = "The :attribute is required";
 
-    public function check($value, array $params)
+    public function setParameters(array $params)
     {
-        $this->requireParamsCount($params, 2);
-        $anotherAttribute = array_shift($params);
-        $definedValues = $params;
+        $this->params['field'] = array_shift($params);
+        $this->params['values'] = $params;
+        return $this;
+    }
+
+    public function check($value)
+    {
+        $this->requireParameters(['field', 'values']);
+
+        $anotherAttribute = $this->parameter('field');
+        $definedValues = $this->parameter('values');
         $anotherValue = $this->validation->getValue($anotherAttribute);
 
         $validator = $this->validation->getValidator();

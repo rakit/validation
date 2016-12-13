@@ -10,7 +10,7 @@ class Required extends Rule
 
     protected $message = "The :attribute is required";
 
-    public function check($value, array $params)
+    public function check($value)
     {
         $this->setAttributeAsRequired();
 

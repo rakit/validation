@@ -10,7 +10,7 @@ class Present extends Rule
 
     protected $message = "The :attribute must be present";
 
-    public function check($value, array $params)
+    public function check($value)
     {
         return $this->validation->hasValue($this->attribute->getKey());
     }
