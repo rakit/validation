@@ -9,10 +9,20 @@ class NotIn extends Rule
 
     protected $message = "The :attribute is not allowing :value";
 
-    public function check($value, array $params)
+    public function setParameters(array $params)
     {
-        $this->requireParamsCount($params, 1);
-        return !in_array($value, $params);
+        if (count($params) == 1 AND is_array($params[0])) {
+            $params = $params[0];
+        }
+        $this->params['disallowed_values'] = $params;
+        return $this;
+    }
+
+    public function check($value)
+    {
+        $this->requireParameters(['disallowed_values']);
+        $disallowed_values = (array) $this->parameter('disallowed_values');
+        return !in_array($value, $disallowed_values);
     }
 
 }

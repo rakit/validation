@@ -6,7 +6,7 @@ class Json extends \Rakit\Validation\Rule
 
     protected $message = "This :attribute is not a valid json object";
 
-    public function check($value, array $params)
+    public function check($value)
     {
 
         json_decode($value);

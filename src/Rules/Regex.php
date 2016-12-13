@@ -9,10 +9,12 @@ class Regex extends Rule
 
     protected $message = "The :attribute is not valid format";
 
-    public function check($value, array $params)
+    protected $fillable_params = ['regex'];
+
+    public function check($value)
     {
-        $this->requireParamsCount($params, 1);
-        $regex = $params[0];
+        $this->requireParameters($this->fillable_params);
+        $regex = $this->parameter('regex');
         return preg_match($regex, $value) > 0;
     }
 

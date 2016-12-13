@@ -127,23 +127,33 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
     public function testValidationMessages()
     {
         $validation = $this->validator->make([
-            'email' => ''
+            'email' => '',
+            'number' => 5
         ], [
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'number' => 'min:6|max:4|between:1,4'
         ], [
             'email.required' => 'Kolom email tidak boleh kosong',
-            'required' => ':attribute harus diisi'
+            'required' => ':attribute harus diisi',
+            'number.max' => 'number > :max',
+            'number.min' => 'number < :min',
+            'number.between' => ':min - :max'
         ]);
 
         $validation->setAlias('email', 'e-mail');
         $validation->validate();
 
-        $this->assertEquals($validation->errors()->count(), 1);
+        $errors = $validation->errors();
 
-        $first_error = $validation->errors()->first('email');
+        $first_error = $errors->first('email');
+        $error_required = $errors->get('email', 'required');
+        
         $this->assertEquals($first_error, 'Kolom email tidak boleh kosong');
-        $error_required = $validation->errors()->get('email', 'required');
         $this->assertEquals($error_required, 'Kolom email tidak boleh kosong');
+
+        $this->assertEquals($errors->get('number', 'max'), 'number > 4');
+        $this->assertEquals($errors->get('number', 'min'), 'number < 6');
+        $this->assertEquals($errors->get('number', 'between'), '1 - 4');
     }
 
     /**
@@ -282,5 +292,45 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($errors->get('optional_field', 'ipv4'));
         $this->assertNotNull($errors->get('optional_field', 'in'));
         $this->assertNotNull($errors->get('required_if_field', 'email'));
+    }
+
+    public function testRegisterRulesUsingInvokes()
+    {
+        $validator = $this->validator;
+        $validation = $this->validator->validate([
+            'a_field' => null,
+            'a_number' => 1000,
+            'a_same_number' => 1000,
+            'a_date' => '2016-12-06',
+            'a_file' => [
+                'name' => 'foo',
+                'type' => 'text/plain',
+                'size' => 10000,
+                'tmp_name' => '/tmp/foo',
+                'error' => UPLOAD_ERR_OK
+            ]
+        ], [
+            'a_field' => [
+                $validator('required')->message('1'),
+            ],
+            'a_number' => [
+                $validator('min', 2000)->message('2'),
+                $validator('max', 5)->message('3'),
+                $validator('between', 1, 5)->message('4'),
+                $validator('in', [1, 2, 3, 4, 5])->message('5'),
+                $validator('not_in', [1000, 2, 3, 4, 5])->message('6'),
+                $validator('same', 'a_date')->message('7'),
+                $validator('different', 'a_same_number')->message('8'),
+            ],
+            'a_date' => [
+                $validator('date', 'd-m-Y')->message('9')
+            ],
+            'a_file' => [
+                $validator('uploaded_file', 20000)->message('10')
+            ]
+        ]);
+
+        $errors = $validation->errors();
+        $this->assertEquals($errors->implode(','), '1,2,3,4,5,6,7,8,9,10');
     }
 }

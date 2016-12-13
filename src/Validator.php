@@ -51,12 +51,18 @@ class Validator
 
     public function __invoke($rule)
     {
+        $args = func_get_args();
+        $rule = array_shift($args);
+        $params = $args;
         $validator = $this->getValidator($rule);
         if (!$validator) {
             throw new RuleNotFoundException("Validator '{$rule}' is not registered", 1);
         }
 
-        return clone $validator;
+        $clonedValidator = clone $validator;
+        $clonedValidator->setParameters($params);
+
+        return $clonedValidator;
     }
 
     protected function registerBaseValidators()

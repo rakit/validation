@@ -9,7 +9,7 @@ class TypeArray extends Rule
 
     protected $message = "The :attribute must be array";
 
-    public function check($value, array $params)
+    public function check($value)
     {
         return is_array($value);
     }

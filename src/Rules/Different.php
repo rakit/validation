@@ -7,12 +7,16 @@ use Rakit\Validation\Rule;
 class Different extends Rule
 {
 
-    protected $message = "The :attribute must be different with :params[0]";
+    protected $message = "The :attribute must be different with :field";
 
-    public function check($value, array $params)
+    protected $fillable_params = ['field'];
+
+    public function check($value)
     {
-        $this->requireParamsCount($params, 1);
-        $another_value = $this->validation->getValue($params[0]);
+        $this->requireParameters($this->fillable_params);
+
+        $field = $this->parameter('field');
+        $another_value = $this->validation->getValue($field);
 
         return $value != $another_value;
     }

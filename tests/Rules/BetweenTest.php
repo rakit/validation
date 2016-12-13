@@ -12,16 +12,16 @@ class BetweenTest extends PHPUnit_Framework_TestCase
 
     public function testValids()
     {
-        $this->assertTrue($this->rule->check('foobar', [6, 10]));
-        $this->assertTrue($this->rule->check([1,2,3], [2, 3]));
-        $this->assertTrue($this->rule->check(123, [100, 150]));
+        $this->assertTrue($this->rule->setParameters([6, 10])->check('foobar'));
+        $this->assertTrue($this->rule->setParameters([2, 3])->check([1,2,3]));
+        $this->assertTrue($this->rule->setParameters([100, 150])->check(123));
     }
 
     public function testInvalids()
     {
-        $this->assertFalse($this->rule->check('foobar', [2, 5]));
-        $this->assertFalse($this->rule->check([1,2,3], [4, 6]));
-        $this->assertFalse($this->rule->check(123, [50, 100]));
+        $this->assertFalse($this->rule->setParameters([2, 5])->check('foobar'));
+        $this->assertFalse($this->rule->setParameters([4, 6])->check([1,2,3]));
+        $this->assertFalse($this->rule->setParameters([50, 100])->check(123));
     }
 
 }

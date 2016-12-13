@@ -9,7 +9,7 @@ class Url extends Rule
 
     protected $message = "The :attribute is not valid url";
 
-    public function check($value, array $params)
+    public function check($value)
     {
         return filter_var($value, FILTER_VALIDATE_URL) !== false;
     }

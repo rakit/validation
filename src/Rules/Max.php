@@ -7,12 +7,15 @@ use Rakit\Validation\Rule;
 class Max extends Rule
 {
 
-    protected $message = "The :attribute maximum is :params[0]";
+    protected $message = "The :attribute maximum is :max";
 
-    public function check($value, array $params)
+    protected $fillable_params = ['max'];
+
+    public function check($value)
     {
-        $this->requireParamsCount($params, 1);
-        $max = (int) $params[0];
+        $this->requireParameters($this->fillable_params);
+
+        $max = (int) $this->parameter('max');
         if (is_int($value)) {
             return $value <= $max;
         } elseif(is_string($value)) {

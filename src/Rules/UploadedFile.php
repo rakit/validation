@@ -14,22 +14,32 @@ class UploadedFile extends Rule
     protected $minSize = null;
     protected $allowedTypes = [];
 
+    public function setParameters(array $params)
+    {
+        $this->minSize(array_shift($params));
+        $this->maxSize(array_shift($params));
+        $this->fileTypes($params);
+
+        return $this;
+    }
+
     public function maxSize($size)
     {
-        $this->maxSize = $size;
+        $this->params['max_size'] = $size;
         return $this;
     }
 
     public function minSize($size)
     {
-        $this->minSize = $size;
+        $this->params['min_size'] = $size;
         return $this;
     }
 
     public function sizeBetween($min, $max)
     {
-        $this->minSize = $min;
-        $this->maxSize = $max;
+        $this->minSize($min);
+        $this->maxSize($max);
+
         return $this;
     }
 
@@ -39,21 +49,16 @@ class UploadedFile extends Rule
             $types = explode('|', $types);
         }
 
-        $this->allowedTypes = $types;
+        $this->params['allowed_types'] = $types;
 
         return $this;
     }
 
-    public function getParams()
-    {
-        return [$this->minSize, $this->maxSize, $this->allowedTypes];
-    }
-
-    public function check($value, array $params)
-    {
-        if (count($params) > 0) $this->minSize(array_shift($params));
-        if (count($params) > 0) $this->maxSize(array_shift($params));
-        if (count($params) > 0) $this->fileTypes($params);
+    public function check($value)
+    {   
+        $minSize = $this->parameter('min_size');
+        $maxSize = $this->parameter('max_size');
+        $allowedTypes = $this->parameter('allowed_types');
 
         if (is_null($value)) {
             return true;
@@ -70,26 +75,26 @@ class UploadedFile extends Rule
 
         if ($value['error']) return false;
 
-        if ($this->minSize) {
-            $minSize = $this->getBytes($this->minSize);
-            if ($value['size'] < $minSize) {
+        if ($minSize) {
+            $bytesMinSize = $this->getBytes($minSize);
+            if ($value['size'] < $bytesMinSize) {
                 return false;
             }
         }
 
-        if ($this->maxSize) {
-            $maxSize = $this->getBytes($this->maxSize);
-            if ($value['size'] > $maxSize) {
+        if ($maxSize) {
+            $bytesMaxSize = $this->getBytes($maxSize);
+            if ($value['size'] > $bytesMaxSize) {
                 return false;
             }
         }
 
-        if (!empty($this->allowedTypes)) {
+        if (!empty($allowedTypes)) {
             $guesser = new MimeTypeGuesser;
             $ext = $guesser->getExtension($value['type']);
             unset($guesser);
 
-            if (!in_array($ext, $this->allowedTypes)) {
+            if (!in_array($ext, $allowedTypes)) {
                 return false;
             }
         }
@@ -101,8 +106,8 @@ class UploadedFile extends Rule
     {
         if(!is_array($value)) return false;
 
-        $required_keys = ['name', 'type', 'tmp_name', 'size', 'error'];
-        foreach($required_keys as $key) {
+        $requiredKeys = ['name', 'type', 'tmp_name', 'size', 'error'];
+        foreach($requiredKeys as $key) {
             if(!isset($value[$key])) return false;
         }
 
