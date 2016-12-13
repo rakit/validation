@@ -20,7 +20,7 @@ class BeforeTest extends PHPUnit_Framework_TestCase
     public function testOnlyAWellFormedDateCanBeValidated($date)
     {
         $this->assertTrue(
-            $this->validator->check($date, ["next week"])
+            $this->validator->setParameters(["next week"])->check($date)
         );
     }
 
@@ -44,7 +44,7 @@ class BeforeTest extends PHPUnit_Framework_TestCase
      */
     public function testANonWellFormedDateCannotBeValidated($date)
     {
-        $this->validator->check($date, ["tomorrow"]);
+        $this->validator->setParameters(["tomorrow"])->check($date);
     }
 
     public function getInvalidDates()
@@ -68,11 +68,11 @@ class BeforeTest extends PHPUnit_Framework_TestCase
         $today = "today";
 
         $this->assertFalse(
-            $this->validator->check($now, ['yesterday'])
+            $this->validator->setParameters(['yesterday'])->check($now)
         );
 
         $this->assertFalse(
-            $this->validator->check($today, ['yesterday'])
+            $this->validator->setParameters(['yesterday'])->check($today)
         );
     }
 
@@ -81,6 +81,6 @@ class BeforeTest extends PHPUnit_Framework_TestCase
      */
     public function testUserProvidedParamCannotBeValidatedBecauseItIsInvalid()
     {
-        $this->validator->check("now", ["to,morrow"]);
+        $this->validator->setParameters(["to,morrow"])->check("now");
     }
 }
