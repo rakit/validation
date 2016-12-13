@@ -9,6 +9,8 @@ class After extends Rule
 
     use DateUtils;
 
+    protected $message = "The :attribute must be a date after :time.";
+
     protected $fillable_params = ['time'];
 
     public function check($value)
