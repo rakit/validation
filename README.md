@@ -277,6 +277,8 @@ Below is list of all available validation rules
 * [accepted](#rule-accepted)
 * [present](#rule-present)
 * [different](#rule-different)
+* [after](#after)
+* [before](#before)
 
 <a id="rule-required"></a>
 #### required
@@ -361,19 +363,23 @@ The field under this rule must be included in the given list of values.
 The field under this rule must not be included in the given list of values.
 
 <a id="rule-min"></a>
-#### min
+#### min:number
 
-soon ...
+The field under this rule must have a size greater or equal than the given number. 
+
+For string data, value corresponds to the number of characters. For numeric data, value corresponds to a given integer value. For an array, size corresponds to the count of the array.
 
 <a id="rule-max"></a>
-#### max
+#### max:number
 
-soon ...
+The field under this rule must have a size lower or equal than the given number. 
+Value size calculated in same way like `min` rule.
 
 <a id="rule-between"></a>
-#### between
+#### between:min,max
 
-soon ...
+The field under this rule must have a size between min and max params. 
+Value size calculated in same way like `min` and `max` rule.
 
 <a id="rule-url"></a>
 #### url
@@ -430,6 +436,153 @@ The field under this rule must be exists, whatever the value is.
 
 Opposite of `same`. The field value under this rule must be different with `another_field` value.
 
+<a id="after"></a>
+#### after:tomorrow
+
+Anything that can be parsed by `strtotime` can be passed as a parameter to this rule. Valid examples include :
+- after:next week
+- after:2016-12-31
+- after:2016
+- after:2016-12-31 09:56:02
+
+<a id="before"></a>
+#### before:yesterday
+
+This also works the same way as the [after rule](#after). Pass anything that can be parsed by `strtotime`
+
 ## Register/Modify Rule
 
-Soon ...
+To create your own validation rule, you need to create a class extending `Rakit\Validation\Rule` 
+then register it using `setValidator` or `addValidator`.
+
+For example, you want to create `unique` validator that check field availability from database. 
+
+First, lets create `UniqueRule` class:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+
+class UniqueRule extends Rule
+{
+    protected $message = ":attribute :value has been used";
+    
+    protected $fillable_params = ['table', 'column', 'except'];
+    
+    protected $pdo;
+    
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+    
+    public function check($value)
+    {
+        // make sure required parameters exists
+        $this->requireParameters(['table', 'column']);
+    
+        // getting parameters
+        $column = $this->parameter('column');
+        $table = $this->parameter('table');
+        $except = $this->parameter('except');
+	
+        if ($except AND $except == $value) {
+            return true;
+        }
+	
+        // do query
+        $stmt = $pdo->prepare("select count(*) as count from `{$table}` where `{$column}` = :value");
+        $stmt->bindParam(':value', $value);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+        // true for valid, false for invalid
+        return intval($data['count']) === 0;
+    }
+}
+
+```
+
+Then you can register `UniqueRule` instance into validator like this:
+
+```php
+use Rakit\Validation\Validator;
+
+$validator = new Validator;
+
+// register it
+$validator->addValidator('unique', new UniqueRule($pdo));
+
+// then you can use it like this:
+$validation = $validator->validate($_POST, [
+    'email' => 'required|email|unique:users,email,exception@mail.com'
+]);
+
+```
+
+In `UniqueRule` above, property `$message` is used for default invalid message. And property `$fillable_params` is used for `setParameters` method (defined in `Rakit\Validation\Rule` class). By default `setParameters` will fill parameters listed in `$fillable_params`. For example `unique:users,email,exception@mail.com` in example above, will set:
+
+```php
+$params['table'] = 'users';
+$params['column'] = 'email';
+$params['except'] = 'exception@mail.com';
+```
+
+So if you want your own rule have dynamic rule params, you just need to override `setParameters(array $params)` method in your own Rule class.
+
+Note that `unique` rule that we created above also can be used like this:
+
+```php
+$validation = $validator->validate($_POST, [
+    'email' => [
+    	'required', 'email',
+    	$validator('unique', 'users', 'email')->message('Custom message')
+    ]
+]);
+```
+
+So you can improve `UniqueRule` class above by adding some methods that returning its own instance like this:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+
+class UniqueRule extends Rule
+{
+    ...
+    
+    public function table($table)
+    {
+        $this->params['table'] = $table;
+        return $this;
+    }
+    
+    public function column($column)
+    {
+        $this->params['table'] = $column;
+        return $this;
+    }
+    
+    public function except($value)
+    {
+        $this->params['except'] = $value;
+        return $this;
+    }
+    
+    ...
+}
+
+```
+
+And then you can use it in more funky way like this:
+
+```php
+$validation = $validator->validate($_POST, [
+    'email' => [
+    	'required', 'email',
+    	$validator('unique')->table('users')->column('email')->except('exception@mail.com')->message('Custom message')
+    ]
+]);
+```
