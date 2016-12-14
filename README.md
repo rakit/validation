@@ -140,9 +140,10 @@ Before register/set custom messages, here are some variables you can use in your
 
 * `:attribute`: will replaced into attribute alias.
 * `:value`: will replaced into stringify value of attribute. For array and object will replaced to json.
-* `:params[n]`: will replaced into rule parameter, `n` is index array. For example `:params[0]` in `min:6` will replaced into `6`.
 
-And here are some ways to register/set your custom message(s):
+And also there are several message variables depends on their rules.
+
+Here are some ways to register/set your custom message(s):
 
 #### Custom Messages for Validator
 
@@ -305,7 +306,7 @@ For uploaded file, `$_FILES['key']['error']` must not `UPLOAD_ERR_NO_FILE`.
 
 The field under this rule must be present and not empty if the anotherfield field is equal to any value.
 
-For example `required_if:something,1,yes,on` will be required if `something` value is one of `1`, `'1'`, `'yes'`, or `'on'`. 
+For example `required_if:something,1,yes,on` will be required if `something` value is one of `1`, `'1'`, `'yes'`, or `'on'`.
 
 <a id="rule-uploaded_file"></a>
 #### uploaded_file:min_size,max_size,file_type_a,file_type_b,...
@@ -353,12 +354,12 @@ The field under this rule must be entirely alpha-numeric characters.
 The field under this rule may have alpha-numeric characters, as well as dashes and underscores.
 
 <a id="rule-in"></a>
-#### in
+#### in:value_1,value_2,...
 
 The field under this rule must be included in the given list of values.
 
 <a id="rule-not_in"></a>
-#### not_in
+#### not_in:value_1,value_2,...
 
 The field under this rule must not be included in the given list of values.
 
@@ -504,21 +505,22 @@ class UniqueRule extends Rule
 
 ```
 
-Then you can register `UniqueRule` instance into validator like this:
+Then you need to register `UniqueRule` instance into validator like this:
 
 ```php
 use Rakit\Validation\Validator;
 
 $validator = new Validator;
 
-// register it
 $validator->addValidator('unique', new UniqueRule($pdo));
+```
 
-// then you can use it like this:
+Now you can use it like this:
+
+```php
 $validation = $validator->validate($_POST, [
-    'email' => 'required|email|unique:users,email,exception@mail.com'
+    'email' => 'email|unique:users,email,exception@mail.com'
 ]);
-
 ```
 
 In `UniqueRule` above, property `$message` is used for default invalid message. And property `$fillable_params` is used for `setParameters` method (defined in `Rakit\Validation\Rule` class). By default `setParameters` will fill parameters listed in `$fillable_params`. For example `unique:users,email,exception@mail.com` in example above, will set:
@@ -529,7 +531,8 @@ $params['column'] = 'email';
 $params['except'] = 'exception@mail.com';
 ```
 
-So if you want your own rule have dynamic rule params, you just need to override `setParameters(array $params)` method in your own Rule class.
+> If you want your custom rule accept parameter list like `in`,`not_in`, or `uploaded_file` rules, 
+  you just need to override `setParameters(array $params)` method in your custom rule class.
 
 Note that `unique` rule that we created above also can be used like this:
 
@@ -561,7 +564,7 @@ class UniqueRule extends Rule
     
     public function column($column)
     {
-        $this->params['table'] = $column;
+        $this->params['column'] = $column;
         return $this;
     }
     
@@ -576,7 +579,7 @@ class UniqueRule extends Rule
 
 ```
 
-And then you can use it in more funky way like this:
+Then you can use it in more funky way like this:
 
 ```php
 $validation = $validator->validate($_POST, [
