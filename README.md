@@ -452,7 +452,8 @@ To create your own validation rule, you need to create a class extending `Rakit\
 then register it using `setValidator` or `addValidator`.
 
 For example, you want to create `unique` validator that check field availability from database. 
-First create your own class.
+
+First, lets create `UniqueRule` class:
 
 ```php
 <?php
@@ -499,16 +500,15 @@ class UniqueRule extends Rule
 
 ```
 
-Then you can register `UniqueRule` into validator like this:
+Then you can register `UniqueRule` instance into validator like this:
 
 ```php
-
 use Rakit\Validation\Validator;
 
 $validator = new Validator;
 
 // register it
-$validator->addValidator('unique, new UniqueRule($pdo));
+$validator->addValidator('unique', new UniqueRule($pdo));
 
 // then you can use it like this:
 $validation = $validator->validate($_POST, [
@@ -517,7 +517,7 @@ $validation = $validator->validate($_POST, [
 
 ```
 
-In `UniqueRule` above, property `$message` is used for default invalid message. And property `$fillable_params` is used for `setParameters` method. By default `setParameters` will fill parameters listed in `$fillable_params` property. For example `unique:users,email,exception@mail.com` in example above, will set:
+In `UniqueRule` above, property `$message` is used for default invalid message. And property `$fillable_params` is used for `setParameters` method (defined in `Rakit\Validation\Rule` class). By default `setParameters` will fill parameters listed in `$fillable_params`. For example `unique:users,email,exception@mail.com` in example above, will set:
 
 ```php
 $params['table'] = 'users';
@@ -538,7 +538,7 @@ $validation = $validator->validate($_POST, [
 ]);
 ```
 
-So you can improve example above by adding some methods that returning its own instance like this:
+So you can improve `UniqueRule` class above by adding some methods that returning its own instance like this:
 
 ```php
 <?php
