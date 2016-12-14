@@ -363,19 +363,23 @@ The field under this rule must be included in the given list of values.
 The field under this rule must not be included in the given list of values.
 
 <a id="rule-min"></a>
-#### min
+#### min:number
 
-soon ...
+The field under this rule must have a size greater or equal than the given number. 
+
+For string data, value corresponds to the number of characters. For numeric data, value corresponds to a given integer value. For an array, size corresponds to the count of the array.
 
 <a id="rule-max"></a>
-#### max
+#### max:number
 
-soon ...
+The field under this rule must have a size lower or equal than the given number. 
+Value size calculated in same way like `min` rule.
 
 <a id="rule-between"></a>
-#### between
+#### between:min,max
 
-soon ...
+The field under this rule must have a size between min and max params. 
+Value size calculated in same way like `min` and `max` rule.
 
 <a id="rule-url"></a>
 #### url
