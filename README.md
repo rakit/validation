@@ -492,7 +492,7 @@ class UniqueRule extends Rule
         }
 	
         // do query
-        $stmt = $pdo->prepare("select count(*) as count from `{$table}` where `{$column}` = :value");
+        $stmt = $this->pdo->prepare("select count(*) as count from `{$table}` where `{$column}` = :value");
         $stmt->bindParam(':value', $value);
         $stmt->execute();
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
