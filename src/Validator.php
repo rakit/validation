@@ -23,9 +23,9 @@ class Validator
         return $this->messages[$key] = $message;
     }
 
-    public function setMessages()
+    public function setMessages($messages)
     {
-        array_merge($this->messages, $messages);
+        $this->messages = array_merge($this->messages, $messages);
     }
 
     public function setValidator($key, Rule $rule)
@@ -46,7 +46,7 @@ class Validator
         return $validation;
     }
 
-    public function make(array $inputs, array $rules, array $messages)
+    public function make(array $inputs, array $rules, array $messages = array())
     {
         $messages = array_merge($this->messages, $messages);
         return new Validation($this, $inputs, $rules, $messages); 
