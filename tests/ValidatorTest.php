@@ -84,7 +84,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         ], [
             'file' => 'uploaded_file'
         ]);
-        $this->assertTrue($v2->passes());
+        $this->assertFalse($v2->passes());
     }
 
     public function testRequiredIfRule()
@@ -280,11 +280,6 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
     {
         $validation = $this->validator->validate([
             'an_empty_file' => [
-                'name' => '',
-                'type' => '',
-                'size' => '',
-                'tmp_name' => '',
-                'error' => UPLOAD_ERR_NO_FILE
             ],
             'required_if_field' => null,
         ], [
