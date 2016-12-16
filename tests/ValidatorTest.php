@@ -124,36 +124,89 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($v2->passes());
     }
 
-    public function testValidationMessages()
+    public function testSetCustomMessagesInValidator()
     {
-        $validation = $this->validator->make([
-            'email' => '',
-            'number' => 5
-        ], [
-            'email' => 'required|email',
-            'number' => 'min:6|max:4|between:1,4'
-        ], [
-            'email.required' => 'Kolom email tidak boleh kosong',
-            'required' => ':attribute harus diisi',
-            'number.max' => 'number > :max',
-            'number.min' => 'number < :min',
-            'number.between' => ':min - :max'
+        $this->validator->setMessages([
+            'required' => 'foo',
+            'email' => 'bar'
         ]);
 
-        $validation->setAlias('email', 'e-mail');
+        $this->validator->setMessage('numeric', 'baz');
+
+        $validation = $this->validator->validate([
+            'foo' => null,
+            'email' => 'invalid email',
+            'something' => 'not numeric'
+        ], [
+            'foo' => 'required',
+            'email' => 'email',
+            'something' => 'numeric'
+        ]);
+
+        $errors = $validation->errors();
+        $this->assertEquals($errors->get('foo', 'required'), 'foo');
+        $this->assertEquals($errors->get('email', 'email'), 'bar');
+        $this->assertEquals($errors->get('something', 'numeric'), 'baz');
+    }
+
+    public function testSetCustomMessagesInValidation()
+    {
+        $validation = $this->validator->make([
+            'foo' => null,
+            'email' => 'invalid email',
+            'something' => 'not numeric'
+        ], [
+            'foo' => 'required',
+            'email' => 'email',
+            'something' => 'numeric'
+        ]);
+
+        $validation->setMessages([
+            'required' => 'foo',
+            'email' => 'bar'
+        ]);
+
+        $validation->setMessage('numeric', 'baz');
+
         $validation->validate();
 
         $errors = $validation->errors();
+        $this->assertEquals($errors->get('foo', 'required'), 'foo');
+        $this->assertEquals($errors->get('email', 'email'), 'bar');
+        $this->assertEquals($errors->get('something', 'numeric'), 'baz');
+    }
 
-        $first_error = $errors->first('email');
-        $error_required = $errors->get('email', 'required');
-        
-        $this->assertEquals($first_error, 'Kolom email tidak boleh kosong');
-        $this->assertEquals($error_required, 'Kolom email tidak boleh kosong');
+    public function testSetAttributeAliases()
+    {
+        $validation = $this->validator->make([
+            'foo' => null,
+            'email' => 'invalid email',
+            'something' => 'not numeric'
+        ], [
+            'foo' => 'required',
+            'email' => 'email',
+            'something' => 'numeric'
+        ]);
 
-        $this->assertEquals($errors->get('number', 'max'), 'number > 4');
-        $this->assertEquals($errors->get('number', 'min'), 'number < 6');
-        $this->assertEquals($errors->get('number', 'between'), '1 - 4');
+        $validation->setMessages([
+            'required' => ':attribute foo',
+            'email' => ':attribute bar',
+            'numeric' => ':attribute baz'
+        ]);
+
+        $validation->setAliases([
+            'foo' => 'Foo',
+            'email' => 'Bar',
+        ]);
+
+        $validation->setAlias('something', 'Baz');
+
+        $validation->validate();
+
+        $errors = $validation->errors();
+        $this->assertEquals($errors->get('foo', 'required'), 'Foo foo');
+        $this->assertEquals($errors->get('email', 'email'), 'Bar bar');
+        $this->assertEquals($errors->get('something', 'numeric'), 'Baz baz');
     }
 
     /**

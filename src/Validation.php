@@ -187,7 +187,7 @@ class Validation
 
     public function setMessages(array $messages)
     {
-        array_merge($this->messages, $messages);
+        $this->messages = array_merge($this->messages, $messages);
     }
 
     public function setAlias($attributeKey, $alias)

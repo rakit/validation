@@ -140,9 +140,10 @@ Before register/set custom messages, here are some variables you can use in your
 
 * `:attribute`: will replaced into attribute alias.
 * `:value`: will replaced into stringify value of attribute. For array and object will replaced to json.
-* `:params[n]`: will replaced into rule parameter, `n` is index array. For example `:params[0]` in `min:6` will replaced into `6`.
 
-And here are some ways to register/set your custom message(s):
+And also there are several message variables depends on their rules.
+
+Here are some ways to register/set your custom message(s):
 
 #### Custom Messages for Validator
 
@@ -305,7 +306,7 @@ For uploaded file, `$_FILES['key']['error']` must not `UPLOAD_ERR_NO_FILE`.
 
 The field under this rule must be present and not empty if the anotherfield field is equal to any value.
 
-For example `required_if:something,1,yes,on` will be required if `something` value is one of `1`, `'1'`, `'yes'`, or `'on'`. 
+For example `required_if:something,1,yes,on` will be required if `something` value is one of `1`, `'1'`, `'yes'`, or `'on'`.
 
 <a id="rule-uploaded_file"></a>
 #### uploaded_file:min_size,max_size,file_type_a,file_type_b,...
@@ -353,29 +354,33 @@ The field under this rule must be entirely alpha-numeric characters.
 The field under this rule may have alpha-numeric characters, as well as dashes and underscores.
 
 <a id="rule-in"></a>
-#### in
+#### in:value_1,value_2,...
 
 The field under this rule must be included in the given list of values.
 
 <a id="rule-not_in"></a>
-#### not_in
+#### not_in:value_1,value_2,...
 
 The field under this rule must not be included in the given list of values.
 
 <a id="rule-min"></a>
-#### min
+#### min:number
 
-soon ...
+The field under this rule must have a size greater or equal than the given number. 
+
+For string data, value corresponds to the number of characters. For numeric data, value corresponds to a given integer value. For an array, size corresponds to the count of the array.
 
 <a id="rule-max"></a>
-#### max
+#### max:number
 
-soon ...
+The field under this rule must have a size lower or equal than the given number. 
+Value size calculated in same way like `min` rule.
 
 <a id="rule-between"></a>
-#### between
+#### between:min,max
 
-soon ...
+The field under this rule must have a size between min and max params. 
+Value size calculated in same way like `min` and `max` rule.
 
 <a id="rule-url"></a>
 #### url
@@ -448,17 +453,139 @@ This also works the same way as the [after rule](#after). Pass anything that can
 
 ## Register/Modify Rule
 
-```php
+To create your own validation rule, you need to create a class extending `Rakit\Validation\Rule` 
+then register it using `setValidator` or `addValidator`.
 
+For example, you want to create `unique` validator that check field availability from database. 
+
+First, lets create `UniqueRule` class:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+
+class UniqueRule extends Rule
+{
+    protected $message = ":attribute :value has been used";
+    
+    protected $fillable_params = ['table', 'column', 'except'];
+    
+    protected $pdo;
+    
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+    
+    public function check($value)
+    {
+        // make sure required parameters exists
+        $this->requireParameters(['table', 'column']);
+    
+        // getting parameters
+        $column = $this->parameter('column');
+        $table = $this->parameter('table');
+        $except = $this->parameter('except');
+	
+        if ($except AND $except == $value) {
+            return true;
+        }
+	
+        // do query
+        $stmt = $this->pdo->prepare("select count(*) as count from `{$table}` where `{$column}` = :value");
+        $stmt->bindParam(':value', $value);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+        // true for valid, false for invalid
+        return intval($data['count']) === 0;
+    }
+}
+
+```
+
+Then you need to register `UniqueRule` instance into validator like this:
+
+```php
 use Rakit\Validation\Validator;
 
 $validator = new Validator;
 
+$validator->addValidator('unique', new UniqueRule($pdo));
+```
 
-$validator->addValidator('newRule, new NewRule()); // The new rule class must extend Rakit\Validation\Rule
+Now you can use it like this:
 
-$data = [
-    'index' => 'required|newRule:something'
-]
+```php
+$validation = $validator->validate($_POST, [
+    'email' => 'email|unique:users,email,exception@mail.com'
+]);
+```
 
+In `UniqueRule` above, property `$message` is used for default invalid message. And property `$fillable_params` is used for `setParameters` method (defined in `Rakit\Validation\Rule` class). By default `setParameters` will fill parameters listed in `$fillable_params`. For example `unique:users,email,exception@mail.com` in example above, will set:
+
+```php
+$params['table'] = 'users';
+$params['column'] = 'email';
+$params['except'] = 'exception@mail.com';
+```
+
+> If you want your custom rule accept parameter list like `in`,`not_in`, or `uploaded_file` rules, 
+  you just need to override `setParameters(array $params)` method in your custom rule class.
+
+Note that `unique` rule that we created above also can be used like this:
+
+```php
+$validation = $validator->validate($_POST, [
+    'email' => [
+    	'required', 'email',
+    	$validator('unique', 'users', 'email')->message('Custom message')
+    ]
+]);
+```
+
+So you can improve `UniqueRule` class above by adding some methods that returning its own instance like this:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+
+class UniqueRule extends Rule
+{
+    ...
+    
+    public function table($table)
+    {
+        $this->params['table'] = $table;
+        return $this;
+    }
+    
+    public function column($column)
+    {
+        $this->params['column'] = $column;
+        return $this;
+    }
+    
+    public function except($value)
+    {
+        $this->params['except'] = $value;
+        return $this;
+    }
+    
+    ...
+}
+
+```
+
+Then you can use it in more funky way like this:
+
+```php
+$validation = $validator->validate($_POST, [
+    'email' => [
+    	'required', 'email',
+    	$validator('unique')->table('users')->column('email')->except('exception@mail.com')->message('Custom message')
+    ]
+]);
 ```
