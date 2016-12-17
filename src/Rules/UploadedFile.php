@@ -61,7 +61,8 @@ class UploadedFile extends Rule
         $maxSize = $this->parameter('max_size');
         $allowedTypes = $this->parameter('allowed_types');
 
-        if (is_null($value)) {
+        // below is Required rule job
+        if (!$this->isValueFromUploadedFiles($value) OR $value['error'] == UPLOAD_ERR_NO_FILE) {
             return true;
         }
 
@@ -69,11 +70,7 @@ class UploadedFile extends Rule
             return false;
         }
 
-        // we validate this in Required rule
-        if ($value['error'] == UPLOAD_ERR_NO_FILE) {
-            return true;
-        }
-
+        // just make sure there is no error
         if ($value['error']) return false;
 
         if ($minSize) {

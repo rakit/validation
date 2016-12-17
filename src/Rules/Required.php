@@ -6,7 +6,7 @@ use Rakit\Validation\Rule;
 
 class Required extends Rule
 {
-	use FileTrait;
+    use FileTrait;
 
     protected $implicit = true;
 
@@ -16,9 +16,10 @@ class Required extends Rule
     {
         $this->setAttributeAsRequired();
 
-        if ($this->isUploadedFile($value)) {
-            return $value['error'] != UPLOAD_ERR_NO_FILE;
+        if ($this->attribute AND $this->attribute->hasRule('uploaded_file')) {
+            return $this->isValueFromUploadedFiles($value) AND $value['error'] != UPLOAD_ERR_NO_FILE;
         }
+
         if (is_string($value)) return strlen(trim($value)) > 0;
         if (is_array($value)) return count($value) > 0;
         return !is_null($value);
