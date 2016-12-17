@@ -7,9 +7,26 @@ use InvalidArgumentException;
 trait FileTrait
 {
 
+    /**
+     * Check whether value is from $_FILES
+     *
+     * @param mixed $value
+     */
+    public function isValueFromUploadedFiles($value)
+    {
+        if (!is_array($value)) return false;
+
+        $keys = ['name', 'type', 'tmp_name', 'size', 'error'];
+        foreach($keys as $key) {
+            if (!array_key_exists($key, $value)) return false;
+        }
+
+        return true;
+    }
+
     public function isUploadedFile($value)
     {
-        return is_uploaded_file($value);
+        return $this->isValueFromUploadedFiles($value) AND is_uploaded_file($value['tmp_name']);
     }
 
     protected function getBytes($size)
