@@ -31,9 +31,12 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($uploadedFileRule->check($file));
     }
 
-    public function testNoUploadedFile()
+    /**
+     * Missing UPLOAD_ERR_NO_FILE should be valid because it is job for required rule
+     */
+    public function testNoUploadedFileShouldBeValid()
     {
-        $this->assertFalse($this->rule->check([
+        $this->assertTrue($this->rule->check([
             'name' => '',
             'type' => '',
             'size' => '',
@@ -84,7 +87,6 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
 
     public function testMinSize()
     {
-
         $rule = $this->getMockBuilder(UploadedFile::class)
             ->setMethods(['isUploadedFile'])
             ->getMock();
@@ -136,7 +138,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'image/png',
-            'size' => 10*1024,
+            'size' => 10 * 1024,
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
@@ -144,39 +146,47 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'image/jpeg',
-            'size' => 10*1024,
+            'size' => 10 * 1024,
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
     }
 
-    public function testInvalids()
+    /**
+     * Missing array key(s) should be valid because it is job for required rule
+     */
+    public function testMissingAKeyShouldBeValid()
     {
-        $this->assertFalse($this->rule->check([
+        // missing name
+        $this->assertTrue($this->rule->check([
             'type' => 'text/plain',
             'size' => filesize(__FILE__),
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
 
-        $this->assertFalse($this->rule->check([
+        // missing type
+        $this->assertTrue($this->rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'size' => filesize(__FILE__),
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
 
-        $this->assertFalse($this->rule->check([
+        // missing size
+        $this->assertTrue($this->rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'text/plain',
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
 
-        $this->assertFalse($this->rule->check([
+        // missing tmp_name
+        $this->assertTrue($this->rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'text/plain',
             'size' => filesize(__FILE__),
+            'error' => 0
         ]));
     }
 }
