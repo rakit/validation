@@ -7,21 +7,48 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->rule = new UploadedFile;
+        $this->rule = new UploadedFile();
     }
 
     public function testValidUploadedFile()
     {
-        $this->assertTrue($this->rule->check([
+        $file = [
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'text/plain',
             'size' => filesize(__FILE__),
             'tmp_name' => __FILE__,
-            'error' => 0
+            'error' => UPLOAD_ERR_OK
+        ];
+
+        $uploadedFileRule = $this->getMockBuilder(UploadedFile::class)
+            ->setMethods(['isUploadedFile'])
+            ->getMock();
+
+        $uploadedFileRule->expects($this->once())
+            ->method('isUploadedFile')
+            ->willReturn(true);
+
+        $this->assertTrue($uploadedFileRule->check($file));
+    }
+
+    /**
+     * Make sure we can't just passing array like valid $_FILES['key']
+     */
+    public function testValidateWithoutMockShouldBeInvalid()
+    {
+        $this->assertFalse($this->rule->check([
+            'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
+            'type' => 'text/plain',
+            'size' => filesize(__FILE__),
+            'tmp_name' => __FILE__,
+            'error' => UPLOAD_ERR_OK
         ]));
     }
 
-    public function testNoUploadedFile()
+    /**
+     * Missing UPLOAD_ERR_NO_FILE should be valid because it is job for required rule
+     */
+    public function testEmptyUploadedFileShouldBeValid()
     {
         $this->assertTrue($this->rule->check([
             'name' => '',
@@ -45,13 +72,20 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
 
     public function testMaxSize()
     {
-        $rule = new UploadedFile;
-        $rule->maxSize('1M');
+        $rule = $this->getMockBuilder(UploadedFile::class)
+            ->setMethods(['isUploadedFile'])
+            ->getMock();
+
+        $rule->expects($this->exactly(2))
+            ->method('isUploadedFile')
+            ->willReturn(true);
+
+        $rule->maxSize("1MB");
 
         $this->assertFalse($rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'text/plain',
-            'size' => 1024*1024*1.1,
+            'size' => 1024 * 1024 * 1.1,
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
@@ -67,7 +101,14 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
 
     public function testMinSize()
     {
-        $rule = new UploadedFile;
+        $rule = $this->getMockBuilder(UploadedFile::class)
+            ->setMethods(['isUploadedFile'])
+            ->getMock();
+
+        $rule->expects($this->exactly(2))
+            ->method('isUploadedFile')
+            ->willReturn(true);
+
         $rule->minSize('10K');
 
         $this->assertFalse($rule->check([
@@ -81,16 +122,23 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'text/plain',
-            'size' => 10*1024,
+            'size' => 10 * 1024,
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
     }
 
-
     public function testFileTypes()
     {
-        $rule = new UploadedFile;
+
+        $rule = $this->getMockBuilder(UploadedFile::class)
+            ->setMethods(['isUploadedFile'])
+            ->getMock();
+
+        $rule->expects($this->exactly(3))
+            ->method('isUploadedFile')
+            ->willReturn(true);
+
         $rule->fileTypes('png|jpeg');
 
         $this->assertFalse($rule->check([
@@ -104,7 +152,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'image/png',
-            'size' => 10*1024,
+            'size' => 10 * 1024,
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
@@ -112,40 +160,47 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'image/jpeg',
-            'size' => 10*1024,
+            'size' => 10 * 1024,
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
     }
 
-    public function testInvalids()
+    /**
+     * Missing array key(s) should be valid because it is job for required rule
+     */
+    public function testMissingAKeyShouldBeValid()
     {
-        $this->assertFalse($this->rule->check([
+        // missing name
+        $this->assertTrue($this->rule->check([
             'type' => 'text/plain',
             'size' => filesize(__FILE__),
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
 
-        $this->assertFalse($this->rule->check([
+        // missing type
+        $this->assertTrue($this->rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'size' => filesize(__FILE__),
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
 
-        $this->assertFalse($this->rule->check([
+        // missing size
+        $this->assertTrue($this->rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'text/plain',
             'tmp_name' => __FILE__,
             'error' => 0
         ]));
 
-        $this->assertFalse($this->rule->check([
+        // missing tmp_name
+        $this->assertTrue($this->rule->check([
             'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
             'type' => 'text/plain',
             'size' => filesize(__FILE__),
+            'error' => 0
         ]));
     }
-
 }

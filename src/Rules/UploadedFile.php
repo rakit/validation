@@ -7,6 +7,7 @@ use Rakit\Validation\MimeTypeGuesser;
 
 class UploadedFile extends Rule
 {
+    use FileTrait;
 
     protected $message = "The :attribute is not valid";
 
@@ -60,19 +61,16 @@ class UploadedFile extends Rule
         $maxSize = $this->parameter('max_size');
         $allowedTypes = $this->parameter('allowed_types');
 
-        if (is_null($value)) {
+        // below is Required rule job
+        if (!$this->isValueFromUploadedFiles($value) OR $value['error'] == UPLOAD_ERR_NO_FILE) {
             return true;
         }
 
-        if (!static::isUploadedFile($value)) {
+        if (!$this->isUploadedFile($value)) {
             return false;
         }
 
-        // we validate this in Required rule
-        if ($value['error'] == UPLOAD_ERR_NO_FILE) {
-            return true;
-        }
-
+        // just make sure there is no error
         if ($value['error']) return false;
 
         if ($minSize) {
@@ -101,52 +99,4 @@ class UploadedFile extends Rule
 
         return true;
     }
-
-    public static function isUploadedFile($value)
-    {
-        if(!is_array($value)) return false;
-
-        $requiredKeys = ['name', 'type', 'tmp_name', 'size', 'error'];
-        foreach($requiredKeys as $key) {
-            if(!isset($value[$key])) return false;
-        }
-
-        return $value;
-    }
-
-    protected function getBytes($size)
-    {
-        if (is_int($size)) return $size;
-        if (!is_string($size)) {
-            throw new \InvalidArgumentException("Size must be string or integer Bytes", 1);
-        }
-
-        if(!preg_match("/^(?<number>((\d+)?\.)?\d+)(?<format>(B|K|M|G|T|P)B?)?$/i", $size, $match)) {
-            throw new \InvalidArgumentException("Size is not valid format", 1);
-        }
-
-        $number = (float) $match['number'];
-        $format = isset($match['format'])? $match['format'] : '';
-
-        switch (strtoupper($format)) {
-            case "KB":
-            case "K":
-                return $number*1024;
-            case "MB":
-            case "M":
-                return $number*pow(1024,2);
-            case "GB":
-            case "G":
-                return $number*pow(1024,3);
-            case "TB":
-            case "T":
-                return $number*pow(1024,4);
-            case "PB":
-            case "P":
-                return $number*pow(1024,5);
-            default:
-                return $number;
-        }
-    }
-
 }

@@ -63,7 +63,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($validation->passes());
     }
 
-    public function testRequireUploadedFile()
+    public function testRequiredUploadedFile()
     {
         $empty_file = [
             'name' => '',
@@ -72,19 +72,69 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
             'tmp_name' => '',
             'error' => UPLOAD_ERR_NO_FILE
         ];
-        $v1 = $this->validator->validate([
-            'file' => $empty_file
-        ], [
-            'file' => 'required|uploaded_file'
-        ]);
-        $this->assertFalse($v1->passes());
 
-        $v2 = $this->validator->validate([
+        $validation = $this->validator->validate([
             'file' => $empty_file
         ], [
-            'file' => 'uploaded_file'
+            'file' => 'required|uploaded_file' 
         ]);
-        $this->assertTrue($v2->passes());
+
+        $errors = $validation->errors();
+        $this->assertFalse($validation->passes());
+        $this->assertNotNull($errors->get('file', 'required'));
+    }
+
+    public function testOptionalUploadedFile()
+    {
+       $empty_file = [
+            'name' => '',
+            'type' => '',
+            'size' => '',
+            'tmp_name' => '',
+            'error' => UPLOAD_ERR_NO_FILE
+        ];
+
+        $validation = $this->validator->validate([
+            'file' => $empty_file
+        ], [
+            'file' => 'uploaded_file' 
+        ]);
+        $this->assertTrue($validation->passes());
+    }
+
+    /**
+     * @dataProvider getSamplesMissingKeyFromUploadedFileValue
+     */    
+    public function testMissingKeyUploadedFile($uploaded_file)
+    {
+        $validation = $this->validator->validate([
+            'file' => $uploaded_file
+        ], [
+            'file' => 'required|uploaded_file' 
+        ]);
+
+        $errors = $validation->errors();
+        $this->assertFalse($validation->passes());
+        $this->assertNotNull($errors->get('file', 'required'));
+    }
+
+    public function getSamplesMissingKeyFromUploadedFileValue()
+    {
+        $valid_uploaded_file = [
+            'name' => 'foo',
+            'type' => 'text/plain',
+            'size' => 1000,
+            'tmp_name' => __FILE__,
+            'error' => UPLOAD_ERR_OK
+        ];
+
+        $samples = [];
+        foreach($valid_uploaded_file as $key => $value) {
+            $uploaded_file = $valid_uploaded_file;
+            unset($uploaded_file[$key]);
+            $samples[] = $uploaded_file;
+        }
+        return $samples;
     }
 
     public function testRequiredIfRule()
@@ -337,7 +387,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
                 'type' => '',
                 'size' => '',
                 'tmp_name' => '',
-                'error' => UPLOAD_ERR_NO_FILE
+                'error' => UPLOAD_ERR_NO_FILE,
             ],
             'required_if_field' => null,
         ], [
