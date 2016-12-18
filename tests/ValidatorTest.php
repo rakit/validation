@@ -347,6 +347,21 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation->validate();
     }
 
+    public function testInternalValidationRuleCanBeOverridden()
+    {
+        $this->validator->allowRuleOverride(true);
+
+        $this->validator->addValidator('required', new Required()); //This is a custom rule defined in the fixtures directory
+
+        $data = ['s' => json_encode(['name' => 'space x', 'human' => false])];
+
+        $validation = $this->validator->make($data, ['s' => 'required'], []);
+
+        $validation->validate();
+
+        $this->assertTrue($validation->passes());
+    }
+
     public function testIgnoreNextRulesWhenImplicitRulesFails()
     {
         $validation = $this->validator->validate([

@@ -12,6 +12,8 @@ class Validator
 
     protected $validators = [];
 
+    protected $allowRuleOverride = false;
+
     public function __construct(array $messages = [])
     {
         $this->messages = $messages;
@@ -106,12 +108,17 @@ class Validator
 
     public function addValidator($ruleName, Rule $rule)
     {
-        if (array_key_exists($ruleName, $this->validators)) {
+        if (!$this->allowRuleOverride && array_key_exists($ruleName, $this->validators)) {
             throw new RuleQuashException(
                 "You cannot override a built in rule. You have to rename your rule"
             );
         }
 
         $this->setValidator($ruleName, $rule);
+    }
+
+    public function allowRuleOverride($status = false)
+    {
+        $this->allowRuleOverride = $status;
     }
 }
