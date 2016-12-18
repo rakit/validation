@@ -17,7 +17,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
             'type' => 'text/plain',
             'size' => filesize(__FILE__),
             'tmp_name' => __FILE__,
-            'error' => 0
+            'error' => UPLOAD_ERR_OK
         ];
 
         $uploadedFileRule = $this->getMockBuilder(UploadedFile::class)
@@ -32,9 +32,23 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Make sure we can't just passing array like valid $_FILES['key']
+     */
+    public function testValidateWithoutMockShouldBeInvalid()
+    {
+        $this->assertFalse($this->rule->check([
+            'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
+            'type' => 'text/plain',
+            'size' => filesize(__FILE__),
+            'tmp_name' => __FILE__,
+            'error' => UPLOAD_ERR_OK
+        ]));
+    }
+
+    /**
      * Missing UPLOAD_ERR_NO_FILE should be valid because it is job for required rule
      */
-    public function testNoUploadedFileShouldBeValid()
+    public function testEmptyUploadedFileShouldBeValid()
     {
         $this->assertTrue($this->rule->check([
             'name' => '',
