@@ -478,4 +478,52 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $errors = $validation->errors();
         $this->assertEquals($errors->implode(','), '1,2,3,4,5,6,7,8,9,10');
     }
+
+    public function testArrayAssocValidation()
+    {
+        $validation = $this->validator->validate([
+            'user' => [
+                'email' => 'invalid email',
+                'name' => 'John Doe',
+                'age' => 16
+            ]
+        ], [
+            'user.email' => 'required|email',
+            'user.name' => 'required',
+            'user.age' => 'required|min:18'
+        ]);
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->count(), 2);
+
+        $this->assertNotNull($errors->get('user.email', 'email'));
+        $this->assertNotNull($errors->get('user.age', 'min'));
+        $this->assertNull($errors->get('user.name', 'required'));
+    }
+
+    public function testArrayValidation()
+    {
+        $validation = $this->validator->validate([
+            'cart_items' => [
+                ['id_product' => 1, 'qty' => 10],
+                ['id_product' => null, 'qty' => 10],
+                ['id_product' => 3, 'qty' => null],
+                ['id_product' => 4, 'qty' => 'foo'],
+                ['id_product' => 'foo', 'qty' => 10],
+            ]
+        ], [
+            'cart_items.*.id_product' => 'required|numeric',
+            'cart_items.*.qty' => 'required|numeric'
+        ]);
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->count(), 4);
+
+        $this->assertNotNull($errors->get('cart_items.1.id_product', 'required'));
+        $this->assertNotNull($errors->get('cart_items.2.qty', 'required'));
+        $this->assertNotNull($errors->get('cart_items.3.qty', 'numeric'));
+        $this->assertNotNull($errors->get('cart_items.4.id_product', 'numeric'));
+    }
 }

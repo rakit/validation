@@ -54,8 +54,18 @@ class Validation
         return $this->errors;
     }
 
-    protected function validateAttribute(Attribute $attribute)
+    protected function validateAttribute(Attribute $attribute, Attribute $primaryAttribute = null, array $otherAttributes = [])
     {
+        if ($this->isArrayAttribute($attribute)) {
+            $attributes = $this->parseArrayAttribute($attribute);
+            foreach($attributes as $i => $attr) {
+                $otherAttributes = $attributes;
+                unset($otherAttributes[$i]);
+                $this->validateAttribute($attr, $attribute, $otherAttributes);
+            }
+            return;
+        }
+
         $attributeKey = $attribute->getKey();
         $rules = $attribute->getRules(); 
         $value = $this->getValue($attributeKey);
@@ -78,6 +88,123 @@ class Validation
                 }
             }
         }
+    }
+
+    protected function isArrayAttribute(Attribute $attribute)
+    {
+        $key = $attribute->getKey();
+        return strpos($key, '*') !== false;
+    }
+
+    protected function parseArrayAttribute(Attribute $attribute)
+    {
+        $attributeKey = $attribute->getKey();
+        $data = Helper::arrayDot($this->initializeAttributeOnData($attributeKey));
+
+        $pattern = str_replace('\*', '[^\.]+', preg_quote($attributeKey));
+
+        $data = array_merge($data, $this->extractValuesForWildcards(
+            $data, $attributeKey
+        ));
+
+        foreach ($data as $key => $value) {
+            if ((bool) preg_match('/^'.$pattern.'\z/', $key)) {
+                $attributes[] = new Attribute($this, $key, null, $attribute->getRules());
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Gather a copy of the attribute data filled with any missing attributes.
+     * Adapted from: https://github.com/illuminate/validation/blob/v5.3.23/Validator.php#L334
+     *
+     * @param  string  $attribute
+     * @return array
+     */
+    protected function initializeAttributeOnData($attributeKey)
+    {
+        $explicitPath = $this->getLeadingExplicitAttributePath($attributeKey);
+
+        $data = $this->extractDataFromPath($explicitPath);
+
+        $asteriskPos = strpos($attributeKey, '*');
+
+        if (false === $asteriskPos || $asteriskPos === (strlen($attributeKey) - 1)) {
+            return $data;
+        }
+
+        return Helper::arraySet($data, $attributeKey, null, true);
+    }
+
+    /**
+     * Get all of the exact attribute values for a given wildcard attribute.
+     * Adapted from: https://github.com/illuminate/validation/blob/v5.3.23/Validator.php#L354
+     *
+     * @param  array  $data
+     * @param  string  $attributeKey
+     * @return array
+     */
+    public function extractValuesForWildcards($data, $attributeKey)
+    {
+        $keys = [];
+
+        $pattern = str_replace('\*', '[^\.]+', preg_quote($attributeKey));
+
+        foreach ($data as $key => $value) {
+            if ((bool) preg_match('/^'.$pattern.'/', $key, $matches)) {
+                $keys[] = $matches[0];
+            }
+        }
+
+        $keys = array_unique($keys);
+
+        $data = [];
+
+        foreach ($keys as $key) {
+            $data[$key] = Helper::arrayGet($this->inputs, $key);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get the explicit part of the attribute name.
+     * Adapted from: https://github.com/illuminate/validation/blob/v5.3.23/Validator.php#L2817
+     *
+     * E.g. 'foo.bar.*.baz' -> 'foo.bar'
+     *
+     * Allows us to not spin through all of the flattened data for some operations.
+     *
+     * @param  string  $attributeKey
+     * @return string
+     */
+    protected function getLeadingExplicitAttributePath($attributeKey)
+    {
+        return rtrim(explode('*', $attributeKey)[0], '.') ?: null;
+    }
+
+    /**
+     * Extract data based on the given dot-notated path.
+     * Adapted from: https://github.com/illuminate/validation/blob/v5.3.23/Validator.php#L2830
+     *
+     * Used to extract a sub-section of the data for faster iteration.
+     *
+     * @param  string  $attributeKey
+     * @return array
+     */
+    protected function extractDataFromPath($attributeKey)
+    {
+        $results = [];
+
+        $value = Helper::arrayGet($this->inputs, $attributeKey, '__missing__');
+
+        if ($value != '__missing__') {
+            Helper::arraySet($results, $attributeKey, $value);
+        }
+
+        return $results;
     }
 
     protected function isEmptyValue($value)
@@ -217,12 +344,12 @@ class Validation
 
     public function getValue($key)
     {
-        return isset($this->inputs[$key])? $this->inputs[$key] : null;
+        return Helper::arrayGet($this->inputs, $key);
     }
 
     public function hasValue($key)
     {
-        return isset($this->inputs[$key]);
+        return Helper::arrayHas($this->inputs, $key);
     }
 
     public function getValidator()
