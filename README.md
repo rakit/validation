@@ -42,7 +42,8 @@ $validation = $validator->make($_POST, [
 	'name' => 'required',	
 	'email' => 'required|email',
 	'password' => 'required|min:6',
-	'confirm_password' => 'required|same:password',
+    'confirm_password' => 'required|same:password',
+	'avatar' => 'required|uploaded_file:0,500K,png,jpeg',
 ]);
 
 // then validate
@@ -77,7 +78,8 @@ $validation = $validator->validate($_POST, [
 	'name' => 'required',	
 	'email' => 'required|email',
 	'password' => 'required|min:6',
-	'confirm_password' => 'required|same:password',
+    'confirm_password' => 'required|same:password',
+	'avatar' => 'required|uploaded_file:0,500K,png,jpeg',
 ]);
 
 if ($validation->fails()) {
@@ -523,7 +525,7 @@ $validation = $validator->validate($_POST, [
 ]);
 ```
 
-In `UniqueRule` above, property `$message` is used for default invalid message. And property `$fillable_params` is used for `setParameters` method (defined in `Rakit\Validation\Rule` class). By default `setParameters` will fill parameters listed in `$fillable_params`. For example `unique:users,email,exception@mail.com` in example above, will set:
+In `UniqueRule` above, property `$message` is used for default invalid message. And property `$fillable_params` is used for `fillParameters` method (defined in `Rakit\Validation\Rule` class). By default `fillParameters` will fill parameters listed in `$fillable_params`. For example `unique:users,email,exception@mail.com` in example above, will set:
 
 ```php
 $params['table'] = 'users';
@@ -532,7 +534,7 @@ $params['except'] = 'exception@mail.com';
 ```
 
 > If you want your custom rule accept parameter list like `in`,`not_in`, or `uploaded_file` rules, 
-  you just need to override `setParameters(array $params)` method in your custom rule class.
+  you just need to override `fillParameters(array $params)` method in your custom rule class.
 
 Note that `unique` rule that we created above also can be used like this:
 
