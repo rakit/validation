@@ -63,7 +63,7 @@ class Validator
         }
 
         $clonedValidator = clone $validator;
-        $clonedValidator->setParameters($params);
+        $clonedValidator->fillParameters($params);
 
         return $clonedValidator;
     }

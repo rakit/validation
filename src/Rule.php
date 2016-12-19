@@ -52,7 +52,7 @@ abstract class Rule
         return $this->params;
     }
 
-    public function setParameters(array $params)
+    public function fillParameters(array $params)
     {
         foreach($this->fillable_params as $key) {
             if (empty($params)) break;
