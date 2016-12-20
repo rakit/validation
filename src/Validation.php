@@ -54,14 +54,12 @@ class Validation
         return $this->errors;
     }
 
-    protected function validateAttribute(Attribute $attribute, Attribute $primaryAttribute = null, array $otherAttributes = [])
+    protected function validateAttribute(Attribute $attribute)
     {
         if ($this->isArrayAttribute($attribute)) {
             $attributes = $this->parseArrayAttribute($attribute);
             foreach($attributes as $i => $attr) {
-                $otherAttributes = $attributes;
-                unset($otherAttributes[$i]);
-                $this->validateAttribute($attr, $attribute, $otherAttributes);
+                $this->validateAttribute($attr);
             }
             return;
         }
@@ -79,9 +77,7 @@ class Validation
             $valid = $ruleValidator->check($value);
             
             if (!$valid) {
-                $rulename = $ruleValidator->getKey();
-                $message = $this->resolveMessage($attribute, $value, $ruleValidator);
-                $this->errors->add($attributeKey, $rulename, $message);
+                $this->addError($attribute, $value, $ruleValidator);
 
                 if ($ruleValidator->isImplicit()) {
                     break;
@@ -109,8 +105,17 @@ class Validation
 
         foreach ($data as $key => $value) {
             if ((bool) preg_match('/^'.$pattern.'\z/', $key)) {
-                $attributes[] = new Attribute($this, $key, null, $attribute->getRules());
+                $attr = new Attribute($this, $key, null, $attribute->getRules());
+                $attr->setPrimaryAttribute($attribute);
+                $attributes[] = $attr;
             }
+        }
+
+        // set other attributes to each attributes
+        foreach ($attributes as $i => $attr) {
+            $otherAttributes = $attributes;
+            unset($otherAttributes[$i]);
+            $attr->setOtherAttributes($otherAttributes);
         }
 
         return $attributes;
@@ -207,6 +212,14 @@ class Validation
         return $results;
     }
 
+    protected function addError(Attribute $attribute, $value, Rule $ruleValidator)
+    {
+        $ruleName = $ruleValidator->getKey();
+        $message = $this->resolveMessage($attribute, $value, $ruleValidator);
+
+        $this->errors->add($attribute->getKey(), $ruleName, $message);
+    }
+
     protected function isEmptyValue($value)
     {
         $requiredValidator = new Required;
@@ -220,23 +233,45 @@ class Validation
             false === $rule instanceof Required;
     }
 
-    protected function resolveAttributeName($attributeKey)
+    protected function resolveAttributeName(Attribute $attribute)
     {
-        return isset($this->aliases[$attributeKey]) ? $this->aliases[$attributeKey] : ucfirst(str_replace('_', ' ', $attributeKey));
+        $primaryAttribute = $attribute->getPrimaryAttribute();
+        if (isset($this->aliases[$attribute->getKey()])) {
+            return $this->aliases[$attribute->getKey()];
+        } elseif($primaryAttribute AND isset($this->aliases[$primaryAttribute->getKey()])) {
+            return $this->aliases[$primaryAttribute->getKey()];
+        } else {
+            return ucfirst(str_replace('_', ' ', $attribute->getKey()));
+        }
     }
 
     protected function resolveMessage(Attribute $attribute, $value, Rule $validator)
     {
+        $primaryAttribute = $attribute->getPrimaryAttribute();
         $params = $validator->getParameters();
         $attributeKey = $attribute->getKey();
         $ruleKey = $validator->getKey();
-        $alias = $attribute->getAlias() ?: $this->resolveAttributeName($attributeKey);
+        $alias = $attribute->getAlias() ?: $this->resolveAttributeName($attribute);
         $message = $validator->getMessage(); // default rule message
         $message_keys = [
             $attributeKey.'.'.$ruleKey,
-            $attributeKey.'.*',
+            $attributeKey,
             $ruleKey
         ];
+
+        if ($primaryAttribute) {
+            // insert primaryAttribute keys 
+            // $message_keys = [
+            //     $attributeKey.'.'.$ruleKey,
+            //     >> here [1] <<
+            //     $attributeKey,
+            //     >> and here [3] <<
+            //     $ruleKey
+            // ];  
+            $primaryAttributeKey = $primaryAttribute->getKey();
+            array_splice($message_keys, 1, 0, $primaryAttributeKey.'.'.$ruleKey);
+            array_splice($message_keys, 3, 0, $primaryAttributeKey);
+        }
 
         foreach($message_keys as $key) {
             if (isset($this->messages[$key])) {

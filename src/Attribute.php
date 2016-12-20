@@ -15,6 +15,10 @@ class Attribute
 
     protected $required = false;
 
+    protected $primaryAttribute = null;
+
+    protected $otherAttributes = [];
+
     public function __construct(Validation $validation, $key, $alias = null, array $rules = array())
     {
         $this->validation = $validation;
@@ -23,6 +27,34 @@ class Attribute
         foreach($rules as $rule) {
             $this->addRule($rule);
         }
+    }
+
+    public function setPrimaryAttribute(Attribute $primaryAttribute)
+    {
+        $this->primaryAttribute = $primaryAttribute;
+    }
+
+    public function getPrimaryAttribute()
+    {
+        return $this->primaryAttribute;
+    }
+
+    public function setOtherAttributes(array $otherAttributes)
+    {
+        $this->otherAttributes = [];
+        foreach($otherAttributes as $otherAttribute) {
+            $this->addOtherAttribute($otherAttribute);
+        }
+    }
+
+    public function addOtherAttribute(Attribute $otherAttribute)
+    {
+        $this->otherAttributes[] = $otherAttribute;
+    }
+
+    public function getOtherAttributes()
+    {
+        return $this->otherAttributes;
     }
 
     public function addRule(Rule $rule)
