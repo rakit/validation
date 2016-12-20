@@ -6,6 +6,30 @@ class Helper
 {
 
     /**
+     * Determine if a given string matches a given pattern.
+     * Adapted from: https://github.com/illuminate/support/blob/v5.3.23/Str.php#L119
+     *
+     * @param  string  $pattern
+     * @param  string  $value
+     * @return bool
+     */
+    public static function strIs($pattern, $value)
+    {
+        if ($pattern == $value) {
+            return true;
+        }
+
+        $pattern = preg_quote($pattern, '#');
+
+        // Asterisks are translated into zero-or-more regular expression wildcards
+        // to make it convenient to check if the strings starts with the given
+        // pattern such as "library/*", making any string check convenient.
+        $pattern = str_replace('\*', '.*', $pattern);
+
+        return (bool) preg_match('#^'.$pattern.'\z#u', $value);
+    }
+
+    /**
      * Check if an item or items exist in an array using "dot" notation.
      * Adapted from: https://github.com/illuminate/support/blob/v5.3.23/Arr.php#L81
      *

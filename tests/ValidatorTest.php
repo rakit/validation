@@ -8,7 +8,6 @@ require_once 'Fixtures/Required.php';
 class ValidatorTest extends PHPUnit_Framework_TestCase
 {
 
-    // TODO: blablabla
     protected $validator;
 
     protected function setUp()
@@ -82,7 +81,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
         $errors = $validation->errors();
         $this->assertFalse($validation->passes());
-        $this->assertNotNull($errors->get('file', 'required'));
+        $this->assertNotNull($errors->first('file:required'));
     }
 
     public function testOptionalUploadedFile()
@@ -116,7 +115,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
         $errors = $validation->errors();
         $this->assertFalse($validation->passes());
-        $this->assertNotNull($errors->get('file', 'required'));
+        $this->assertNotNull($errors->first('file:required'));
     }
 
     public function getSamplesMissingKeyFromUploadedFileValue()
@@ -278,21 +277,21 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($errors->count(), 4);
 
-        $this->assertNotNull($errors->get('required_field', 'required'));
-        $this->assertNull($errors->get('required_field', 'numeric'));
-        $this->assertNull($errors->get('required_field', 'min'));
+        $this->assertNotNull($errors->first('required_field:required'));
+        $this->assertNull($errors->first('required_field:numeric'));
+        $this->assertNull($errors->first('required_field:min'));
 
-        $this->assertNotNull($errors->get('required_if_field', 'required_if'));
-        $this->assertNull($errors->get('required_if_field', 'numeric'));
-        $this->assertNull($errors->get('required_if_field', 'min'));
+        $this->assertNotNull($errors->first('required_if_field:required_if'));
+        $this->assertNull($errors->first('required_if_field:numeric'));
+        $this->assertNull($errors->first('required_if_field:min'));
 
-        $this->assertNotNull($errors->get('must_present_field', 'present'));
-        $this->assertNull($errors->get('must_present_field', 'numeric'));
-        $this->assertNull($errors->get('must_present_field', 'min'));
+        $this->assertNotNull($errors->first('must_present_field:present'));
+        $this->assertNull($errors->first('must_present_field:numeric'));
+        $this->assertNull($errors->first('must_present_field:min'));
 
-        $this->assertNotNull($errors->get('must_accepted_field', 'accepted'));
-        $this->assertNull($errors->get('must_accepted_field', 'numeric'));
-        $this->assertNull($errors->get('must_accepted_field', 'min'));
+        $this->assertNotNull($errors->first('must_accepted_field:accepted'));
+        $this->assertNull($errors->first('must_accepted_field:numeric'));
+        $this->assertNull($errors->first('must_accepted_field:min'));
     }
 
     public function testIgnoreOtherRulesWhenAttributeIsNotRequired()
@@ -350,9 +349,9 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $errors = $validation->errors();
 
         $this->assertEquals($errors->count(), 3);
-        $this->assertNotNull($errors->get('optional_field', 'ipv4'));
-        $this->assertNotNull($errors->get('optional_field', 'in'));
-        $this->assertNotNull($errors->get('required_if_field', 'email'));
+        $this->assertNotNull($errors->first('optional_field:ipv4'));
+        $this->assertNotNull($errors->first('optional_field:in'));
+        $this->assertNotNull($errors->first('required_if_field:email'));
     }
 
     public function testRegisterRulesUsingInvokes()
@@ -392,7 +391,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         ]);
 
         $errors = $validation->errors();
-        $this->assertEquals($errors->implode(','), '1,2,3,4,5,6,7,8,9,10');
+        $this->assertEquals(implode(',', $errors->all()), '1,2,3,4,5,6,7,8,9,10');
     }
 
     public function testArrayAssocValidation()
@@ -413,9 +412,9 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($errors->count(), 2);
 
-        $this->assertNotNull($errors->get('user.email', 'email'));
-        $this->assertNotNull($errors->get('user.age', 'min'));
-        $this->assertNull($errors->get('user.name', 'required'));
+        $this->assertNotNull($errors->first('user.email:email'));
+        $this->assertNotNull($errors->first('user.age:min'));
+        $this->assertNull($errors->first('user.name:required'));
     }
 
     public function testArrayValidation()
@@ -437,10 +436,10 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($errors->count(), 4);
 
-        $this->assertNotNull($errors->get('cart_items.1.id_product', 'required'));
-        $this->assertNotNull($errors->get('cart_items.2.qty', 'required'));
-        $this->assertNotNull($errors->get('cart_items.3.qty', 'numeric'));
-        $this->assertNotNull($errors->get('cart_items.4.id_product', 'numeric'));
+        $this->assertNotNull($errors->first('cart_items.1.id_product:required'));
+        $this->assertNotNull($errors->first('cart_items.2.qty:required'));
+        $this->assertNotNull($errors->first('cart_items.3.qty:numeric'));
+        $this->assertNotNull($errors->first('cart_items.4.id_product:numeric'));
     }
 
     public function testSetCustomMessagesInValidator()
@@ -469,10 +468,10 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         ]);
 
         $errors = $validation->errors();
-        $this->assertEquals($errors->get('foo', 'required'), 'foo');
-        $this->assertEquals($errors->get('email', 'email'), 'bar');
-        $this->assertEquals($errors->get('something', 'numeric'), 'baz');
-        $this->assertEquals($errors->get('comments.0.text', 'required'), 'baz');
+        $this->assertEquals($errors->first('foo:required'), 'foo');
+        $this->assertEquals($errors->first('email:email'), 'bar');
+        $this->assertEquals($errors->first('something:numeric'), 'baz');
+        $this->assertEquals($errors->first('comments.0.text:required'), 'baz');
     }
 
     public function testSetCustomMessagesInValidation()
@@ -503,10 +502,10 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation->validate();
 
         $errors = $validation->errors();
-        $this->assertEquals($errors->get('foo', 'required'), 'foo');
-        $this->assertEquals($errors->get('email', 'email'), 'bar');
-        $this->assertEquals($errors->get('something', 'numeric'), 'baz');
-        $this->assertEquals($errors->get('comments.0.text', 'required'), 'baz');
+        $this->assertEquals($errors->first('foo:required'), 'foo');
+        $this->assertEquals($errors->first('email:email'), 'bar');
+        $this->assertEquals($errors->first('something:numeric'), 'baz');
+        $this->assertEquals($errors->first('comments.0.text:required'), 'baz');
     }
 
     public function testSpecificRuleMessage()
@@ -526,9 +525,9 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation->validate();
 
         $errors = $validation->errors();
-        $this->assertEquals($errors->get('something', 'email'), 'foo');
-        $this->assertEquals($errors->get('something', 'numeric'), 'bar');
-        $this->assertEquals($errors->get('something', 'max'), 'baz');
+        $this->assertEquals($errors->first('something:email'), 'foo');
+        $this->assertEquals($errors->first('something:numeric'), 'bar');
+        $this->assertEquals($errors->first('something:max'), 'baz');
     }
 
     public function testSetAttributeAliases()
@@ -566,9 +565,9 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation->validate();
 
         $errors = $validation->errors();
-        $this->assertEquals($errors->get('foo', 'required'), 'Foo foo');
-        $this->assertEquals($errors->get('email', 'email'), 'Bar bar');
-        $this->assertEquals($errors->get('something', 'numeric'), 'Baz baz');
-        $this->assertEquals($errors->get('comments.0.text', 'required'), 'Qux qux');
+        $this->assertEquals($errors->first('foo:required'), 'Foo foo');
+        $this->assertEquals($errors->first('email:email'), 'Bar bar');
+        $this->assertEquals($errors->first('something:numeric'), 'Baz baz');
+        $this->assertEquals($errors->first('comments.0.text:required'), 'Qux qux');
     }
 }
