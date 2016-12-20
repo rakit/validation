@@ -8,6 +8,7 @@ require_once 'Fixtures/Required.php';
 class ValidatorTest extends PHPUnit_Framework_TestCase
 {
 
+    // TODO: blablabla
     protected $validator;
 
     protected function setUp()
@@ -506,6 +507,28 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($errors->get('email', 'email'), 'bar');
         $this->assertEquals($errors->get('something', 'numeric'), 'baz');
         $this->assertEquals($errors->get('comments.0.text', 'required'), 'baz');
+    }
+
+    public function testSpecificRuleMessage()
+    {
+        $validation = $this->validator->make([
+            'something' => 'value',
+        ], [
+            'something' => 'email|max:3|numeric',
+        ]);
+
+        $validation->setMessages([
+            'something:email' => 'foo',
+            'something:numeric' => 'bar',
+            'something:max' => 'baz',
+        ]);
+
+        $validation->validate();
+
+        $errors = $validation->errors();
+        $this->assertEquals($errors->get('something', 'email'), 'foo');
+        $this->assertEquals($errors->get('something', 'numeric'), 'bar');
+        $this->assertEquals($errors->get('something', 'max'), 'baz');
     }
 
     public function testSetAttributeAliases()

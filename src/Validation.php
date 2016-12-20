@@ -17,6 +17,8 @@ class Validation
 
     protected $aliases = [];
 
+    protected $messageSeparator = ':';
+
     public function __construct(Validator $validator, array $inputs, array $rules, array $messages = array())
     {
         $this->validator = $validator;
@@ -254,7 +256,7 @@ class Validation
         $alias = $attribute->getAlias() ?: $this->resolveAttributeName($attribute);
         $message = $validator->getMessage(); // default rule message
         $message_keys = [
-            $attributeKey.'.'.$ruleKey,
+            $attributeKey.$this->messageSeparator.$ruleKey,
             $attributeKey,
             $ruleKey
         ];
@@ -262,14 +264,14 @@ class Validation
         if ($primaryAttribute) {
             // insert primaryAttribute keys 
             // $message_keys = [
-            //     $attributeKey.'.'.$ruleKey,
+            //     $attributeKey.$this->messageSeparator.$ruleKey,
             //     >> here [1] <<
             //     $attributeKey,
             //     >> and here [3] <<
             //     $ruleKey
             // ];  
             $primaryAttributeKey = $primaryAttribute->getKey();
-            array_splice($message_keys, 1, 0, $primaryAttributeKey.'.'.$ruleKey);
+            array_splice($message_keys, 1, 0, $primaryAttributeKey.$this->messageSeparator.$ruleKey);
             array_splice($message_keys, 3, 0, $primaryAttributeKey);
         }
 

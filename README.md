@@ -219,7 +219,7 @@ $validation_a->validate();
 #### Custom Message for Specific Attribute Rule
 
 Sometimes you may want to set custom message for specific rule attribute. 
-To do this you can use `.` as message separator or using chaining method.
+To do this you can use `:` as message separator or using chaining methods.
 
 Examples:
 
@@ -231,7 +231,7 @@ $validation_a = $validator->make($dataset_a, [
 ]);
 
 $validation_a->setMessages([
-	'age.min' => '18+ only',
+	'age:min' => '18+ only',
 ]);
 
 $validation_a->validate();
