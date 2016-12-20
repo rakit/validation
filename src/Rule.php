@@ -52,6 +52,18 @@ abstract class Rule
         return $this->params;
     }
 
+    public function setParameters(array $params)
+    {
+        $this->params = array_merge($this->params, $params);
+        return $this;
+    }
+
+    public function setParameter($key, $value)
+    {
+        $this->params[$key] = $value;
+        return $this;
+    }
+
     public function fillParameters(array $params)
     {
         foreach($this->fillable_params as $key) {
