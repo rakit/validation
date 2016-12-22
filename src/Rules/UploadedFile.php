@@ -15,7 +15,7 @@ class UploadedFile extends Rule
     protected $minSize = null;
     protected $allowedTypes = [];
 
-    public function setParameters(array $params)
+    public function fillParameters(array $params)
     {
         $this->minSize(array_shift($params));
         $this->maxSize(array_shift($params));

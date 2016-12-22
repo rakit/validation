@@ -12,13 +12,13 @@ class InTest extends PHPUnit_Framework_TestCase
 
     public function testValids()
     {
-        $this->assertTrue($this->rule->setParameters([1,2,3])->check(1));
-        $this->assertTrue($this->rule->setParameters(['1', 'bar', '3'])->check('bar'));
+        $this->assertTrue($this->rule->fillParameters([1,2,3])->check(1));
+        $this->assertTrue($this->rule->fillParameters(['1', 'bar', '3'])->check('bar'));
     }
 
     public function testInvalids()
     {
-        $this->assertFalse($this->rule->setParameters([1,2,3])->check(4));
+        $this->assertFalse($this->rule->fillParameters([1,2,3])->check(4));
     }
 
 }

@@ -10,7 +10,7 @@ class RequiredIf extends Required
 
     protected $message = "The :attribute is required";
 
-    public function setParameters(array $params)
+    public function fillParameters(array $params)
     {
         $this->params['field'] = array_shift($params);
         $this->params['values'] = $params;

@@ -9,7 +9,7 @@ class In extends Rule
 
     protected $message = "The :attribute is not allowing :value";
 
-    public function setParameters(array $params)
+    public function fillParameters(array $params)
     {
         if (count($params) == 1 AND is_array($params[0])) {
             $params = $params[0];

@@ -38,26 +38,30 @@ use Rakit\Validation\Validator;
 $validator = new Validator;
 
 // make it
-$validation = $validator->make($_POST, [
-	'name' => 'required',	
-	'email' => 'required|email',
-	'password' => 'required|min:6',
-	'confirm_password' => 'required|same:password',
+$validation = $validator->make($_POST + $_FILES, [
+    'name'                  => 'required',
+    'email'                 => 'required|email',
+    'password'              => 'required|min:6',
+    'confirm_password'      => 'required|same:password',
+    'avatar'                => 'required|uploaded_file:0,500K,png,jpeg',
+    'skills'                => 'array',
+    'skills.*.id'           => 'required|numeric',
+    'skills.*.percentage'   => 'required|numeric'
 ]);
 
 // then validate
 $validation->validate();
 
 if ($validation->fails()) {
-	// handling errors
-	$errors = $validation->errors();
-	echo "<pre>";
-	print_r($errors->firstOfAll());
-	echo "</pre>";
-	exit;
+    // handling errors
+    $errors = $validation->errors();
+    echo "<pre>";
+    print_r($errors->firstOfAll());
+    echo "</pre>";
+    exit;
 } else {
-	// validation passes
-	echo "Success!";
+    // validation passes
+    echo "Success!";
 }
 
 ```
@@ -73,11 +77,15 @@ use Rakit\Validation\Validator;
 
 $validator = new Validator;
 
-$validation = $validator->validate($_POST, [
-	'name' => 'required',	
-	'email' => 'required|email',
-	'password' => 'required|min:6',
-	'confirm_password' => 'required|same:password',
+$validation = $validator->validate($_POST + $_FILES, [
+    'name'                  => 'required',
+    'email'                 => 'required|email',
+    'password'              => 'required|min:6',
+    'confirm_password'      => 'required|same:password',
+    'avatar'                => 'required|uploaded_file:0,500K,png,jpeg',
+    'skills'                => 'array',
+    'skills.*.id'           => 'required|numeric',
+    'skills.*.percentage'   => 'required|numeric'
 ]);
 
 if ($validation->fails()) {
@@ -94,7 +102,7 @@ if ($validation->fails()) {
 
 ```
 
-In this case, 2 example above will output the same results. 
+In this case, 2 examples above will output the same results. 
 
 But with `make` you can setup something like custom invalid message, custom attribute alias, etc before validation running.
 
@@ -217,7 +225,7 @@ $validation_a->validate();
 #### Custom Message for Specific Attribute Rule
 
 Sometimes you may want to set custom message for specific rule attribute. 
-To do this you can use `.` as message separator or using chaining method.
+To do this you can use `:` as message separator or using chaining methods.
 
 Examples:
 
@@ -229,7 +237,7 @@ $validation_a = $validator->make($dataset_a, [
 ]);
 
 $validation_a->setMessages([
-	'age.min' => '18+ only',
+	'age:min' => '18+ only',
 ]);
 
 $validation_a->validate();
@@ -523,7 +531,7 @@ $validation = $validator->validate($_POST, [
 ]);
 ```
 
-In `UniqueRule` above, property `$message` is used for default invalid message. And property `$fillable_params` is used for `setParameters` method (defined in `Rakit\Validation\Rule` class). By default `setParameters` will fill parameters listed in `$fillable_params`. For example `unique:users,email,exception@mail.com` in example above, will set:
+In `UniqueRule` above, property `$message` is used for default invalid message. And property `$fillable_params` is used for `fillParameters` method (defined in `Rakit\Validation\Rule` class). By default `fillParameters` will fill parameters listed in `$fillable_params`. For example `unique:users,email,exception@mail.com` in example above, will set:
 
 ```php
 $params['table'] = 'users';
@@ -532,7 +540,7 @@ $params['except'] = 'exception@mail.com';
 ```
 
 > If you want your custom rule accept parameter list like `in`,`not_in`, or `uploaded_file` rules, 
-  you just need to override `setParameters(array $params)` method in your custom rule class.
+  you just need to override `fillParameters(array $params)` method in your custom rule class.
 
 Note that `unique` rule that we created above also can be used like this:
 

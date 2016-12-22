@@ -17,6 +17,8 @@ class Validation
 
     protected $aliases = [];
 
+    protected $messageSeparator = ':';
+
     public function __construct(Validator $validator, array $inputs, array $rules, array $messages = array())
     {
         $this->validator = $validator;
@@ -56,6 +58,14 @@ class Validation
 
     protected function validateAttribute(Attribute $attribute)
     {
+        if ($this->isArrayAttribute($attribute)) {
+            $attributes = $this->parseArrayAttribute($attribute);
+            foreach($attributes as $i => $attr) {
+                $this->validateAttribute($attr);
+            }
+            return;
+        }
+
         $attributeKey = $attribute->getKey();
         $rules = $attribute->getRules(); 
         $value = $this->getValue($attributeKey);
@@ -69,15 +79,147 @@ class Validation
             $valid = $ruleValidator->check($value);
             
             if (!$valid) {
-                $rulename = $ruleValidator->getKey();
-                $message = $this->resolveMessage($attribute, $value, $ruleValidator);
-                $this->errors->add($attributeKey, $rulename, $message);
+                $this->addError($attribute, $value, $ruleValidator);
 
                 if ($ruleValidator->isImplicit()) {
                     break;
                 }
             }
         }
+    }
+
+    protected function isArrayAttribute(Attribute $attribute)
+    {
+        $key = $attribute->getKey();
+        return strpos($key, '*') !== false;
+    }
+
+    protected function parseArrayAttribute(Attribute $attribute)
+    {
+        $attributeKey = $attribute->getKey();
+        $data = Helper::arrayDot($this->initializeAttributeOnData($attributeKey));
+
+        $pattern = str_replace('\*', '[^\.]+', preg_quote($attributeKey));
+
+        $data = array_merge($data, $this->extractValuesForWildcards(
+            $data, $attributeKey
+        ));
+
+        foreach ($data as $key => $value) {
+            if ((bool) preg_match('/^'.$pattern.'\z/', $key)) {
+                $attr = new Attribute($this, $key, null, $attribute->getRules());
+                $attr->setPrimaryAttribute($attribute);
+                $attributes[] = $attr;
+            }
+        }
+
+        // set other attributes to each attributes
+        foreach ($attributes as $i => $attr) {
+            $otherAttributes = $attributes;
+            unset($otherAttributes[$i]);
+            $attr->setOtherAttributes($otherAttributes);
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Gather a copy of the attribute data filled with any missing attributes.
+     * Adapted from: https://github.com/illuminate/validation/blob/v5.3.23/Validator.php#L334
+     *
+     * @param  string  $attribute
+     * @return array
+     */
+    protected function initializeAttributeOnData($attributeKey)
+    {
+        $explicitPath = $this->getLeadingExplicitAttributePath($attributeKey);
+
+        $data = $this->extractDataFromPath($explicitPath);
+
+        $asteriskPos = strpos($attributeKey, '*');
+
+        if (false === $asteriskPos || $asteriskPos === (strlen($attributeKey) - 1)) {
+            return $data;
+        }
+
+        return Helper::arraySet($data, $attributeKey, null, true);
+    }
+
+    /**
+     * Get all of the exact attribute values for a given wildcard attribute.
+     * Adapted from: https://github.com/illuminate/validation/blob/v5.3.23/Validator.php#L354
+     *
+     * @param  array  $data
+     * @param  string  $attributeKey
+     * @return array
+     */
+    public function extractValuesForWildcards($data, $attributeKey)
+    {
+        $keys = [];
+
+        $pattern = str_replace('\*', '[^\.]+', preg_quote($attributeKey));
+
+        foreach ($data as $key => $value) {
+            if ((bool) preg_match('/^'.$pattern.'/', $key, $matches)) {
+                $keys[] = $matches[0];
+            }
+        }
+
+        $keys = array_unique($keys);
+
+        $data = [];
+
+        foreach ($keys as $key) {
+            $data[$key] = Helper::arrayGet($this->inputs, $key);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get the explicit part of the attribute name.
+     * Adapted from: https://github.com/illuminate/validation/blob/v5.3.23/Validator.php#L2817
+     *
+     * E.g. 'foo.bar.*.baz' -> 'foo.bar'
+     *
+     * Allows us to not spin through all of the flattened data for some operations.
+     *
+     * @param  string  $attributeKey
+     * @return string
+     */
+    protected function getLeadingExplicitAttributePath($attributeKey)
+    {
+        return rtrim(explode('*', $attributeKey)[0], '.') ?: null;
+    }
+
+    /**
+     * Extract data based on the given dot-notated path.
+     * Adapted from: https://github.com/illuminate/validation/blob/v5.3.23/Validator.php#L2830
+     *
+     * Used to extract a sub-section of the data for faster iteration.
+     *
+     * @param  string  $attributeKey
+     * @return array
+     */
+    protected function extractDataFromPath($attributeKey)
+    {
+        $results = [];
+
+        $value = Helper::arrayGet($this->inputs, $attributeKey, '__missing__');
+
+        if ($value != '__missing__') {
+            Helper::arraySet($results, $attributeKey, $value);
+        }
+
+        return $results;
+    }
+
+    protected function addError(Attribute $attribute, $value, Rule $ruleValidator)
+    {
+        $ruleName = $ruleValidator->getKey();
+        $message = $this->resolveMessage($attribute, $value, $ruleValidator);
+
+        $this->errors->add($attribute->getKey(), $ruleName, $message);
     }
 
     protected function isEmptyValue($value)
@@ -93,23 +235,45 @@ class Validation
             false === $rule instanceof Required;
     }
 
-    protected function resolveAttributeName($attributeKey)
+    protected function resolveAttributeName(Attribute $attribute)
     {
-        return isset($this->aliases[$attributeKey]) ? $this->aliases[$attributeKey] : ucfirst(str_replace('_', ' ', $attributeKey));
+        $primaryAttribute = $attribute->getPrimaryAttribute();
+        if (isset($this->aliases[$attribute->getKey()])) {
+            return $this->aliases[$attribute->getKey()];
+        } elseif($primaryAttribute AND isset($this->aliases[$primaryAttribute->getKey()])) {
+            return $this->aliases[$primaryAttribute->getKey()];
+        } else {
+            return ucfirst(str_replace('_', ' ', $attribute->getKey()));
+        }
     }
 
     protected function resolveMessage(Attribute $attribute, $value, Rule $validator)
     {
+        $primaryAttribute = $attribute->getPrimaryAttribute();
         $params = $validator->getParameters();
         $attributeKey = $attribute->getKey();
         $ruleKey = $validator->getKey();
-        $alias = $attribute->getAlias() ?: $this->resolveAttributeName($attributeKey);
+        $alias = $attribute->getAlias() ?: $this->resolveAttributeName($attribute);
         $message = $validator->getMessage(); // default rule message
         $message_keys = [
-            $attributeKey.'.'.$ruleKey,
-            $attributeKey.'.*',
+            $attributeKey.$this->messageSeparator.$ruleKey,
+            $attributeKey,
             $ruleKey
         ];
+
+        if ($primaryAttribute) {
+            // insert primaryAttribute keys 
+            // $message_keys = [
+            //     $attributeKey.$this->messageSeparator.$ruleKey,
+            //     >> here [1] <<
+            //     $attributeKey,
+            //     >> and here [3] <<
+            //     $ruleKey
+            // ];  
+            $primaryAttributeKey = $primaryAttribute->getKey();
+            array_splice($message_keys, 1, 0, $primaryAttributeKey.$this->messageSeparator.$ruleKey);
+            array_splice($message_keys, 3, 0, $primaryAttributeKey);
+        }
 
         foreach($message_keys as $key) {
             if (isset($this->messages[$key])) {
@@ -217,12 +381,12 @@ class Validation
 
     public function getValue($key)
     {
-        return isset($this->inputs[$key])? $this->inputs[$key] : null;
+        return Helper::arrayGet($this->inputs, $key);
     }
 
     public function hasValue($key)
     {
-        return isset($this->inputs[$key]);
+        return Helper::arrayHas($this->inputs, $key);
     }
 
     public function getValidator()
