@@ -38,27 +38,30 @@ use Rakit\Validation\Validator;
 $validator = new Validator;
 
 // make it
-$validation = $validator->make($_POST, [
-	'name' => 'required',	
-	'email' => 'required|email',
-	'password' => 'required|min:6',
+$validation = $validator->make($_POST + $_FILES, [
+    'name' => 'required',   
+    'email' => 'required|email',
+    'password' => 'required|min:6',
     'confirm_password' => 'required|same:password',
-	'avatar' => 'required|uploaded_file:0,500K,png,jpeg',
+    'avatar' => 'required|uploaded_file:0,500K,png,jpeg',
+    'skills' => 'array',
+    'skills.*.id' => 'required|numeric',
+    'skills.*.percentage' => 'required|numeric'
 ]);
 
 // then validate
 $validation->validate();
 
 if ($validation->fails()) {
-	// handling errors
-	$errors = $validation->errors();
-	echo "<pre>";
-	print_r($errors->firstOfAll());
-	echo "</pre>";
-	exit;
+    // handling errors
+    $errors = $validation->errors();
+    echo "<pre>";
+    print_r($errors->firstOfAll());
+    echo "</pre>";
+    exit;
 } else {
-	// validation passes
-	echo "Success!";
+    // validation passes
+    echo "Success!";
 }
 
 ```
@@ -74,12 +77,15 @@ use Rakit\Validation\Validator;
 
 $validator = new Validator;
 
-$validation = $validator->validate($_POST, [
-	'name' => 'required',	
-	'email' => 'required|email',
-	'password' => 'required|min:6',
+$validation = $validator->validate($_POST + $_FILES, [
+    'name' => 'required',   
+    'email' => 'required|email',
+    'password' => 'required|min:6',
     'confirm_password' => 'required|same:password',
-	'avatar' => 'required|uploaded_file:0,500K,png,jpeg',
+    'avatar' => 'required|uploaded_file:0,500K,png,jpeg',
+    'skills' => 'array',
+    'skills.*.id' => 'required|numeric',
+    'skills.*.percentage' => 'required|numeric'
 ]);
 
 if ($validation->fails()) {
@@ -96,7 +102,7 @@ if ($validation->fails()) {
 
 ```
 
-In this case, 2 example above will output the same results. 
+In this case, 2 examples above will output the same results. 
 
 But with `make` you can setup something like custom invalid message, custom attribute alias, etc before validation running.
 
