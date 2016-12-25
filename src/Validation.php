@@ -105,6 +105,8 @@ class Validation
             $data, $attributeKey
         ));
 
+        $attributes = [];
+
         foreach ($data as $key => $value) {
             if ((bool) preg_match('/^'.$pattern.'\z/', $key)) {
                 $attr = new Attribute($this, $key, null, $attribute->getRules());
