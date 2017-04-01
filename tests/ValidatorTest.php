@@ -219,6 +219,28 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($v2->passes());
     }
 
+    public function testRequiredWithAllRule()
+    {
+        $v1 = $this->validator->validate([
+            'b' => '',
+            'a' => '1'
+        ], [
+            'b' => 'required_with_all:a,c'
+        ]);
+
+        $this->assertTrue($v1->passes());
+
+        $v2 = $this->validator->validate([
+            'a' => '1',
+            'b' => '',
+            'c' => '2'
+        ], [
+            'b' => 'required_with_all:a,c'
+        ]);
+
+        $this->assertFalse($v2->passes());
+    }
+
     public function testRulePresent()
     {
         $v1 = $this->validator->validate([
