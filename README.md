@@ -264,6 +264,11 @@ Below is list of all available validation rules
 
 * [required](#rule-required)
 * [required_if](#rule-required_if)
+* [required_unless](#rule-required_unless)
+* [required_with](#rule-required_with)
+* [required_without](#rule-required_without)
+* [required_with_all](#rule-required_with_all)
+* [required_without_all](#rule-required_without_all)
 * [uploaded_file](#rule-uploaded_file)
 * [email](#rule-email)
 * [alpha](#rule-alpha)
@@ -315,6 +320,31 @@ For uploaded file, `$_FILES['key']['error']` must not `UPLOAD_ERR_NO_FILE`.
 The field under this rule must be present and not empty if the anotherfield field is equal to any value.
 
 For example `required_if:something,1,yes,on` will be required if `something` value is one of `1`, `'1'`, `'yes'`, or `'on'`.
+
+<a id="rule-required_unless"></a>
+#### required_unless:another_field,value_1,value_2,...
+
+The field under validation must be present and not empty unless the anotherfield field is equal to any value.
+
+<a id="rule-required_with"></a>
+#### required_with:field_1,field_2,...
+
+The field under validation must be present and not empty only if any of the other specified fields are present.
+
+<a id="rule-required_without"></a>
+#### required_without:field_1,field_2,...
+
+The field under validation must be present and not empty only when any of the other specified fields are not present.
+
+<a id="rule-required_with_all"></a>
+#### required_with_all:field_1,field_2,...
+
+The field under validation must be present and not empty only if all of the other specified fields are present.
+
+<a id="rule-required_without_all"></a>
+#### required_without_all:field_1,field_2,...
+
+The field under validation must be present and not empty only when all of the other specified fields are not present.
 
 <a id="rule-uploaded_file"></a>
 #### uploaded_file:min_size,max_size,file_type_a,file_type_b,...

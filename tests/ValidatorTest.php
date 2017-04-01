@@ -158,6 +158,109 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($v2->passes());
     }
 
+    public function testRequiredUnlessRule()
+    {
+        $v1 = $this->validator->validate([
+            'a' => '',
+            'b' => '',
+        ], [
+            'b' => 'required_unless:a,1'
+        ]);
+
+        $this->assertFalse($v1->passes());
+
+        $v2 = $this->validator->validate([
+            'a' => '1',
+            'b' => '',
+        ], [
+            'b' => 'required_unless:a,1'
+        ]);
+
+        $this->assertTrue($v2->passes());
+    }
+
+    public function testRequiredWithRule()
+    {
+        $v1 = $this->validator->validate([
+            'b' => '',
+        ], [
+            'b' => 'required_with:a'
+        ]);
+
+        $this->assertTrue($v1->passes());
+
+        $v2 = $this->validator->validate([
+            'a' => '1',
+            'b' => '',
+        ], [
+            'b' => 'required_with:a'
+        ]);
+
+        $this->assertFalse($v2->passes());
+    }
+
+    public function testRequiredWithoutRule()
+    {
+        $v1 = $this->validator->validate([
+            'b' => '',
+        ], [
+            'b' => 'required_without:a'
+        ]);
+
+        $this->assertFalse($v1->passes());
+
+        $v2 = $this->validator->validate([
+            'a' => '1',
+            'b' => '',
+        ], [
+            'b' => 'required_without:a'
+        ]);
+
+        $this->assertTrue($v2->passes());
+    }
+
+    public function testRequiredWithAllRule()
+    {
+        $v1 = $this->validator->validate([
+            'b' => '',
+            'a' => '1'
+        ], [
+            'b' => 'required_with_all:a,c'
+        ]);
+
+        $this->assertTrue($v1->passes());
+
+        $v2 = $this->validator->validate([
+            'a' => '1',
+            'b' => '',
+            'c' => '2'
+        ], [
+            'b' => 'required_with_all:a,c'
+        ]);
+
+        $this->assertFalse($v2->passes());
+    }
+
+    public function testRequiredWithoutAllRule()
+    {
+        $v1 = $this->validator->validate([
+            'b' => '',
+            'a' => '1'
+        ], [
+            'b' => 'required_without_all:a,c'
+        ]);
+
+        $this->assertTrue($v1->passes());
+
+        $v2 = $this->validator->validate([
+            'b' => '',
+        ], [
+            'b' => 'required_without_all:a,c'
+        ]);
+
+        $this->assertFalse($v2->passes());
+    }
+
     public function testRulePresent()
     {
         $v1 = $this->validator->validate([
