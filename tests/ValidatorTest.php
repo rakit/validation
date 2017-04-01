@@ -199,6 +199,26 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($v2->passes());
     }
 
+    public function testRequiredWithoutRule()
+    {
+        $v1 = $this->validator->validate([
+            'b' => '',
+        ], [
+            'b' => 'required_without:a'
+        ]);
+
+        $this->assertFalse($v1->passes());
+
+        $v2 = $this->validator->validate([
+            'a' => '1',
+            'b' => '',
+        ], [
+            'b' => 'required_without:a'
+        ]);
+
+        $this->assertTrue($v2->passes());
+    }
+
     public function testRulePresent()
     {
         $v1 = $this->validator->validate([

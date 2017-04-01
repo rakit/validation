@@ -77,6 +77,7 @@ class Validator
             'required_if'       => new Rules\RequiredIf,
             'required_unless'   => new Rules\RequiredUnless,
             'required_with'     => new Rules\RequiredWith,
+            'required_without'  => new Rules\RequiredWithout,
             'email'             => new Rules\Email,
             'alpha'             => new Rules\Alpha,
             'numeric'           => new Rules\Numeric,
