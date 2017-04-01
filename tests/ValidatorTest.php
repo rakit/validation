@@ -158,6 +158,27 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($v2->passes());
     }
 
+    public function testRequiredUnlessRule()
+    {
+        $v1 = $this->validator->validate([
+            'a' => '',
+            'b' => '',
+        ], [
+            'b' => 'required_unless:a,1'
+        ]);
+
+        $this->assertFalse($v1->passes());
+
+        $v2 = $this->validator->validate([
+            'a' => '1',
+            'b' => '',
+        ], [
+            'b' => 'required_unless:a,1'
+        ]);
+
+        $this->assertTrue($v2->passes());
+    }
+
     public function testRulePresent()
     {
         $v1 = $this->validator->validate([

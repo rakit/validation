@@ -75,6 +75,7 @@ class Validator
         $baseValidator = [
             'required'          => new Rules\Required,
             'required_if'       => new Rules\RequiredIf,
+            'required_unless'   => new Rules\RequiredUnless,
             'email'             => new Rules\Email,
             'alpha'             => new Rules\Alpha,
             'numeric'           => new Rules\Numeric,
