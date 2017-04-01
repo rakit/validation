@@ -79,6 +79,7 @@ class Validator
             'required_with'             => new Rules\RequiredWith,
             'required_without'          => new Rules\RequiredWithout,
             'required_with_all'         => new Rules\RequiredWithAll,
+            'required_without_all'      => new Rules\RequiredWithoutAll,
             'email'                     => new Rules\Email,
             'alpha'                     => new Rules\Alpha,
             'numeric'                   => new Rules\Numeric,
