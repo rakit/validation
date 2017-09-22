@@ -293,6 +293,7 @@ Below is list of all available validation rules
 * [different](#rule-different)
 * [after](#after)
 * [before](#before)
+* [callback](#callback)
 
 <a id="rule-required"></a>
 #### required
@@ -489,10 +490,54 @@ Anything that can be parsed by `strtotime` can be passed as a parameter to this 
 
 This also works the same way as the [after rule](#after). Pass anything that can be parsed by `strtotime`
 
+<a id="callback"></a>
+#### callback
+
+You can use this rule to define your own validation rule.
+This rule can't be registered using string pipe.
+To use this rule, you should put Closure inside array of rules.
+
+For example:
+
+```php
+$validation = $validator->validate($_POST, [
+    'even_number' => [
+        'required',
+        function ($value) {
+            // false = invalid
+            return (is_numeric($value) AND $value % 2 === 0);
+        }
+    ]
+]);
+```
+
+You can set invalid message by returning a string. 
+For example, example above would be:
+
+```php
+$validation = $validator->validate($_POST, [
+    'even_number' => [
+        'required',
+        function ($value) {
+            if (!is_numeric($value)) {
+                return ":attribute must be numeric.";
+            }
+            if ($value % 2 !== 0) {
+                return ":attribute is not even number.";
+            }
+            // you can return true or don't return anything if value is valid
+        }
+    ]
+]);
+```
+
+> Note: `Rakit\Validation\Rules\Callback` instance is binded into your Closure. 
+  So you can access rule properties and methods using `$this`.
+
 ## Register/Modify Rule
 
-To create your own validation rule, you need to create a class extending `Rakit\Validation\Rule` 
-then register it using `setValidator` or `addValidator`.
+Another way to use custom validation rule is to create a class extending `Rakit\Validation\Rule`. 
+Then register it using `setValidator` or `addValidator`.
 
 For example, you want to create `unique` validator that check field availability from database. 
 
