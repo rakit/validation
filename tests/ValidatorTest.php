@@ -626,6 +626,27 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($errors->first('comments.0.text:required'), 'baz');
     }
 
+    public function testCustomMessageInCallbackRule()
+    {
+        $evenNumberValidator = function ($value) {
+            if (!is_numeric($value) OR $value % 2 !== 0) {
+                return ":attribute must be even number";
+            }
+            return true;
+        };
+
+        $validation = $this->validator->make([
+            'foo' => 'abc',
+        ], [
+            'foo' => [$evenNumberValidator],
+        ]);
+
+        $validation->validate();
+
+        $errors = $validation->errors();
+        $this->assertEquals($errors->first('foo:callback'), "Foo must be even number");
+    }
+
     public function testSpecificRuleMessage()
     {
         $validation = $this->validator->make([

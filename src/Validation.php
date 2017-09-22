@@ -3,6 +3,7 @@
 namespace Rakit\Validation;
 
 use Rakit\Validation\Rules\Required;
+use Closure;
 
 class Validation
 {
@@ -326,11 +327,12 @@ class Validation
                 $validator = call_user_func_array($validatorFactory, array_merge([$rulename], $params));
             } elseif($rule instanceof Rule) {
                 $validator = $rule;
+            } elseif($rule instanceof Closure) {
+                $validator = call_user_func_array($validatorFactory, ['callback', $rule]);
             } else {
                 $ruleName = is_object($rule) ? get_class($rule) : gettype($rule);
-                throw new \Exception("Rule must be a string or Rakit\Validation\Rule instance. ".$ruleName." given", 1);
+                throw new \Exception("Rule must be a string, closure or Rakit\Validation\Rule instance. ".$ruleName." given");
             }
-
 
             $resolved_rules[] = $validator;
         }
