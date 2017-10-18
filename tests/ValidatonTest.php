@@ -1,6 +1,7 @@
 <?php
 
 use Rakit\Validation\Validation;
+use Rakit\Validation\Validator;
 
 class ValidatonTest extends PHPUnit_Framework_TestCase
 {
@@ -16,12 +17,9 @@ class ValidatonTest extends PHPUnit_Framework_TestCase
         $method = $class->getMethod('parseRule');
         $method->setAccessible(true);
 
-        $validationMock = $this->getMockBuilder(Validation::class)
-            ->disableOriginalConstructor()
-            ->setMethodsExcept(['parseRule'])
-            ->getMock();
+        $validation = new Validation(new Validator(), [], []);
 
-        $result = $method->invokeArgs($validationMock, [$rules]);
+        $result = $method->invokeArgs($validation, [$rules]);
         $this->assertSame($expectedResult, $result);
     }
 
