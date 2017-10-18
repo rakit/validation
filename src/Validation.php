@@ -344,7 +344,12 @@ class Validation
     {
         $exp = explode(':', $rule, 2);
         $rulename = $exp[0];
-        $params = isset($exp[1])? explode(',', $exp[1]) : [];
+        if ($rulename !== 'regex') {
+            $params = isset($exp[1])? explode(',', $exp[1]) : [];
+        } else {
+            $params = [$exp[1]];
+        }
+
         return [$rulename, $params];
     }
 
