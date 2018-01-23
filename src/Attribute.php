@@ -9,6 +9,8 @@ class Attribute
 
     protected $key;
 
+    protected $humanizedKey;
+
     protected $alias;
 
     protected $validation;
@@ -24,6 +26,7 @@ class Attribute
         $this->validation = $validation;
         $this->alias = $alias;
         $this->key = $key;
+        $this->humanizedKey = ucfirst(str_replace('_', ' ', $key));
         foreach($rules as $rule) {
             $this->addRule($rule);
         }
@@ -92,6 +95,11 @@ class Attribute
     public function getKey()
     {
         return $this->key;
+    }
+
+    public function getHumanizedKey()
+    {
+        return $this->humanizedKey;
     }
 
     public function setAlias($alias)
