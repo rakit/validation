@@ -245,8 +245,10 @@ class Validation
             return $this->aliases[$attribute->getKey()];
         } elseif($primaryAttribute AND isset($this->aliases[$primaryAttribute->getKey()])) {
             return $this->aliases[$primaryAttribute->getKey()];
+        } elseif ($this->validator->getUseHumanizedKeys()) {
+            return $attribute->getHumanizedKey();
         } else {
-            return ucfirst(str_replace('_', ' ', $attribute->getKey()));
+            return $attribute->getKey();
         }
     }
 

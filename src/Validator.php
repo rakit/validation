@@ -11,6 +11,8 @@ class Validator
 
     protected $allowRuleOverride = false;
 
+    protected $useHumanizedKeys = true;
+
     public function __construct(array $messages = [])
     {
         $this->messages = $messages;
@@ -123,5 +125,15 @@ class Validator
     public function allowRuleOverride($status = false)
     {
         $this->allowRuleOverride = $status;
+    }
+
+    public function setUseHumanizedKeys($useHumanizedKeys = true)
+    {
+        $this->useHumanizedKeys = $useHumanizedKeys;
+    }
+
+    public function getUseHumanizedKeys()
+    {
+        return $this->useHumanizedKeys;
     }
 }
