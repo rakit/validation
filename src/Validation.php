@@ -4,6 +4,7 @@ namespace Rakit\Validation;
 
 use Rakit\Validation\Rules\Required;
 use Closure;
+use Rakit\Validation\Rules\Defaults;
 
 class Validation
 {
@@ -19,6 +20,8 @@ class Validation
     protected $aliases = [];
 
     protected $messageSeparator = ':';
+    
+    protected $validata = [];
 
     public function __construct(Validator $validator, array $inputs, array $rules, array $messages = array())
     {
@@ -73,6 +76,12 @@ class Validation
         $isEmptyValue = $this->isEmptyValue($value);
 
         foreach($rules as $ruleValidator) {
+            if ($isEmptyValue && $ruleValidator instanceof Defaults) {
+                $default = $ruleValidator->check(null);
+                $this->validata[$attributeKey] = $default;
+            } else {
+                $this->validata[$attributeKey] = $value;
+            }
             if ($isEmptyValue AND $this->ruleIsOptional($attribute, $ruleValidator)) {
                 continue;
             }
@@ -420,6 +429,10 @@ class Validation
         }
 
         return $resolvedInputs;
+    }
+    
+    public function getValidata() {
+        return $this->validata;
     }
 
 }
