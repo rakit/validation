@@ -444,6 +444,25 @@ Value size calculated in same way like `min` and `max` rule.
 #### url
 
 The field under this rule must be valid url format.
+By default it check common URL scheme format like `any_scheme://...`.
+But you can specify URL schemes if you want.
+
+For example:
+
+```php
+$validation = $validator->validate($inputs, [
+    'random_url' => 'url',          // value can be `any_scheme://...`
+    'https_url' => 'url:http',      // value must be started with `https://`
+    'http_url' => 'url:http,https', // value must be started with `http://` or `https://`
+    'ftp_url' => 'url:ftp',         // value must be started with `ftp://`
+    'custom_url' => 'url:custom',   // value must be started with `custom://`
+    'mailto_url' => 'url:mailto',   // value must conatin valid mailto URL scheme like `mailto:a@mail.com,b@mail.com`
+    'jdbc_url' => 'url:jdbc',       // value must contain valid jdbc URL scheme like `jdbc:mysql://localhost/dbname`
+]);
+```
+
+> For commmon URL scheme and mailto, we combine `FILTER_VALIDATE_URL` to validate URL format and `preg_match` to validate it's scheme. 
+  Except for JDBC URL, currently it just check a valid JDBC scheme.
 
 <a id="rule-ip"></a>
 #### ip
