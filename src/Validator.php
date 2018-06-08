@@ -104,6 +104,8 @@ class Validator
             'callback'                  => new Rules\Callback,
             'before'                    => new Rules\Before,
             'after'                     => new Rules\After,
+            'defaults'                  => new Rules\Defaults,
+            'default'                   => new Rules\Defaults, // alias of defaults
         ];
 
         foreach($baseValidator as $key => $validator) {

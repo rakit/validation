@@ -4,6 +4,7 @@ namespace Rakit\Validation;
 
 use Rakit\Validation\Rules\Required;
 use Closure;
+use Rakit\Validation\Rules\Defaults;
 
 class Validation
 {
@@ -19,6 +20,9 @@ class Validation
     protected $aliases = [];
 
     protected $messageSeparator = ':';
+    
+    protected $validData = [];
+    protected $invalidData = [];
 
     public function __construct(Validator $validator, array $inputs, array $rules, array $messages = array())
     {
@@ -72,7 +76,14 @@ class Validation
         $value = $this->getValue($attributeKey);
         $isEmptyValue = $this->isEmptyValue($value);
 
+        $isValid = true;
         foreach($rules as $ruleValidator) {
+            if ($isEmptyValue && $ruleValidator instanceof Defaults) {
+                $value = $ruleValidator->check(null);
+                $isEmptyValue = $this->isEmptyValue($value);
+                continue;
+            }
+
             if ($isEmptyValue AND $this->ruleIsOptional($attribute, $ruleValidator)) {
                 continue;
             }
@@ -80,12 +91,18 @@ class Validation
             $valid = $ruleValidator->check($value);
             
             if (!$valid) {
+                $isValid = false;
                 $this->addError($attribute, $value, $ruleValidator);
-
                 if ($ruleValidator->isImplicit()) {
                     break;
                 }
             }
+        }
+
+        if ($isValid) {
+            $this->validData[$attributeKey] = $value;
+        } else {
+            $this->invalidData[$attributeKey] = $value;
         }
     }
 
@@ -420,6 +437,20 @@ class Validation
         }
 
         return $resolvedInputs;
+    }
+    
+    public function getValidatedData() {
+        return array_merge($this->validData, $this->invalidData);
+    }
+
+    public function getValidData()
+    {
+        return $this->validData;
+    }
+
+    public function getInvalidData()
+    {
+        return $this->invalidData;
     }
 
 }

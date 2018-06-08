@@ -709,4 +709,44 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($errors->first('something:numeric'), 'Baz baz');
         $this->assertEquals($errors->first('comments.0.text:required'), 'Qux qux');
     }
+
+    public function testUsingDefaults()
+    {
+        $validation = $this->validator->validate([
+            'is_active' => null,
+            'is_published' => 'invalid-value'
+        ], [
+            'is_active' => 'defaults:0|required|in:0,1',
+            'is_enabled' => 'defaults:1|required|in:0,1',
+            'is_published' => 'required|in:0,1'
+        ]);
+
+        $this->assertFalse($validation->passes());
+
+        $errors = $validation->errors();
+        $this->assertNull($errors->first('is_active'));
+        $this->assertNull($errors->first('is_enabled'));
+        $this->assertNotNull($errors->first('is_published'));
+
+        // Getting (all) validated data
+        $validatedData = $validation->getValidatedData();
+        $this->assertEquals($validatedData, [
+            'is_active' => '0',
+            'is_enabled' => '1',
+            'is_published' => 'invalid-value'
+        ]);
+        
+        // Getting only valid data
+        $validData = $validation->getValidData();
+        $this->assertEquals($validData, [
+            'is_active' => '0',
+            'is_enabled' => '1'
+        ]);
+
+        // Getting only invalid data
+        $invalidData = $validation->getInvalidData();
+        $this->assertEquals($invalidData, [
+            'is_published' => 'invalid-value',
+        ]);
+    }
 }
