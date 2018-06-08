@@ -360,12 +360,12 @@ Field under this rule must be following rules below to be valid:
 
 Here are some example definitions and explanations:
 
-| Definition                             | Explanation                                                                                   |
-|----------------------------------------|-----------------------------------------------------------------------------------------------|
-| `uploaded_file`                        | Uploaded file is optional. When it is not empty, it must be `ERR_UPLOAD_OK`.                  |
-| `required|uploaded_file`               | Uploaded file is required, and it must be `ERR_UPLOAD_OK`.                                    |
-| `uploaded_file:0,1M`                   | uploaded file size must be between 0 - 1 MB, but uploaded file are optional                   |
-| `required|uploaded_file:0,1M,png,jpeg` | uploaded file size must be between 0 - 1MB and mime types must be `image/jpeg` or `image/png` |
+* `uploaded_file`: uploaded file is optional. When it is not empty, it must be `ERR_UPLOAD_OK`. 
+* `required|uploaded_file`: uploaded file is required, and it must be `ERR_UPLOAD_OK`. 
+* `uploaded_file:0,1M`: uploaded file size must be between 0 - 1 MB, but uploaded file is optional.
+* `required|uploaded_file:0,1M,png,jpeg`: uploaded file size must be between 0 - 1MB and mime types must be `image/jpeg` or `image/png`.
+
+
 
 <a id="rule-email"></a>
 #### email
