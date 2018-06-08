@@ -369,7 +369,8 @@ Here are some example definitions and explanations:
 <a id="rule-default"></a>
 #### default/defaults
 
-This is special rule that doesn't validate anything. It just set default value to your attribute.
+This is special rule that doesn't validate anything. 
+It just set default value to your attribute if that attribute is empty or not present.
 
 For example if you have validation like this
 
@@ -461,7 +462,7 @@ $validation = $validator->validate($inputs, [
 ]);
 ```
 
-> For commmon URL scheme and mailto, we combine `FILTER_VALIDATE_URL` to validate URL format and `preg_match` to validate it's scheme. 
+> For common URL scheme and mailto, we combine `FILTER_VALIDATE_URL` to validate URL format and `preg_match` to validate it's scheme. 
   Except for JDBC URL, currently it just check a valid JDBC scheme.
 
 <a id="rule-ip"></a>
