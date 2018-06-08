@@ -270,6 +270,7 @@ Below is list of all available validation rules
 * [required_with_all](#rule-required_with_all)
 * [required_without_all](#rule-required_without_all)
 * [uploaded_file](#rule-uploaded_file)
+* [default/defaults](#rule-default)
 * [email](#rule-email)
 * [alpha](#rule-alpha)
 * [numeric](#rule-numeric)
@@ -365,7 +366,25 @@ Here are some example definitions and explanations:
 * `uploaded_file:0,1M`: uploaded file size must be between 0 - 1 MB, but uploaded file is optional.
 * `required|uploaded_file:0,1M,png,jpeg`: uploaded file size must be between 0 - 1MB and mime types must be `image/jpeg` or `image/png`.
 
+<a id="rule-default"></a>
+#### default/defaults
 
+This is special rule that doesn't validate anything. It just set default value to your attribute.
+
+For example if you have validation like this
+
+```php
+$validation = $validator->validate([
+    'enabled' => null
+], [
+    'enabled' => 'default:1|required|in:0,1'
+    'published' => 'default:0|required|in:0,1'
+]);
+
+$validation->passes(); // true
+```
+
+Validation passes because we sets default value for `enabled` and `published` to `1` and `0` which is valid.
 
 <a id="rule-email"></a>
 #### email
@@ -672,3 +691,46 @@ $validation = $validator->validate($_POST, [
     ]
 ]);
 ```
+
+## Getting Validated, Valid, and Invalid Data
+
+For example you have validation like this:
+
+```php
+$validation = $validator->validate([
+    'title' => 'Lorem Ipsum',
+    'body' => 'Lorem ipsum dolor sit amet ...',
+    'published' => null,
+    'something' => '-invalid-'
+], [
+    'title' => 'required',
+    'body' => 'required',
+    'published' => 'default:1|required|in:0,1',
+    'something' => 'required|numeric'
+]);
+```
+
+You can get validated data, valid data, or invalid data using methods in example below:
+
+```php
+$validatedData = $validation->getValidatedData();
+// [
+//     'title' => 'Lorem Ipsum',
+//     'body' => 'Lorem ipsum dolor sit amet ...',
+//     'published' => '1' // notice this
+//     'something' => '-invalid-'
+// ]
+
+$validData = $validation->getValidData();
+// [
+//     'title' => 'Lorem Ipsum',
+//     'body' => 'Lorem ipsum dolor sit amet ...',
+//     'published' => '1'
+// ]
+
+$invalidData = $validation->getInvalidData();
+// [
+//     'something' => '-invalid-'
+// ]
+```
+
