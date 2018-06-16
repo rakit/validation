@@ -73,6 +73,8 @@ class Validation
 
         $attributeKey = $attribute->getKey();
         $rules = $attribute->getRules(); 
+
+
         $value = $this->getValue($attributeKey);
         $isEmptyValue = $this->isEmptyValue($value);
 
@@ -84,11 +86,11 @@ class Validation
                 continue;
             }
 
+            $valid = $ruleValidator->check($value);
+
             if ($isEmptyValue AND $this->ruleIsOptional($attribute, $ruleValidator)) {
                 continue;
             }
-
-            $valid = $ruleValidator->check($value);
             
             if (!$valid) {
                 $isValid = false;
