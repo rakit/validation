@@ -9,8 +9,6 @@ class Attribute
 
     protected $key;
 
-    protected $humanizedKey;
-
     protected $alias;
 
     protected $validation;
@@ -21,12 +19,13 @@ class Attribute
 
     protected $otherAttributes = [];
 
+    protected $keyIndexes = [];
+
     public function __construct(Validation $validation, $key, $alias = null, array $rules = array())
     {
         $this->validation = $validation;
         $this->alias = $alias;
         $this->key = $key;
-        $this->humanizedKey = ucfirst(str_replace('_', ' ', $key));
         foreach($rules as $rule) {
             $this->addRule($rule);
         }
@@ -35,6 +34,11 @@ class Attribute
     public function setPrimaryAttribute(Attribute $primaryAttribute)
     {
         $this->primaryAttribute = $primaryAttribute;
+    }
+
+    public function setKeyIndexes(array $keyIndexes)
+    {
+        $this->keyIndexes = $keyIndexes;
     }
 
     public function getPrimaryAttribute()
@@ -97,9 +101,28 @@ class Attribute
         return $this->key;
     }
 
+    public function getKeyIndexes()
+    {
+        return $this->keyIndexes;
+    }
+
     public function getHumanizedKey()
     {
-        return $this->humanizedKey;
+        $primaryAttribute = $this->getPrimaryAttribute();
+        $key = str_replace('_', ' ', $this->key);
+
+        // Resolve key from array validation
+        if ($primaryAttribute) {
+            $split = explode('.', $key);
+            $key = implode(' ', array_map(function($word) {
+                if (is_numeric($word)) {
+                    $word = $word + 1;
+                }
+                return Helper::snakeCase($word, ' ');
+            }, $split));
+        }
+
+        return ucfirst($key);
     }
 
     public function setAlias($alias)

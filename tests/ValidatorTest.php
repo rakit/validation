@@ -749,4 +749,63 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
             'is_published' => 'invalid-value',
         ]);
     }
+
+    public function testHumanizedKeyInArrayValidation()
+    {
+        $validation = $this->validator->validate([
+            'cart' => [
+                [
+                    'qty' => 'xyz',
+                ],
+            ]
+        ], [
+            'cart.*.itemName' => 'required',
+            'cart.*.qty' => 'required|numeric'
+        ]);
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->first('cart.*.qty'), 'The Cart 1 qty must be numeric');
+        $this->assertEquals($errors->first('cart.*.itemName'), 'The Cart 1 item name is required');
+    }
+
+    public function testCustomMessageInArrayValidation()
+    {
+        $validation = $this->validator->make([
+            'cart' => [
+                [
+                    'qty' => 'xyz',
+                    'itemName' => 'Lorem ipsum'
+                ],
+                [
+                    'qty' => 10,
+                    'attributes' => [
+                        [
+                            'name' => 'color',
+                            'value' => null
+                        ]
+                    ]
+                ],
+            ]
+        ], [
+            'cart.*.itemName' => 'required',
+            'cart.*.qty' => 'required|numeric',
+            'cart.*.attributes.*.value' => 'required'
+        ]);
+
+        $validation->setMessages([
+            'cart.*.itemName:required' => 'Item [0] name is required',
+            'cart.*.qty:numeric' => 'Item {0} qty is not a number',
+            'cart.*.attributes.*.value' => 'Item {0} attribute {1} value is required',
+        ]);
+
+        $validation->validate();
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->first('cart.*.qty'), 'Item 1 qty is not a number');
+        $this->assertEquals($errors->first('cart.*.itemName'), 'Item 1 name is required');
+        $this->assertEquals($errors->first('cart.*.attributes.*.value'), 'Item 2 attribute 1 value is required');
+    }
+
 }

@@ -117,7 +117,7 @@ class Validation
         $attributeKey = $attribute->getKey();
         $data = Helper::arrayDot($this->initializeAttributeOnData($attributeKey));
 
-        $pattern = str_replace('\*', '[^\.]+', preg_quote($attributeKey));
+        $pattern = str_replace('\*', '([^\.]+)', preg_quote($attributeKey));
 
         $data = array_merge($data, $this->extractValuesForWildcards(
             $data, $attributeKey
@@ -126,9 +126,10 @@ class Validation
         $attributes = [];
 
         foreach ($data as $key => $value) {
-            if ((bool) preg_match('/^'.$pattern.'\z/', $key)) {
+            if ((bool) preg_match('/^'.$pattern.'\z/', $key, $match)) {
                 $attr = new Attribute($this, $key, null, $attribute->getRules());
                 $attr->setPrimaryAttribute($attribute);
+                $attr->setKeyIndexes(array_slice($match, 1));
                 $attributes[] = $attr;
             }
         }
@@ -304,6 +305,7 @@ class Validation
             }
         }
 
+        // Replace message params
         $vars = array_merge($params, [
             'attribute' => $alias,
             'value' => $value,
@@ -312,6 +314,20 @@ class Validation
         foreach($vars as $key => $value) {
             $value = $this->stringify($value);
             $message = str_replace(':'.$key, $value, $message);
+        }
+
+        // Replace key indexes
+        $keyIndexes = $attribute->getKeyIndexes();
+        foreach ($keyIndexes as $pathIndex => $index) {
+            $replacers = [
+                "[{$pathIndex}]" => $index,
+            ];
+
+            if (is_numeric($index)) {
+                $replacers["{{$pathIndex}}"] = $index + 1;
+            }
+
+            $message = str_replace(array_keys($replacers), array_values($replacers), $message);
         }
 
         return $message;
