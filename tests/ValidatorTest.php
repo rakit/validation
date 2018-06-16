@@ -842,4 +842,38 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertNull($errors->first('products.14.notes'));
     }
 
+    public function testRequiredUnlessOnArrayAttribute()
+    {
+        $validation = $this->validator->validate([
+            'products' => [
+                // valid because has_notes is 1
+                '10' => [
+                    'quantity' => 8,
+                    'has_notes' => 1,
+                    'notes' => ''
+                ],
+                // invalid because has_notes is not 1
+                '12' => [
+                    'quantity' => 0,
+                    'has_notes' => null,
+                    'notes' => ''
+                ],
+                // invalid because no has_notes
+                '14' => [
+                    'quantity' => 0,
+                    'notes' => ''
+                ],
+            ]
+        ], [
+            'products.*.notes' => 'required_unless:products.*.has_notes,1',
+        ]);
+
+        $this->assertFalse($validation->passes());
+
+        $errors = $validation->errors();
+        $this->assertNull($errors->first('products.10.notes'));
+        $this->assertNotNull($errors->first('products.12.notes'));
+        $this->assertNotNull($errors->first('products.14.notes'));
+    }
+
 }

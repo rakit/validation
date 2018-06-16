@@ -23,7 +23,7 @@ class RequiredUnless extends Required
 
         $anotherAttribute = $this->parameter('field');
         $definedValues = $this->parameter('values');
-        $anotherValue = $this->validation->getValue($anotherAttribute);
+        $anotherValue = $this->getAttribute()->getValue($anotherAttribute);
 
         $validator = $this->validation->getValidator();
         $required_validator = $validator('required');
