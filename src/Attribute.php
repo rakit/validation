@@ -106,6 +106,36 @@ class Attribute
         return $this->keyIndexes;
     }
 
+    public function getValue($key = null)
+    {
+        if ($key && $this->isArrayAttribute()) {
+            $key = $this->resolveSiblingKey($key);
+        }
+
+        if (!$key) {
+            $key = $this->getKey();
+        }
+
+        return $this->validation->getValue($key);
+    }
+
+    public function isArrayAttribute()
+    {
+        return count($this->getKeyIndexes()) > 0;
+    }
+
+    public function resolveSiblingKey($key)
+    {
+        $indexes = $this->getKeyIndexes();
+        $keys = explode("*", $key);
+        $countAsterisks = count($keys) - 1;
+        if (count($indexes) < $countAsterisks) {
+            $indexes = array_merge($indexes, array_fill(0, $countAsterisks - count($indexes), "*"));
+        }
+        $args = array_merge([str_replace("*", "%s", $key)], $indexes);
+        return call_user_func_array('sprintf', $args);
+    }
+
     public function getHumanizedKey()
     {
         $primaryAttribute = $this->getPrimaryAttribute();
