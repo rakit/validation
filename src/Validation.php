@@ -74,12 +74,13 @@ class Validation
         $attributeKey = $attribute->getKey();
         $rules = $attribute->getRules(); 
 
-
         $value = $this->getValue($attributeKey);
         $isEmptyValue = $this->isEmptyValue($value);
 
         $isValid = true;
         foreach($rules as $ruleValidator) {
+            $ruleValidator->setAttribute($attribute);
+
             if ($isEmptyValue && $ruleValidator instanceof Defaults) {
                 $value = $ruleValidator->check(null);
                 $isEmptyValue = $this->isEmptyValue($value);
