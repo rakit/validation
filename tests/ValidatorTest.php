@@ -808,4 +808,38 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($errors->first('cart.*.attributes.*.value'), 'Item 2 attribute 1 value is required');
     }
 
+    public function testRequiredIfOnArrayAttribute()
+    {
+        $validation = $this->validator->validate([
+            'products' => [
+                // invalid because has_notes is not empty
+                '10' => [
+                    'quantity' => 8,
+                    'has_notes' => 1,
+                    'notes' => ''
+                ],
+                // valid because has_notes is null
+                '12' => [
+                    'quantity' => 0,
+                    'has_notes' => null,
+                    'notes' => ''
+                ],
+                // valid because no has_notes
+                '14' => [
+                    'quantity' => 0,
+                    'notes' => ''
+                ],
+            ]
+        ], [
+            'products.*.notes' => 'required_if:products.*.has_notes,1',
+        ]);
+
+        $this->assertFalse($validation->passes());
+
+        $errors = $validation->errors();
+        $this->assertNotNull($errors->first('products.10.notes'));
+        $this->assertNull($errors->first('products.12.notes'));
+        $this->assertNull($errors->first('products.14.notes'));
+    }
+
 }
