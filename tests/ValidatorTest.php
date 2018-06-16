@@ -876,4 +876,28 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($errors->first('products.14.notes'));
     }
 
+    public function testSameRuleOnArrayAttribute()
+    {
+        $validation = $this->validator->validate([
+            'users' => [
+                [
+                    'password' => 'foo',
+                    'password_confirmation' => 'foo'
+                ],
+                [
+                    'password' => 'foo',
+                    'password_confirmation' => 'bar'
+                ],
+            ]
+        ], [
+            'users.*.password_confirmation' => 'required|same:users.*.password',
+        ]);
+
+        $this->assertFalse($validation->passes());
+
+        $errors = $validation->errors();
+        $this->assertNull($errors->first('users.0.password_confirmation:same'));
+        $this->assertNotNull($errors->first('users.1.password_confirmation:same'));
+    }
+
 }

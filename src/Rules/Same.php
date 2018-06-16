@@ -16,7 +16,7 @@ class Same extends Rule
         $this->requireParameters($this->fillable_params);
 
         $field = $this->parameter('field');
-        $anotherValue = $this->validation->getValue($field);
+        $anotherValue = $this->getAttribute()->getValue($field);
 
         return $value == $anotherValue;
     }
