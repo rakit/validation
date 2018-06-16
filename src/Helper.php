@@ -158,4 +158,21 @@ class Helper
         return $target;
     }
 
+    /**
+     * Get snake_case format from given string
+     *
+     * @param  string $value
+     * @param  string $delimiter
+     * @return string
+     */
+    public static function snakeCase($value, $delimiter = '_')
+    {
+        if (! ctype_lower($value)) {
+            $value = preg_replace('/\s+/u', '', ucwords($value));
+            $value = strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
+        }
+        
+        return $value;
+    }
+
 }

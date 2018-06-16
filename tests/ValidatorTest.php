@@ -749,4 +749,155 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
             'is_published' => 'invalid-value',
         ]);
     }
+
+    public function testHumanizedKeyInArrayValidation()
+    {
+        $validation = $this->validator->validate([
+            'cart' => [
+                [
+                    'qty' => 'xyz',
+                ],
+            ]
+        ], [
+            'cart.*.itemName' => 'required',
+            'cart.*.qty' => 'required|numeric'
+        ]);
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->first('cart.*.qty'), 'The Cart 1 qty must be numeric');
+        $this->assertEquals($errors->first('cart.*.itemName'), 'The Cart 1 item name is required');
+    }
+
+    public function testCustomMessageInArrayValidation()
+    {
+        $validation = $this->validator->make([
+            'cart' => [
+                [
+                    'qty' => 'xyz',
+                    'itemName' => 'Lorem ipsum'
+                ],
+                [
+                    'qty' => 10,
+                    'attributes' => [
+                        [
+                            'name' => 'color',
+                            'value' => null
+                        ]
+                    ]
+                ],
+            ]
+        ], [
+            'cart.*.itemName' => 'required',
+            'cart.*.qty' => 'required|numeric',
+            'cart.*.attributes.*.value' => 'required'
+        ]);
+
+        $validation->setMessages([
+            'cart.*.itemName:required' => 'Item [0] name is required',
+            'cart.*.qty:numeric' => 'Item {0} qty is not a number',
+            'cart.*.attributes.*.value' => 'Item {0} attribute {1} value is required',
+        ]);
+
+        $validation->validate();
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->first('cart.*.qty'), 'Item 1 qty is not a number');
+        $this->assertEquals($errors->first('cart.*.itemName'), 'Item 1 name is required');
+        $this->assertEquals($errors->first('cart.*.attributes.*.value'), 'Item 2 attribute 1 value is required');
+    }
+
+    public function testRequiredIfOnArrayAttribute()
+    {
+        $validation = $this->validator->validate([
+            'products' => [
+                // invalid because has_notes is not empty
+                '10' => [
+                    'quantity' => 8,
+                    'has_notes' => 1,
+                    'notes' => ''
+                ],
+                // valid because has_notes is null
+                '12' => [
+                    'quantity' => 0,
+                    'has_notes' => null,
+                    'notes' => ''
+                ],
+                // valid because no has_notes
+                '14' => [
+                    'quantity' => 0,
+                    'notes' => ''
+                ],
+            ]
+        ], [
+            'products.*.notes' => 'required_if:products.*.has_notes,1',
+        ]);
+
+        $this->assertFalse($validation->passes());
+
+        $errors = $validation->errors();
+        $this->assertNotNull($errors->first('products.10.notes'));
+        $this->assertNull($errors->first('products.12.notes'));
+        $this->assertNull($errors->first('products.14.notes'));
+    }
+
+    public function testRequiredUnlessOnArrayAttribute()
+    {
+        $validation = $this->validator->validate([
+            'products' => [
+                // valid because has_notes is 1
+                '10' => [
+                    'quantity' => 8,
+                    'has_notes' => 1,
+                    'notes' => ''
+                ],
+                // invalid because has_notes is not 1
+                '12' => [
+                    'quantity' => 0,
+                    'has_notes' => null,
+                    'notes' => ''
+                ],
+                // invalid because no has_notes
+                '14' => [
+                    'quantity' => 0,
+                    'notes' => ''
+                ],
+            ]
+        ], [
+            'products.*.notes' => 'required_unless:products.*.has_notes,1',
+        ]);
+
+        $this->assertFalse($validation->passes());
+
+        $errors = $validation->errors();
+        $this->assertNull($errors->first('products.10.notes'));
+        $this->assertNotNull($errors->first('products.12.notes'));
+        $this->assertNotNull($errors->first('products.14.notes'));
+    }
+
+    public function testSameRuleOnArrayAttribute()
+    {
+        $validation = $this->validator->validate([
+            'users' => [
+                [
+                    'password' => 'foo',
+                    'password_confirmation' => 'foo'
+                ],
+                [
+                    'password' => 'foo',
+                    'password_confirmation' => 'bar'
+                ],
+            ]
+        ], [
+            'users.*.password_confirmation' => 'required|same:users.*.password',
+        ]);
+
+        $this->assertFalse($validation->passes());
+
+        $errors = $validation->errors();
+        $this->assertNull($errors->first('users.0.password_confirmation:same'));
+        $this->assertNotNull($errors->first('users.1.password_confirmation:same'));
+    }
+
 }
