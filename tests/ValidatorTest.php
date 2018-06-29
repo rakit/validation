@@ -900,4 +900,63 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($errors->first('users.1.password_confirmation:same'));
     }
 
+    public function testGetValidData()
+    {
+        $validation = $this->validator->validate([
+            'items' => [
+                [
+                    'product_id' => 1,
+                    'qty' => 'invalid'
+                ]
+            ],
+            'thing' => 'exists',
+        ], [
+            'thing' => 'required',
+            'items.*.product_id' => 'required|numeric',
+            'items.*.qty' => 'required|numeric',
+            'something' => 'default:on|required|in:on,off'
+        ]);
+
+        $validData = $validation->getValidData();
+
+        $this->assertEquals([
+            'items' => [
+                [
+                    'product_id' => 1
+                ]
+            ],
+            'thing' => 'exists',
+            'something' => 'on'
+        ], $validData);
+    }
+
+    public function testGetInvalidData()
+    {
+        $validation = $this->validator->validate([
+            'items' => [
+                [
+                    'product_id' => 1,
+                    'qty' => 'invalid'
+                ]
+            ],
+            'thing' => 'exists',
+        ], [
+            'thing' => 'required',
+            'items.*.product_id' => 'required|numeric',
+            'items.*.qty' => 'required|numeric',
+            'something' => 'required|in:on,off'
+        ]);
+
+        $invalidData = $validation->getInvalidData();
+
+        $this->assertEquals([
+            'items' => [
+                [
+                    'qty' => 'invalid'
+                ]
+            ],
+            'something' => null
+        ], $invalidData);
+    }
+
 }

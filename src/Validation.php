@@ -103,9 +103,9 @@ class Validation
         }
 
         if ($isValid) {
-            $this->validData[$attributeKey] = $value;
+            $this->setValidData($attribute, $value);
         } else {
-            $this->invalidData[$attributeKey] = $value;
+            $this->setInvalidData($attribute, $value);
         }
     }
 
@@ -462,9 +462,29 @@ class Validation
         return array_merge($this->validData, $this->invalidData);
     }
 
+    protected function setValidData(Attribute $attribute, $value)
+    {
+        $key = $attribute->getKey();
+        if ($attribute->isArrayAttribute()) {
+            Helper::arraySet($this->validData, $key, $value);   
+        } else {
+            $this->validData[$key] = $value;
+        }
+    }
+
     public function getValidData()
     {
         return $this->validData;
+    }
+
+    protected function setInvalidData(Attribute $attribute, $value)
+    {
+        $key = $attribute->getKey();
+        if ($attribute->isArrayAttribute()) {
+            Helper::arraySet($this->invalidData, $key, $value);   
+        } else {
+            $this->invalidData[$key] = $value;
+        }
     }
 
     public function getInvalidData()
