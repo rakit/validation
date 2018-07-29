@@ -81,6 +81,7 @@ class Validator
             'required_without_all'      => new Rules\RequiredWithoutAll,
             'email'                     => new Rules\Email,
             'alpha'                     => new Rules\Alpha,
+            'alphya_new'                => new Rules\AlphaNew,
             'numeric'                   => new Rules\Numeric,
             'alpha_num'                 => new Rules\AlphaNum,
             'alpha_dash'                => new Rules\AlphaDash,
