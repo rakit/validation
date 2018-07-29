@@ -84,6 +84,8 @@ class Validator
             'alphya_new'                => new Rules\AlphaNew,
             'numeric'                   => new Rules\Numeric,
             'alpha_num'                 => new Rules\AlphaNum,
+            'time_24'                   => new Rules\Time_24,
+            'phone'                     => new Rules\MatchPhone,
             'alpha_dash'                => new Rules\AlphaDash,
             'in'                        => new Rules\In,
             'not_in'                    => new Rules\NotIn,
