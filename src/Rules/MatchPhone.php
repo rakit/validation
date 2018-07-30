@@ -15,7 +15,7 @@ class MatchPhone extends Rule
             return false;
         }
 
-        return preg_match('/^(091|\+91|91|\(091\)|\(\+91\)|\(91\)|0)? ?[7-9][0-9]{9}$/', $value) > 0;
+        return preg_match('/^([\+0-9]{2,5}|0)? ?[1-9][0-9]{2}[ \-]?[0-9]{3}[ \-]?[0-9]{4}$/', $value) > 0;
         
     }
 
