@@ -21,4 +21,16 @@ class InTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->fillParameters([1,2,3])->check(4));
     }
 
+    public function testStricts()
+    {
+        // Not strict
+        $this->assertTrue($this->rule->fillParameters(['1', '2', '3'])->check(1));        
+        $this->assertTrue($this->rule->fillParameters(['1', '2', '3'])->check(true));
+
+        // Strict        
+        $this->rule->strict();
+        $this->assertFalse($this->rule->fillParameters(['1', '2', '3'])->check(1));        
+        $this->assertFalse($this->rule->fillParameters(['1', '2', '3'])->check(1));        
+    }
+
 }

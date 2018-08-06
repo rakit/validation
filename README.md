@@ -417,10 +417,28 @@ The field under this rule may have alpha-numeric characters, as well as dashes a
 
 The field under this rule must be included in the given list of values.
 
+This rule is using `in_array` to check the value. 
+By default `in_array` disable strict checking. 
+So it doesn't check data type.
+If you want enable strict checking, you can invoke validator like this:
+
+```php
+$validation = $validator->validate($data, [
+    'enabled' => [
+        'required', 
+        $validator('in', [true, 1])->strict()
+    ]
+]);
+```
+
+Then 'enabled' value should be boolean `true`, or int `1`.
+
 <a id="rule-not_in"></a>
 #### not_in:value_1,value_2,...
 
 The field under this rule must not be included in the given list of values.
+
+This rule also using `in_array`. You can enable strict checking by invoking validator and call `strict()` like example in rule `in` above.
 
 <a id="rule-min"></a>
 #### min:number
