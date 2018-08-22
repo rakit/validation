@@ -7,7 +7,7 @@ use Rakit\Validation\Rule;
 class AlphaDash extends Rule
 {
 
-    protected $message = "The :attribute only allows a-z, 0-8, _ and -";
+    protected $message = "The :attribute only allows a-z, 0-9, _ and -";
 
     public function check($value)
     {
