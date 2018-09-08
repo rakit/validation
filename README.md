@@ -272,6 +272,8 @@ Below is list of all available validation rules
 * [uploaded_file](#rule-uploaded_file)
 * [default/defaults](#rule-default)
 * [email](#rule-email)
+* [uppercase](#rule-uppercase)
+* [lowercase](#rule-lowercase)
 * [alpha](#rule-alpha)
 * [numeric](#rule-numeric)
 * [alpha_num](#rule-alpha_num)
@@ -391,6 +393,16 @@ Validation passes because we sets default value for `enabled` and `published` to
 #### email
 
 The field under this validation must be valid email address.
+
+<a id="rule-uppercase"></a>
+#### uppercase
+
+The field under this validation must be valid uppercase.
+
+<a id="rule-lowercase"></a>
+#### lowercase
+
+The field under this validation must be valid lowercase.
 
 <a id="rule-alpha"></a>
 #### alpha
