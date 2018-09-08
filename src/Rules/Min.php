@@ -19,7 +19,7 @@ class Min extends Rule
         if (is_int($value)) {
             return $value >= $min;
         } elseif(is_string($value)) {
-            return strlen($value) >= $min;
+            return mb_strlen($value) >= $min;
         } elseif(is_array($value)) {
             return count($value) >= $min;
         } else {

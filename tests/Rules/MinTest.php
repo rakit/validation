@@ -21,7 +21,12 @@ class MinTest extends PHPUnit_Framework_TestCase
     {
         $this->assertFalse($this->rule->fillParameters([7])->check('foobar'));
         $this->assertFalse($this->rule->fillParameters([4])->check([1,2,3]));
-        $this->assertFalse($this->rule->fillParameters([200])->check(123));
+        $this->assertFalse($this->rule->fillParameters([200])->check(123));  
+
+        $this->assertFalse($this->rule->fillParameters([4])->check('мин'));
+        $this->assertFalse($this->rule->fillParameters([5])->check('كلمة'));
+        $this->assertFalse($this->rule->fillParameters([4])->check('ワード'));
+        $this->assertFalse($this->rule->fillParameters([2])->check('字'));      
     }
 
 }
