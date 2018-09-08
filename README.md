@@ -274,6 +274,7 @@ Below is list of all available validation rules
 * [email](#rule-email)
 * [uppercase](#rule-uppercase)
 * [lowercase](#rule-lowercase)
+* [json](#rule-json)
 * [alpha](#rule-alpha)
 * [numeric](#rule-numeric)
 * [alpha_num](#rule-alpha_num)
@@ -403,6 +404,11 @@ The field under this validation must be valid uppercase.
 #### lowercase
 
 The field under this validation must be valid lowercase.
+
+<a id="rule-json"></a>
+#### json
+
+The field under this validation must be valid JSON string.
 
 <a id="rule-alpha"></a>
 #### alpha

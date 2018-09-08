@@ -2,7 +2,7 @@
 
 use Rakit\Validation\Validator;
 
-require_once 'Fixtures/Json.php';
+require_once 'Fixtures/Even.php';
 require_once 'Fixtures/Required.php';
 
 class ValidatorTest extends PHPUnit_Framework_TestCase
@@ -339,11 +339,11 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
     public function testNewValidationRuleCanBeAdded()
     {
 
-        $this->validator->addValidator('json', new Json());
+        $this->validator->addValidator('even', new Even());
 
-        $data = ['s' => json_encode(['name' => 'space x', 'human' => false])];
+        $data = [4, 6, 8, 10 ];
 
-        $validation = $this->validator->make($data, ['s' => 'json'], []);
+        $validation = $this->validator->make($data, ['s' => 'even'], []);
 
         $validation->validate();
 
