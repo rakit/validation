@@ -19,7 +19,7 @@ class Max extends Rule
         if (is_int($value)) {
             return $value <= $max;
         } elseif(is_string($value)) {
-            return mb_strlen($value) <= $max;
+            return mb_strlen($value, 'UTF-8') <= $max;
         } elseif(is_array($value)) {
             return count($value) <= $max;
         } else {
