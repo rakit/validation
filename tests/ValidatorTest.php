@@ -909,10 +909,16 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
                     'qty' => 'invalid'
                 ]
             ],
+            'emails' => [
+                'foo@bar.com',
+                'something',
+                'foo@blah.com'
+            ],
             'thing' => 'exists',
         ], [
             'thing' => 'required',
             'items.*.product_id' => 'required|numeric',
+            'emails.*' => 'required|email',
             'items.*.qty' => 'required|numeric',
             'something' => 'default:on|required|in:on,off'
         ]);
@@ -924,6 +930,10 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
                 [
                     'product_id' => 1
                 ]
+            ],
+            'emails' => [
+                0 => 'foo@bar.com',
+                2 => 'foo@blah.com'
             ],
             'thing' => 'exists',
             'something' => 'on'
@@ -939,10 +949,16 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
                     'qty' => 'invalid'
                 ]
             ],
+            'emails' => [
+                'foo@bar.com',
+                'something',
+                'foo@blah.com'
+            ],
             'thing' => 'exists',
         ], [
             'thing' => 'required',
             'items.*.product_id' => 'required|numeric',
+            'emails.*' => 'required|email',
             'items.*.qty' => 'required|numeric',
             'something' => 'required|in:on,off'
         ]);
@@ -954,6 +970,9 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
                 [
                     'qty' => 'invalid'
                 ]
+            ],
+            'emails' => [
+                1 => 'something'
             ],
             'something' => null
         ], $invalidData);
