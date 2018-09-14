@@ -21,7 +21,7 @@ class Between extends Rule
         if (is_int($value)) {
             return $value >= $min AND $value <= $max;
         } elseif(is_string($value)) {
-            return strlen($value) >= $min AND strlen($value) <= $max;
+            return mb_strlen($value, 'UTF-8') >= $min AND mb_strlen($value, 'UTF-8') <= $max;
         } elseif(is_array($value)) {
             return count($value) >= $min AND count($value) <= $max;
         } else {

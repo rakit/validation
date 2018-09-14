@@ -162,7 +162,7 @@ class Validation
 
         $asteriskPos = strpos($attributeKey, '*');
 
-        if (false === $asteriskPos || $asteriskPos === (strlen($attributeKey) - 1)) {
+        if (false === $asteriskPos || $asteriskPos === (mb_strlen($attributeKey, 'UTF-8') - 1)) {
             return $data;
         }
 
