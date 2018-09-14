@@ -21,7 +21,7 @@ class BetweenTest extends PHPUnit_Framework_TestCase
     public function testInvalids()
     {
         $this->assertFalse($this->rule->fillParameters([2, 5])->check('foobar'));
-        $this->assertTrue($this->rule->fillParameters([2, 5])->check('футбол'));
+        $this->assertFalse($this->rule->fillParameters([2, 5])->check('футбол'));
         $this->assertFalse($this->rule->fillParameters([4, 6])->check([1,2,3]));
         $this->assertFalse($this->rule->fillParameters([50, 100])->check(123));
     }
