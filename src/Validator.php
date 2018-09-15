@@ -107,6 +107,7 @@ class Validator
             'lowercase'                 => new Rules\Lowercase,
             'uppercase'                 => new Rules\Uppercase,
             'json'                      => new Rules\Json,
+            'digits'                      => new Rules\Digits,
             'defaults'                  => new Rules\Defaults,
             'default'                   => new Rules\Defaults, // alias of defaults
         ];
