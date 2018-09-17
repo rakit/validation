@@ -13,7 +13,7 @@ class Digits extends Rule
 
     public function check($value)
     {
-    	$this->requireParameters($this->fillable_params);
+        $this->requireParameters($this->fillable_params);
 
         $length = (int) $this->parameter('length');
 

@@ -13,7 +13,7 @@ class DigitsBetween extends Rule
 
     public function check($value)
     {
-    	$this->requireParameters($this->fillable_params);
+        $this->requireParameters($this->fillable_params);
 
         $min = (int) $this->parameter('min');
         $max = (int) $this->parameter('max');
