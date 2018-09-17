@@ -284,6 +284,8 @@ Below is list of all available validation rules
 * [min](#rule-min)
 * [max](#rule-max)
 * [between](#rule-between)
+* [digits](#rule-digits)
+* [digits_between](#rule-digits_between)
 * [url](#rule-url)
 * [ip](#rule-ip)
 * [ipv4](#rule-ipv4)
@@ -476,6 +478,16 @@ Value size calculated in same way like `min` rule.
 
 The field under this rule must have a size between min and max params. 
 Value size calculated in same way like `min` and `max` rule.
+
+<a id="rule-digits"></a>
+#### digits:value
+
+The field under validation must be numeric and must have an exact length of `value`.
+
+<a id="rule-digits_between"></a>
+#### digits_between:min,max
+
+The field under validation must have a length between the given `min` and `max`.
 
 <a id="rule-url"></a>
 #### url
