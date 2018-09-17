@@ -90,6 +90,7 @@ class Validator
             'max'                       => new Rules\Max,
             'between'                   => new Rules\Between,
             'url'                       => new Rules\Url,
+            'integer'                   => new Rules\Integer,
             'ip'                        => new Rules\Ip,
             'ipv4'                      => new Rules\Ipv4,
             'ipv6'                      => new Rules\Ipv6,
