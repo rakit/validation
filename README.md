@@ -287,6 +287,7 @@ Below is list of all available validation rules
 * [digits](#rule-digits)
 * [digits_between](#rule-digits_between)
 * [url](#rule-url)
+* [integer](#rule-integer)
 * [ip](#rule-ip)
 * [ipv4](#rule-ipv4)
 * [ipv6](#rule-ipv6)
@@ -512,6 +513,10 @@ $validation = $validator->validate($inputs, [
 
 > For common URL scheme and mailto, we combine `FILTER_VALIDATE_URL` to validate URL format and `preg_match` to validate it's scheme. 
   Except for JDBC URL, currently it just check a valid JDBC scheme.
+
+<a id="rule-integer"></a>
+#### integer
+The field under this rule must be integer.
 
 <a id="rule-ip"></a>
 #### ip
