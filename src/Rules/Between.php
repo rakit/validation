@@ -17,8 +17,8 @@ class Between extends Rule
 
         $min = (int) $this->parameter('min');
         $max = (int) $this->parameter('max');
-        
-        if (is_int($value)) {
+
+        if (is_int($value) || is_float($value)) {
             return $value >= $min AND $value <= $max;
         } elseif(is_string($value)) {
             return mb_strlen($value, 'UTF-8') >= $min AND mb_strlen($value, 'UTF-8') <= $max;
