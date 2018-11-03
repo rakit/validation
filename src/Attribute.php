@@ -124,6 +124,11 @@ class Attribute
         return count($this->getKeyIndexes()) > 0;
     }
 
+    public function isUsingDotNotation()
+    {
+        return strpos($this->getKey(), '.') !== false;
+    }
+
     public function resolveSiblingKey($key)
     {
         $indexes = $this->getKeyIndexes();
