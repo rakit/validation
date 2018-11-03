@@ -158,6 +158,36 @@ class Helper
         return $target;
     }
 
+
+    /**
+     * Unset an item on an array or object using dot notation.
+     *
+     * @param  mixed  $target
+     * @param  string|array  $key
+     * @return mixed
+     */
+    public static function arrayUnset(&$target, $key)
+    {
+        if (!is_array($target)) {
+            return $target;
+        }
+
+        $segments = is_array($key) ? $key : explode('.', $key);
+        $segment = array_shift($segments);
+
+        if ($segment == '*') {
+            $target = [];
+        } elseif ($segments) {
+            if (array_key_exists($segment, $target)) {
+                static::arrayUnset($target[$segment], $segments);
+            }
+        } elseif (array_key_exists($segment, $target)) {
+            unset($target[$segment]);
+        }
+
+        return $target;
+    }
+
     /**
      * Get snake_case format from given string
      *
@@ -171,7 +201,7 @@ class Helper
             $value = preg_replace('/\s+/u', '', ucwords($value));
             $value = strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
         }
-        
+
         return $value;
     }
 

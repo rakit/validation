@@ -76,7 +76,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation = $this->validator->validate([
             'file' => $empty_file
         ], [
-            'file' => 'required|uploaded_file' 
+            'file' => 'required|uploaded_file'
         ]);
 
         $errors = $validation->errors();
@@ -97,20 +97,20 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $validation = $this->validator->validate([
             'file' => $empty_file
         ], [
-            'file' => 'uploaded_file' 
+            'file' => 'uploaded_file'
         ]);
         $this->assertTrue($validation->passes());
     }
 
     /**
      * @dataProvider getSamplesMissingKeyFromUploadedFileValue
-     */    
+     */
     public function testMissingKeyUploadedFile($uploaded_file)
     {
         $validation = $this->validator->validate([
             'file' => $uploaded_file
         ], [
-            'file' => 'required|uploaded_file' 
+            'file' => 'required|uploaded_file'
         ]);
 
         $errors = $validation->errors();
@@ -335,7 +335,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse($validator2->passes());
     }
-        
+
     public function testNewValidationRuleCanBeAdded()
     {
 
@@ -735,7 +735,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
             'is_enabled' => '1',
             'is_published' => 'invalid-value'
         ]);
-        
+
         // Getting only valid data
         $validData = $validation->getValidData();
         $this->assertEquals($validData, [
@@ -914,13 +914,22 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
                 'something',
                 'foo@blah.com'
             ],
+            'stuffs' => [
+                'one' => '1',
+                'two' => '2',
+                'three' => 'three',
+            ],
             'thing' => 'exists',
         ], [
             'thing' => 'required',
             'items.*.product_id' => 'required|numeric',
             'emails.*' => 'required|email',
             'items.*.qty' => 'required|numeric',
-            'something' => 'default:on|required|in:on,off'
+            'something' => 'default:on|required|in:on,off',
+            'stuffs' => 'required|array',
+            'stuffs.one' => 'required|numeric',
+            'stuffs.two' => 'required|numeric',
+            'stuffs.three' => 'required|numeric',
         ]);
 
         $validData = $validation->getValidData();
@@ -936,8 +945,15 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
                 2 => 'foo@blah.com'
             ],
             'thing' => 'exists',
-            'something' => 'on'
+            'something' => 'on',
+            'stuffs' => [
+                'one' => '1',
+                'two' => '2',
+            ]
         ], $validData);
+
+        $stuffs = $validData['stuffs'];
+        $this->assertFalse(isset($stuffs['three']));
     }
 
     public function testGetInvalidData()
@@ -954,13 +970,22 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
                 'something',
                 'foo@blah.com'
             ],
+            'stuffs' => [
+                'one' => '1',
+                'two' => '2',
+                'three' => 'three',
+            ],
             'thing' => 'exists',
         ], [
             'thing' => 'required',
             'items.*.product_id' => 'required|numeric',
             'emails.*' => 'required|email',
             'items.*.qty' => 'required|numeric',
-            'something' => 'required|in:on,off'
+            'something' => 'required|in:on,off',
+            'stuffs' => 'required|array',
+            'stuffs.one' => 'numeric',
+            'stuffs.two' => 'numeric',
+            'stuffs.three' => 'numeric',
         ]);
 
         $invalidData = $validation->getInvalidData();
@@ -974,8 +999,15 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
             'emails' => [
                 1 => 'something'
             ],
-            'something' => null
+            'something' => null,
+            'stuffs' => [
+                'three' => 'three',
+            ]
         ], $invalidData);
+
+        $stuffs = $invalidData['stuffs'];
+        $this->assertFalse(isset($stuffs['one']));
+        $this->assertFalse(isset($stuffs['two']));
     }
 
 }

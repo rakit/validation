@@ -42,7 +42,7 @@ class HelperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(Helper::arrayGet($array, 'foo.bar'), $array['foo']['bar']);
         $this->assertEquals(Helper::arrayGet($array, 'foo.bar.baz'), $array['foo']['bar']['baz']);
         $this->assertEquals(Helper::arrayGet($array, 'one.two.three'), 123);
-        
+
         $this->assertNull(Helper::arrayGet($array, 'foo.bar.baz.qux'));
         $this->assertNull(Helper::arrayGet($array, 'one.two'));
     }
@@ -89,13 +89,43 @@ class HelperTest extends PHPUnit_Framework_TestCase
 
         Helper::arraySet($array, 'comments.*.id', null, false);
         Helper::arraySet($array, 'comments.*.x.y', 1, false);
-        
+
         $this->assertEquals($array, [
             'comments' => [
                 ['id' => null, 'text' => 'foo', 'x' => ['y' => 1]],
                 ['id' => 2, 'text' => 'bar', 'x' => ['y' => 1]],
                 ['id' => 3, 'text' => 'baz', 'x' => ['y' => 1]],
             ]
+        ]);
+    }
+
+    public function testArrayUnset()
+    {
+        $array = [
+            'users' => [
+                'one' => 'user_one',
+                'two' => 'user_two',
+            ],
+            'stuffs' => [1, 'two', ['three'], null, false, true],
+            'message' => "lorem ipsum",
+        ];
+
+        Helper::arrayUnset($array, 'users.one');
+        $this->assertEquals($array, [
+            'users' => [
+                'two' => 'user_two',
+            ],
+            'stuffs' => [1, 'two', ['three'], null, false, true],
+            'message' => "lorem ipsum",
+        ]);
+
+        Helper::arrayUnset($array, 'stuffs.*');
+        $this->assertEquals($array, [
+            'users' => [
+                'two' => 'user_two',
+            ],
+            'stuffs' => [],
+            'message' => "lorem ipsum",
         ]);
     }
 
