@@ -14,7 +14,7 @@ class Min extends Rule
     public function check($value)
     {
         $this->requireParameters($this->fillable_params);
-        
+
         $min = (int) $this->parameter('min');
         if (is_int($value)) {
             return $value >= $min;

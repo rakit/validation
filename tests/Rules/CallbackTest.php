@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Callback;
+namespace Rakit\Validation\Tests;
 
-class CallbackTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Callback;
+use PHPUnit\Framework\TestCase;
+
+class CallbackTest extends TestCase
 {
 
     public function setUp()

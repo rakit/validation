@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Numeric;
+namespace Rakit\Validation\Tests;
 
-class NumericTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Numeric;
+use PHPUnit\Framework\TestCase;
+
+class NumericTest extends TestCase
 {
 
     public function setUp()

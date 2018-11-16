@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Ip;
+namespace Rakit\Validation\Tests;
 
-class IpTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Ip;
+use PHPUnit\Framework\TestCase;
+
+class IpTest extends TestCase
 {
 
     public function setUp()

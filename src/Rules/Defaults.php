@@ -14,7 +14,7 @@ class Defaults extends Rule
     public function check($value)
     {
         $this->requireParameters($this->fillable_params);
-        
+
         $default = $this->parameter('default');
         return $default;
     }

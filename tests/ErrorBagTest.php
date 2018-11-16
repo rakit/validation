@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\ErrorBag;
+namespace Rakit\Validation\Tests;
 
-class ErrorBagTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\ErrorBag;
+use PHPUnit\Framework\TestCase;
+
+class ErrorBagTest extends TestCase
 {
 
     public function testCount()
@@ -117,7 +120,7 @@ class ErrorBagTest extends PHPUnit_Framework_TestCase
                 'email' => '1',
                 'unique' => '2',
             ],
-            
+
             'items.0.id_product' => [
                 'numeric' => '3',
                 'etc' => 'x'
@@ -125,7 +128,7 @@ class ErrorBagTest extends PHPUnit_Framework_TestCase
             'items.0.qty' => [
                 'numeric' => 'a'
             ],
-            
+
             'items.1.id_product' => [
                 'numeric' => '4',
                 'etc' => 'y'
@@ -227,7 +230,7 @@ class ErrorBagTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($errors->all('prefix :message suffix'), [
             'prefix 1 suffix',
             'prefix 2 suffix',
-            
+
             'prefix 3 suffix',
             'prefix x suffix',
             'prefix a suffix',
@@ -263,7 +266,7 @@ class ErrorBagTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($errors->firstOfAll('prefix :message suffix'), [
             'prefix 1 suffix',
-            
+
             'prefix 3 suffix',
             'prefix a suffix',
 

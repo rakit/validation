@@ -1,8 +1,12 @@
 <?php
 
-use Rakit\Validation\Rules\Alpha;
+namespace Rakit\Validation\Tests;
 
-class AlphaTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Alpha;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+
+class AlphaTest extends TestCase
 {
 
     public function setUp()

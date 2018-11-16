@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\DigitsBetween;
+namespace Rakit\Validation\Tests;
 
-class DigitsBetweenTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\DigitsBetween;
+use PHPUnit\Framework\TestCase;
+
+class DigitsBetweenTest extends TestCase
 {
 
     public function setUp()

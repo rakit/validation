@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Date;
+namespace Rakit\Validation\Tests;
 
-class DateTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Date;
+use PHPUnit\Framework\TestCase;
+
+class DateTest extends TestCase
 {
 
     public function setUp()

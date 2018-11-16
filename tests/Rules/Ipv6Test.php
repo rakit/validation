@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Ipv6;
+namespace Rakit\Validation\Tests;
 
-class Ipv6Test extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Ipv6;
+use PHPUnit\Framework\TestCase;
+
+class Ipv6Test extends TestCase
 {
 
     public function setUp()

@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Email;
+namespace Rakit\Validation\Tests;
 
-class EmailTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Email;
+use PHPUnit\Framework\TestCase;
+
+class EmailTest extends TestCase
 {
 
     public function setUp()

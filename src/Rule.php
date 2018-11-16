@@ -92,7 +92,7 @@ abstract class Rule
     {
         $this->message = $message;
         return $this;
-    }    
+    }
 
     public function getMessage()
     {

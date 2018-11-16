@@ -50,7 +50,7 @@ class Validator
     public function make(array $inputs, array $rules, array $messages = array())
     {
         $messages = array_merge($this->messages, $messages);
-        return new Validation($this, $inputs, $rules, $messages); 
+        return new Validation($this, $inputs, $rules, $messages);
     }
 
     public function __invoke($rule)
