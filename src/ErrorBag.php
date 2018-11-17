@@ -99,12 +99,16 @@ class ErrorBag
         return $results;
     }
 
-    public function firstOfAll($format = ':message')
+    public function firstOfAll($format = ':message', $dotNotation = false)
     {
         $messages = $this->messages;
         $results = [];
         foreach($messages as $key => $keyMessages) {
-            $results[] = $this->formatMessage(array_shift($messages[$key]), $format);
+            if ($dotNotation) {
+                $results[$key] = $this->formatMessage(array_shift($messages[$key]), $format);
+            } else {
+                Helper::arraySet($results, $key, $this->formatMessage(array_shift($messages[$key]), $format));
+            }
         }
         return $results;
     }

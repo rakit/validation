@@ -265,13 +265,49 @@ class ErrorBagTest extends TestCase
         ]);
 
         $this->assertEquals($errors->firstOfAll('prefix :message suffix'), [
-            'prefix 1 suffix',
+            'email' => 'prefix 1 suffix',
+            'items' => [
+                [
+                    'id_product' => 'prefix 3 suffix',
+                    'qty' => 'prefix a suffix'
+                ],
+                [
+                    'id_product' => 'prefix 4 suffix',
+                    'qty' => 'prefix b suffix'
+                ],
+            ]
+        ]);
+    }
 
-            'prefix 3 suffix',
-            'prefix a suffix',
+    public function testFirstOfAllDotNotation()
+    {
+        $errors = new ErrorBag([
+            'email' => [
+                'email' => '1',
+                'unique' => '2',
+            ],
+            'items.0.id_product' => [
+                'numeric' => '3',
+                'etc' => 'x'
+            ],
+            'items.0.qty' => [
+                'numeric' => 'a'
+            ],
+            'items.1.id_product' => [
+                'numeric' => '4',
+                'etc' => 'y'
+            ],
+            'items.1.qty' => [
+                'numeric' => 'b'
+            ]
+        ]);
 
-            'prefix 4 suffix',
-            'prefix b suffix',
+        $this->assertEquals($errors->firstOfAll('prefix :message suffix', true), [
+            'email' => 'prefix 1 suffix',
+            'items.0.id_product' => 'prefix 3 suffix',
+            'items.0.qty' => 'prefix a suffix',
+            'items.1.id_product' => 'prefix 4 suffix',
+            'items.1.qty' => 'prefix b suffix',
         ]);
     }
 
