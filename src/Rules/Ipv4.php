@@ -13,5 +13,4 @@ class Ipv4 extends Rule
     {
         return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
     }
-
 }

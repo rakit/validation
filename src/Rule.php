@@ -16,7 +16,7 @@ abstract class Rule
 
     protected $params = [];
 
-    protected $fillable_params = [];
+    protected $fillableParams = [];
 
     protected $message = "The :attribute is invalid";
 
@@ -66,8 +66,10 @@ abstract class Rule
 
     public function fillParameters(array $params)
     {
-        foreach($this->fillable_params as $key) {
-            if (empty($params)) break;
+        foreach ($this->fillableParams as $key) {
+            if (empty($params)) {
+                break;
+            }
             $this->params[$key] = array_shift($params);
         }
         return $this;
@@ -101,12 +103,11 @@ abstract class Rule
 
     protected function requireParameters(array $params)
     {
-        foreach($params as $param) {
+        foreach ($params as $param) {
             if (!isset($this->params[$param])) {
                 $rule = $this->getKey();
                 throw new MissingRequiredParameterException("Missing required parameter '{$param}' on rule '{$rule}'");
             }
         }
     }
-
 }

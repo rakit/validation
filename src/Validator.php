@@ -114,7 +114,7 @@ class Validator
             'default'                   => new Rules\Defaults, // alias of defaults
         ];
 
-        foreach($baseValidator as $key => $validator) {
+        foreach ($baseValidator as $key => $validator) {
             $this->setValidator($key, $validator);
         }
     }

@@ -13,5 +13,4 @@ class TypeArray extends Rule
     {
         return is_array($value);
     }
-
 }

@@ -17,5 +17,4 @@ class AlphaDash extends Rule
 
         return preg_match('/^[\pL\pM\pN_-]+$/u', $value) > 0;
     }
-
 }

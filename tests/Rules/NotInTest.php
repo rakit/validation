@@ -35,5 +35,4 @@ class NotInTest extends TestCase
         $this->assertTrue($this->rule->fillParameters(['1', '2', '3'])->check(1));
         $this->assertTrue($this->rule->fillParameters(['1', '2', '3'])->check(1));
     }
-
 }

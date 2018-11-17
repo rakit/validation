@@ -13,5 +13,4 @@ class Numeric extends Rule
     {
         return is_numeric($value);
     }
-
 }

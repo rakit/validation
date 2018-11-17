@@ -87,7 +87,7 @@ class ValidatorTest extends TestCase
 
     public function testOptionalUploadedFile()
     {
-       $empty_file = [
+        $emptyFile = [
             'name' => '',
             'type' => '',
             'size' => '',
@@ -96,7 +96,7 @@ class ValidatorTest extends TestCase
         ];
 
         $validation = $this->validator->validate([
-            'file' => $empty_file
+            'file' => $emptyFile
         ], [
             'file' => 'uploaded_file'
         ]);
@@ -106,10 +106,10 @@ class ValidatorTest extends TestCase
     /**
      * @dataProvider getSamplesMissingKeyFromUploadedFileValue
      */
-    public function testMissingKeyUploadedFile($uploaded_file)
+    public function testMissingKeyUploadedFile($uploadedFile)
     {
         $validation = $this->validator->validate([
-            'file' => $uploaded_file
+            'file' => $uploadedFile
         ], [
             'file' => 'required|uploaded_file'
         ]);
@@ -121,7 +121,7 @@ class ValidatorTest extends TestCase
 
     public function getSamplesMissingKeyFromUploadedFileValue()
     {
-        $valid_uploaded_file = [
+        $validUploadedFile = [
             'name' => 'foo',
             'type' => 'text/plain',
             'size' => 1000,
@@ -130,10 +130,10 @@ class ValidatorTest extends TestCase
         ];
 
         $samples = [];
-        foreach($valid_uploaded_file as $key => $value) {
-            $uploaded_file = $valid_uploaded_file;
-            unset($uploaded_file[$key]);
-            $samples[] = $uploaded_file;
+        foreach ($validUploadedFile as $key => $value) {
+            $uploadedFile = $validUploadedFile;
+            unset($uploadedFile[$key]);
+            $samples[] = $uploadedFile;
         }
         return $samples;
     }
@@ -287,7 +287,7 @@ class ValidatorTest extends TestCase
             'name' => "some name"
         ], [
             'name' => 'required|xxx'
-        ],[
+        ], [
             'name.required' => "Fill in your name",
             'xxx' => "Oops"
         ]);
@@ -309,7 +309,7 @@ class ValidatorTest extends TestCase
 
         $validator2 = $this->validator->make($data, [
             'date' => "required|before:last week"
-        ],[]);
+        ], []);
 
         $validator2->validate();
 
@@ -330,7 +330,7 @@ class ValidatorTest extends TestCase
 
         $validator2 = $this->validator->make($data, [
             'date' => "required|after:next year"
-        ],[]);
+        ], []);
 
         $validator2->validate();
 
@@ -630,7 +630,7 @@ class ValidatorTest extends TestCase
     public function testCustomMessageInCallbackRule()
     {
         $evenNumberValidator = function ($value) {
-            if (!is_numeric($value) OR $value % 2 !== 0) {
+            if (!is_numeric($value) or $value % 2 !== 0) {
                 return ":attribute must be even number";
             }
             return true;
@@ -1010,5 +1010,4 @@ class ValidatorTest extends TestCase
         $this->assertFalse(isset($stuffs['one']));
         $this->assertFalse(isset($stuffs['two']));
     }
-
 }

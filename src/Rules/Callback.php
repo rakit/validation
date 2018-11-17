@@ -11,7 +11,7 @@ class Callback extends Rule
 
     protected $message = "The :attribute is not valid";
 
-    protected $fillable_params = ['callback'];
+    protected $fillableParams = ['callback'];
 
     public function setCallback(Closure $callback)
     {
@@ -20,7 +20,7 @@ class Callback extends Rule
 
     public function check($value)
     {
-        $this->requireParameters($this->fillable_params);
+        $this->requireParameters($this->fillableParams);
 
         $callback = $this->parameter('callback');
         if (false === $callback instanceof Closure) {
@@ -34,11 +34,10 @@ class Callback extends Rule
         if (is_string($invalidMessage)) {
             $this->setMessage($invalidMessage);
             return false;
-        } elseif(false === $invalidMessage) {
+        } elseif (false === $invalidMessage) {
             return false;
         }
 
         return true;
     }
-
 }

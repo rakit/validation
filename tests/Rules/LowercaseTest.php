@@ -26,5 +26,4 @@ class LowercaseTest extends TestCase
         $this->assertFalse($this->rule->check('Username'));
         $this->assertFalse($this->rule->check('userName'));
     }
-
 }

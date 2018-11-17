@@ -31,5 +31,4 @@ class MinTest extends TestCase
         $this->assertFalse($this->rule->fillParameters([4])->check('ワード'));
         $this->assertFalse($this->rule->fillParameters([2])->check('字'));
     }
-
 }

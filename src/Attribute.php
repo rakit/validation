@@ -26,7 +26,7 @@ class Attribute
         $this->validation = $validation;
         $this->alias = $alias;
         $this->key = $key;
-        foreach($rules as $rule) {
+        foreach ($rules as $rule) {
             $this->addRule($rule);
         }
     }
@@ -49,7 +49,7 @@ class Attribute
     public function setOtherAttributes(array $otherAttributes)
     {
         $this->otherAttributes = [];
-        foreach($otherAttributes as $otherAttribute) {
+        foreach ($otherAttributes as $otherAttribute) {
             $this->addOtherAttribute($otherAttribute);
         }
     }
@@ -149,7 +149,7 @@ class Attribute
         // Resolve key from array validation
         if ($primaryAttribute) {
             $split = explode('.', $key);
-            $key = implode(' ', array_map(function($word) {
+            $key = implode(' ', array_map(function ($word) {
                 if (is_numeric($word)) {
                     $word = $word + 1;
                 }
@@ -169,5 +169,4 @@ class Attribute
     {
         return $this->alias;
     }
-
 }

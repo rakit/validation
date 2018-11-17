@@ -28,5 +28,4 @@ class NumericTest extends TestCase
         $this->assertFalse($this->rule->check('123foo'));
         $this->assertFalse($this->rule->check([123]));
     }
-
 }

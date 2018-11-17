@@ -26,5 +26,4 @@ class DigitsTest extends TestCase
         $this->assertFalse($this->rule->fillParameters([4])->check(12));
         $this->assertFalse($this->rule->fillParameters([3])->check('foo'));
     }
-
 }

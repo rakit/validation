@@ -38,7 +38,7 @@ class ErrorBag
             if (!$ruleName) {
                 return !empty($messages);
             } else {
-                return !empty($messages) AND isset($messages[$ruleName]);
+                return !empty($messages) and isset($messages[$ruleName]);
             }
         }
     }
@@ -71,15 +71,17 @@ class ErrorBag
         $results = [];
         if ($this->isWildcardKey($key)) {
             $messages = $this->filterMessagesForWildcardKey($key, $ruleName);
-            foreach($messages as $explicitKey => $keyMessages) {
+            foreach ($messages as $explicitKey => $keyMessages) {
                 foreach ($keyMessages as $rule => $message) {
                     $results[$explicitKey][$rule] = $this->formatMessage($message, $format);
                 }
             }
         } else {
             $keyMessages = isset($this->messages[$key])? $this->messages[$key] : [];
-            foreach($keyMessages as $rule => $message) {
-                if ($ruleName AND $ruleName != $rule) continue;
+            foreach ($keyMessages as $rule => $message) {
+                if ($ruleName and $ruleName != $rule) {
+                    continue;
+                }
                 $results[$rule] = $this->formatMessage($message, $format);
             }
         }
@@ -91,8 +93,8 @@ class ErrorBag
     {
         $messages = $this->messages;
         $results = [];
-        foreach($messages as $key => $keyMessages) {
-            foreach($keyMessages as $message) {
+        foreach ($messages as $key => $keyMessages) {
+            foreach ($keyMessages as $message) {
                 $results[] = $this->formatMessage($message, $format);
             }
         }
@@ -103,7 +105,7 @@ class ErrorBag
     {
         $messages = $this->messages;
         $results = [];
-        foreach($messages as $key => $keyMessages) {
+        foreach ($messages as $key => $keyMessages) {
             if ($dotNotation) {
                 $results[$key] = $this->formatMessage(array_shift($messages[$key]), $format);
             } else {
@@ -144,8 +146,10 @@ class ErrorBag
                 continue;
             }
 
-            foreach($keyMessages as $rule => $message) {
-                if ($ruleName AND $rule != $ruleName) continue;
+            foreach ($keyMessages as $rule => $message) {
+                if ($ruleName and $rule != $ruleName) {
+                    continue;
+                }
                 $filteredMessages[$k][$rule] = $message;
             }
         }
@@ -157,5 +161,4 @@ class ErrorBag
     {
         return str_replace(':message', $message, $format);
     }
-
 }

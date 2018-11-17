@@ -9,11 +9,11 @@ class DigitsBetween extends Rule
 
     protected $message = "The :attribute must have a length between the given :min and :max";
 
-    protected $fillable_params = ['min', 'max'];
+    protected $fillableParams = ['min', 'max'];
 
     public function check($value)
     {
-        $this->requireParameters($this->fillable_params);
+        $this->requireParameters($this->fillableParams);
 
         $min = (int) $this->parameter('min');
         $max = (int) $this->parameter('max');
@@ -23,5 +23,4 @@ class DigitsBetween extends Rule
         return ! preg_match('/[^0-9]/', $value)
                     && $length >= $min && $length <= $max;
     }
-
 }

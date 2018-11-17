@@ -27,5 +27,4 @@ class AlphaNumTest extends TestCase
         $this->assertFalse($this->rule->check('123 foo'));
         $this->assertFalse($this->rule->check(' foo123 '));
     }
-
 }

@@ -28,5 +28,4 @@ class DigitsBetweenTest extends TestCase
         $this->assertFalse($this->rule->fillParameters([1, 3])->check(12345));
         $this->assertFalse($this->rule->fillParameters([3, 6])->check('foobar'));
     }
-
 }

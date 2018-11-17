@@ -204,5 +204,4 @@ class Helper
 
         return $value;
     }
-
 }
