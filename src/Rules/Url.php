@@ -11,7 +11,7 @@ class Url extends Rule
 
     public function fillParameters(array $params)
     {
-        if (count($params) == 1 AND is_array($params[0])) {
+        if (count($params) == 1 and is_array($params[0])) {
             $params = $params[0];
         }
         return $this->forScheme($params);
@@ -36,7 +36,7 @@ class Url extends Rule
                     if ($this->{$method}($value)) {
                         return true;
                     }
-                } elseif($this->validateCommonScheme($value, $scheme)) {
+                } elseif ($this->validateCommonScheme($value, $scheme)) {
                     return true;
                 }
             }
@@ -68,5 +68,4 @@ class Url extends Rule
     {
         return (bool) preg_match("/^jdbc:\w+:\/\//", $value);
     }
-
 }

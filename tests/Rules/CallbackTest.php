@@ -11,8 +11,8 @@ class CallbackTest extends TestCase
     public function setUp()
     {
         $this->rule = new Callback;
-        $this->rule->setCallback(function($value) {
-            return (is_numeric($value) AND $value % 2 === 0);
+        $this->rule->setCallback(function ($value) {
+            return (is_numeric($value) and $value % 2 === 0);
         });
     }
 
@@ -29,5 +29,4 @@ class CallbackTest extends TestCase
         $this->assertFalse($this->rule->check('abc12'));
         $this->assertFalse($this->rule->check("12abc"));
     }
-
 }

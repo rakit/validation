@@ -13,5 +13,4 @@ class Ip extends Rule
     {
         return filter_var($value, FILTER_VALIDATE_IP) !== false;
     }
-
 }

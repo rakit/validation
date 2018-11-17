@@ -30,5 +30,4 @@ class AcceptedTest extends TestCase
         $this->assertFalse($this->rule->check(' 1'));
         $this->assertFalse($this->rule->check(10));
     }
-
 }

@@ -26,14 +26,13 @@ class RequiredIf extends Required
         $anotherValue = $this->getAttribute()->getValue($anotherAttribute);
 
         $validator = $this->validation->getValidator();
-        $required_validator = $validator('required');
+        $requiredValidator = $validator('required');
 
         if (in_array($anotherValue, $definedValues)) {
             $this->setAttributeAsRequired();
-            return $required_validator->check($value, []);
+            return $requiredValidator->check($value, []);
         }
 
         return true;
     }
-
 }

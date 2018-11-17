@@ -13,5 +13,4 @@ class Email extends Rule
     {
         return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
     }
-
 }

@@ -11,14 +11,14 @@ class After extends Rule
 
     protected $message = "The :attribute must be a date after :time.";
 
-    protected $fillable_params = ['time'];
+    protected $fillableParams = ['time'];
 
     public function check($value)
     {
-        $this->requireParameters($this->fillable_params);
+        $this->requireParameters($this->fillableParams);
         $time = $this->parameter('time');
 
-        if (!$this->isValidDate($value)){
+        if (!$this->isValidDate($value)) {
             throw $this->throwException($value);
         }
 

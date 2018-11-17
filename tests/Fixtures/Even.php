@@ -11,11 +11,10 @@ class Even extends Rule
 
     public function check($value)
     {
-        if ( ! is_numeric($value)) {
+        if (! is_numeric($value)) {
             return false;
         }
 
         return $value % 2 === 0;
     }
-
 }

@@ -62,7 +62,7 @@ class UploadedFile extends Rule
         $allowedTypes = $this->parameter('allowed_types');
 
         // below is Required rule job
-        if (!$this->isValueFromUploadedFiles($value) OR $value['error'] == UPLOAD_ERR_NO_FILE) {
+        if (!$this->isValueFromUploadedFiles($value) or $value['error'] == UPLOAD_ERR_NO_FILE) {
             return true;
         }
 
@@ -71,7 +71,9 @@ class UploadedFile extends Rule
         }
 
         // just make sure there is no error
-        if ($value['error']) return false;
+        if ($value['error']) {
+            return false;
+        }
 
         if ($minSize) {
             $bytesMinSize = $this->getBytes($minSize);

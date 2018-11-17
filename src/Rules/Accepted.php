@@ -15,5 +15,4 @@ class Accepted extends Rule
         $acceptables = ['yes', 'on', '1', 1, true, 'true'];
         return in_array($value, $acceptables, true);
     }
-
 }

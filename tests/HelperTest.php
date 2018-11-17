@@ -131,5 +131,4 @@ class HelperTest extends TestCase
             'message' => "lorem ipsum",
         ]);
     }
-
 }

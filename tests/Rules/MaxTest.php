@@ -31,5 +31,4 @@ class MaxTest extends TestCase
         $this->assertFalse($this->rule->fillParameters([2])->check([1,2,3]));
         $this->assertFalse($this->rule->fillParameters([100])->check(123));
     }
-
 }

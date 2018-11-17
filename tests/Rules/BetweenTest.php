@@ -30,5 +30,4 @@ class BetweenTest extends TestCase
         $this->assertFalse($this->rule->fillParameters([50, 100])->check(123));
         $this->assertFalse($this->rule->fillParameters([50, 100])->check(123.4));
     }
-
 }

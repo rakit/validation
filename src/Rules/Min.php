@@ -9,22 +9,21 @@ class Min extends Rule
 
     protected $message = "The :attribute minimum is :min";
 
-    protected $fillable_params = ['min'];
+    protected $fillableParams = ['min'];
 
     public function check($value)
     {
-        $this->requireParameters($this->fillable_params);
+        $this->requireParameters($this->fillableParams);
 
         $min = (int) $this->parameter('min');
         if (is_int($value)) {
             return $value >= $min;
-        } elseif(is_string($value)) {
+        } elseif (is_string($value)) {
             return mb_strlen($value, 'UTF-8') >= $min;
-        } elseif(is_array($value)) {
+        } elseif (is_array($value)) {
             return count($value) >= $min;
         } else {
             return false;
         }
     }
-
 }

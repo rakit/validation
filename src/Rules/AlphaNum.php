@@ -17,5 +17,4 @@ class AlphaNum extends Rule
 
         return preg_match('/^[\pL\pM\pN]+$/u', $value) > 0;
     }
-
 }

@@ -19,5 +19,4 @@ class DefaultsTest extends TestCase
         $this->assertEquals($this->rule->fillParameters(['something'])->check(null), 'something');
         $this->assertEquals($this->rule->fillParameters([[1,2,3]])->check('anything'), [1,2,3]);
     }
-
 }
