@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Defaults;
+namespace Rakit\Validation\Tests;
 
-class DefaultsTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Defaults;
+use PHPUnit\Framework\TestCase;
+
+class DefaultsTest extends TestCase
 {
 
     public function setUp()

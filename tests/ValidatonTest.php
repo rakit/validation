@@ -1,9 +1,13 @@
 <?php
 
+namespace Rakit\Validation\Tests;
+
 use Rakit\Validation\Validation;
 use Rakit\Validation\Validator;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
-class ValidatonTest extends PHPUnit_Framework_TestCase
+class ValidatonTest extends TestCase
 {
     /**
      * @param string $rules

@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Integer;
+namespace Rakit\Validation\Tests;
 
-class IntegerTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Integer;
+use PHPUnit\Framework\TestCase;
+
+class IntegerTest extends TestCase
 {
 
     public function setUp()

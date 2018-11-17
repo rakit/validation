@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Max;
+namespace Rakit\Validation\Tests;
 
-class MaxTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Max;
+use PHPUnit\Framework\TestCase;
+
+class MaxTest extends TestCase
 {
 
     public function setUp()

@@ -30,7 +30,7 @@ class RequiredUnless extends Required
 
         if (!in_array($anotherValue, $definedValues)) {
             $this->setAttributeAsRequired();
-            return $required_validator->check($value, []); 
+            return $required_validator->check($value, []);
         }
 
         return true;

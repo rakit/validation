@@ -26,7 +26,7 @@ class RequiredWithout extends Required
         foreach($fields as $field) {
             if (!$this->validation->hasValue($field)) {
                 $this->setAttributeAsRequired();
-                return $required_validator->check($value, []); 
+                return $required_validator->check($value, []);
             }
         }
 

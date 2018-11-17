@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Url;
+namespace Rakit\Validation\Tests;
 
-class UrlTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Url;
+use PHPUnit\Framework\TestCase;
+
+class UrlTest extends TestCase
 {
 
     public function setUp()

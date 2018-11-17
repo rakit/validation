@@ -56,7 +56,7 @@ class UploadedFile extends Rule
     }
 
     public function check($value)
-    {   
+    {
         $minSize = $this->parameter('min_size');
         $maxSize = $this->parameter('max_size');
         $allowedTypes = $this->parameter('allowed_types');

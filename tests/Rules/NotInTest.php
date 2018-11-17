@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\NotIn;
+namespace Rakit\Validation\Tests;
 
-class NotInTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\NotIn;
+use PHPUnit\Framework\TestCase;
+
+class NotInTest extends TestCase
 {
 
     public function setUp()
@@ -24,13 +27,13 @@ class NotInTest extends PHPUnit_Framework_TestCase
     public function testStricts()
     {
         // Not strict
-        $this->assertFalse($this->rule->fillParameters(['1', '2', '3'])->check(1));        
+        $this->assertFalse($this->rule->fillParameters(['1', '2', '3'])->check(1));
         $this->assertFalse($this->rule->fillParameters(['1', '2', '3'])->check(true));
 
-        // Strict        
+        // Strict
         $this->rule->strict();
-        $this->assertTrue($this->rule->fillParameters(['1', '2', '3'])->check(1));        
-        $this->assertTrue($this->rule->fillParameters(['1', '2', '3'])->check(1));        
+        $this->assertTrue($this->rule->fillParameters(['1', '2', '3'])->check(1));
+        $this->assertTrue($this->rule->fillParameters(['1', '2', '3'])->check(1));
     }
 
 }

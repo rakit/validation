@@ -1,7 +1,10 @@
 <?php
 
+namespace Rakit\Validation\Tests;
 
-class Even extends \Rakit\Validation\Rule
+use Rakit\Validation\Rule;
+
+class Even extends Rule
 {
 
     protected $message = "The :attribute must be even";

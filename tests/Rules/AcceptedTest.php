@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Accepted;
+namespace Rakit\Validation\Tests;
 
-class AcceptedTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Accepted;
+use PHPUnit\Framework\TestCase;
+
+class AcceptedTest extends TestCase
 {
 
     public function setUp()

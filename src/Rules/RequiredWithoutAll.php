@@ -30,7 +30,7 @@ class RequiredWithoutAll extends Required
         }
 
         $this->setAttributeAsRequired();
-        return $required_validator->check($value, []); 
+        return $required_validator->check($value, []);
     }
 
 }

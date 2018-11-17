@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\AlphaDash;
+namespace Rakit\Validation\Tests;
 
-class AlphaDashTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\AlphaDash;
+use PHPUnit\Framework\TestCase;
+
+class AlphaDashTest extends TestCase
 {
 
     public function setUp()

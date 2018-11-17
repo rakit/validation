@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Helper;
+namespace Rakit\Validation\Tests;
 
-class HelperTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Helper;
+use PHPUnit\Framework\TestCase;
+
+class HelperTest extends TestCase
 {
 
     public function testArrayHas()

@@ -1,11 +1,12 @@
 <?php
 
+namespace Rakit\Validation\Tests;
+
 use Rakit\Validation\Validator;
+use PHPUnit\Framework\TestCase;
+use DateTime;
 
-require_once 'Fixtures/Even.php';
-require_once 'Fixtures/Required.php';
-
-class ValidatorTest extends PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
 
     protected $validator;

@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Between;
+namespace Rakit\Validation\Tests;
 
-class BetweenTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Between;
+use PHPUnit\Framework\TestCase;
+
+class BetweenTest extends TestCase
 {
 
     public function setUp()

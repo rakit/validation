@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Lowercase;
+namespace Rakit\Validation\Tests;
 
-class LowercaseTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Lowercase;
+use PHPUnit\Framework\TestCase;
+
+class LowercaseTest extends TestCase
 {
 
     public function setUp()

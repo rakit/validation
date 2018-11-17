@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\TypeArray;
+namespace Rakit\Validation\Tests;
 
-class TypeArrayTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\TypeArray;
+use PHPUnit\Framework\TestCase;
+
+class TypeArrayTest extends TestCase
 {
 
     public function setUp()
