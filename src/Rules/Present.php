@@ -14,5 +14,4 @@ class Present extends Rule
     {
         return $this->validation->hasValue($this->attribute->getKey());
     }
-
 }

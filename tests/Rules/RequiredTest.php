@@ -31,5 +31,4 @@ class RequiredTest extends TestCase
         $this->assertFalse($this->rule->check(''));
         $this->assertFalse($this->rule->check([]));
     }
-
 }

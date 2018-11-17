@@ -28,5 +28,4 @@ class EmailTest extends TestCase
         $this->assertFalse($this->rule->check('johndoe.gmail.com'));
         $this->assertFalse($this->rule->check('johndoe.gmail.com'));
     }
-
 }

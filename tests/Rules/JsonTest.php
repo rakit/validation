@@ -31,6 +31,4 @@ class JsonTest extends TestCase
         $this->assertFalse($this->rule->check('{"username": John Doe}'));
         $this->assertFalse($this->rule->check('{number: 12345678}'));
     }
-
 }
-

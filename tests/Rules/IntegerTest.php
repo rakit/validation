@@ -21,7 +21,6 @@ class IntegerTest extends TestCase
         $this->assertTrue($this->rule->check('-123'));
         $this->assertTrue($this->rule->check(123));
         $this->assertTrue($this->rule->check(-123));
-
     }
 
     public function testInvalids()
@@ -32,5 +31,4 @@ class IntegerTest extends TestCase
         $this->assertFalse($this->rule->check('123.456'));
         $this->assertFalse($this->rule->check('-123.456'));
     }
-
 }

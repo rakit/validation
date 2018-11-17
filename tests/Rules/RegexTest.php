@@ -22,5 +22,4 @@ class RegexTest extends TestCase
     {
         $this->assertFalse($this->rule->fillParameters(["/^F/i"])->check("bar"));
     }
-
 }

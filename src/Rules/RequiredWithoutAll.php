@@ -21,16 +21,15 @@ class RequiredWithoutAll extends Required
         $this->requireParameters(['fields']);
         $fields = $this->parameter('fields');
         $validator = $this->validation->getValidator();
-        $required_validator = $validator('required');
+        $requiredValidator = $validator('required');
 
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             if ($this->validation->hasValue($field)) {
                 return true;
             }
         }
 
         $this->setAttributeAsRequired();
-        return $required_validator->check($value, []);
+        return $requiredValidator->check($value, []);
     }
-
 }

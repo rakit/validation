@@ -310,5 +310,4 @@ class ErrorBagTest extends TestCase
             'items.1.qty' => 'prefix b suffix',
         ]);
     }
-
 }

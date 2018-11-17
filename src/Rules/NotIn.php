@@ -13,7 +13,7 @@ class NotIn extends Rule
 
     public function fillParameters(array $params)
     {
-        if (count($params) == 1 AND is_array($params[0])) {
+        if (count($params) == 1 and is_array($params[0])) {
             $params = $params[0];
         }
         $this->params['disallowed_values'] = $params;
@@ -28,8 +28,7 @@ class NotIn extends Rule
     public function check($value)
     {
         $this->requireParameters(['disallowed_values']);
-        $disallowed_values = (array) $this->parameter('disallowed_values');
-        return !in_array($value, $disallowed_values, $this->strict);
+        $disallowedValues = (array) $this->parameter('disallowed_values');
+        return !in_array($value, $disallowedValues, $this->strict);
     }
-
 }

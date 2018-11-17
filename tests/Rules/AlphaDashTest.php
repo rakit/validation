@@ -28,5 +28,4 @@ class AlphaDashTest extends TestCase
         $this->assertFalse($this->rule->check('foo bar'));
         $this->assertFalse($this->rule->check('123 bar '));
     }
-
 }

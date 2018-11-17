@@ -788,5 +788,4 @@ class MimeTypeGuesser
         $key = array_search($extension, $this->mimeTypes);
         return $key ?: null;
     }
-
 }

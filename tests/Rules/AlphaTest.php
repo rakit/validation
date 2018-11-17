@@ -30,5 +30,4 @@ class AlphaTest extends TestCase
         $this->assertFalse($this->rule->check('foo123bar'));
         $this->assertFalse($this->rule->check('foo bar'));
     }
-
 }

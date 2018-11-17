@@ -13,5 +13,4 @@ class Alpha extends Rule
     {
         return is_string($value) && preg_match('/^[\pL\pM]+$/u', $value);
     }
-
 }

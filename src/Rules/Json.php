@@ -23,5 +23,4 @@ class Json extends Rule
 
         return true;
     }
-
 }

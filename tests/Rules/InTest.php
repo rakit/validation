@@ -35,5 +35,4 @@ class InTest extends TestCase
         $this->assertFalse($this->rule->fillParameters(['1', '2', '3'])->check(1));
         $this->assertFalse($this->rule->fillParameters(['1', '2', '3'])->check(1));
     }
-
 }

@@ -25,5 +25,4 @@ class TypeArrayTest extends TestCase
         $this->assertFalse($this->rule->check('[]'));
         $this->assertFalse($this->rule->check('[1,2,3]'));
     }
-
 }

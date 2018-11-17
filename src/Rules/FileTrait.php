@@ -14,11 +14,15 @@ trait FileTrait
      */
     public function isValueFromUploadedFiles($value)
     {
-        if (!is_array($value)) return false;
+        if (!is_array($value)) {
+            return false;
+        }
 
         $keys = ['name', 'type', 'tmp_name', 'size', 'error'];
-        foreach($keys as $key) {
-            if (!array_key_exists($key, $value)) return false;
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $value)) {
+                return false;
+            }
         }
 
         return true;
@@ -26,7 +30,7 @@ trait FileTrait
 
     public function isUploadedFile($value)
     {
-        return $this->isValueFromUploadedFiles($value) AND is_uploaded_file($value['tmp_name']);
+        return $this->isValueFromUploadedFiles($value) and is_uploaded_file($value['tmp_name']);
     }
 
     protected function getBytes($size)

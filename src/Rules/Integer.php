@@ -13,5 +13,4 @@ class Integer extends Rule
     {
         return filter_var($value, FILTER_VALIDATE_INT) !== false;
     }
-
 }

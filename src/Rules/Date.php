@@ -9,7 +9,7 @@ class Date extends Rule
 
     protected $message = "The :attribute is not valid date format";
 
-    protected $fillable_params = ['format'];
+    protected $fillableParams = ['format'];
 
     protected $params = [
         'format' => 'Y-m-d'
@@ -17,10 +17,9 @@ class Date extends Rule
 
     public function check($value)
     {
-        $this->requireParameters($this->fillable_params);
+        $this->requireParameters($this->fillableParams);
 
         $format = $this->parameter('format');
         return date_create_from_format($format, $value) !== false;
     }
-
 }
