@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class DefaultsTest extends TestCase
 {
-
     public function setUp()
     {
         $this->rule = new Defaults;
@@ -20,5 +19,4 @@ class DefaultsTest extends TestCase
         $this->assertTrue($this->rule->fillParameters([[1,2,3]])->check(false));
         $this->assertTrue($this->rule->fillParameters([[1,2,3]])->check([]));
     }
-
 }
