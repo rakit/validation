@@ -36,9 +36,9 @@ class Validator
      * @param mixed $message
      * @return void
      */
-    public function setMessage($key, $message)
+    public function setMessage(string $key, string $message): void
     {
-        return $this->messages[$key] = $message;
+        $this->messages[$key] = $message;
     }
 
     /**
@@ -47,26 +47,26 @@ class Validator
      * @param array $messages
      * @return void
      */
-    public function setMessages($messages)
+    public function setMessages(array $messages): void
     {
         $this->messages = array_merge($this->messages, $messages);
     }
 
     /**
-     * Given $key and $rule to ser validator
+     * Register or override existing validator
      *
      * @param mixed $key
      * @param Rule $rule
      * @return void
      */
-    public function setValidator($key, Rule $rule)
+    public function setValidator(string $key, Rule $rule): void
     {
         $this->validators[$key] = $rule;
         $rule->setKey($key);
     }
 
     /**
-     * Given $key to get validator
+     * Get validator object from given $key
      *
      * @param mixed $key
      * @return mixed
@@ -84,7 +84,7 @@ class Validator
      * @param array $messages
      * @return Validation
      */
-    public function validate(array $inputs, array $rules, array $messages = [])
+    public function validate(array $inputs, array $rules, array $messages = []): Validation
     {
         $validation = $this->make($inputs, $rules, $messages);
         $validation->validate();
@@ -99,20 +99,20 @@ class Validator
      * @param array $messages
      * @return Validation
      */
-    public function make(array $inputs, array $rules, array $messages = [])
+    public function make(array $inputs, array $rules, array $messages = []): Validation
     {
         $messages = array_merge($this->messages, $messages);
         return new Validation($this, $inputs, $rules, $messages);
     }
 
     /**
-     * magic invoke method
+     * Magic invoke method to make Rule instance
      *
-     * @param mixed $rule
-     * @return mixed
+     * @param string $rule
+     * @return Rule
      * @throws RuleNotFoundException
      */
-    public function __invoke($rule)
+    public function __invoke(string $rule): Rule
     {
         $args = func_get_args();
         $rule = array_shift($args);
@@ -133,7 +133,7 @@ class Validator
      *
      * @return void
      */
-    protected function registerBaseValidators()
+    protected function registerBaseValidators(): void
     {
         $baseValidator = [
             'required'                  => new Rules\Required,
@@ -184,13 +184,13 @@ class Validator
     }
 
     /**
-     * Given $ruleName and $rule to sdd new validator
+     * Given $ruleName and $rule to add new validator
      *
-     * @param mixed $ruleName
+     * @param string $ruleName
      * @param Rule $rule
      * @return void
      */
-    public function addValidator($ruleName, Rule $rule)
+    public function addValidator(string $ruleName, Rule $rule): void
     {
         if (!$this->allowRuleOverride && array_key_exists($ruleName, $this->validators)) {
             throw new RuleQuashException(
@@ -207,7 +207,7 @@ class Validator
      * @param boolean $status
      * @return void
      */
-    public function allowRuleOverride($status = false)
+    public function allowRuleOverride(bool $status = false): void
     {
         $this->allowRuleOverride = $status;
     }
@@ -218,7 +218,7 @@ class Validator
      * @param boolean $useHumanizedKeys
      * @return void
      */
-    public function setUseHumanizedKeys($useHumanizedKeys = true)
+    public function setUseHumanizedKeys(bool $useHumanizedKeys = true): void
     {
         $this->useHumanizedKeys = $useHumanizedKeys;
     }
@@ -228,7 +228,7 @@ class Validator
      *
      * @return void
      */
-    public function getUseHumanizedKeys()
+    public function isUsingHumanizedKey(): bool
     {
         return $this->useHumanizedKeys;
     }

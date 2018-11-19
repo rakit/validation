@@ -6,13 +6,13 @@ use Rakit\Validation\MissingRequiredParameterException;
 
 abstract class Rule
 {
-    /** @var mixed */
+    /** @var string */
     protected $key;
 
-    /** @var mixed */
+    /** @var Rakit\Validation\Attribute|null */
     protected $attribute;
 
-    /** @var mixed */
+    /** @var Rakit\Validation\Validation|null */
     protected $validation;
 
     /** @var bool */
@@ -32,10 +32,10 @@ abstract class Rule
     /**
      * Set Validation class instance
      *
-     * @param Validation $validation
+     * @param Rakit\Validation\Validation $validation
      * @return void
      */
-    public function setValidation(Validation $validation)
+    public function setValidation(Validation $validation): void
     {
         $this->validation = $validation;
     }
@@ -43,10 +43,10 @@ abstract class Rule
     /**
      * Set key
      *
-     * @param mixed $key
+     * @param string $key
      * @return void
      */
-    public function setKey($key)
+    public function setKey(string $key): void
     {
         $this->key = $key;
     }
@@ -54,7 +54,7 @@ abstract class Rule
     /**
      * Get key
      *
-     * @return mixed
+     * @return string
      */
     public function getKey()
     {
@@ -64,10 +64,10 @@ abstract class Rule
     /**
      * Set attribute
      *
-     * @param mixed $attribute
+     * @param Rakit\Validation\Attribute $attribute
      * @return void
      */
-    public function setAttribute($attribute)
+    public function setAttribute(Attribute $attribute): void
     {
         $this->attribute = $attribute;
     }
@@ -75,11 +75,11 @@ abstract class Rule
     /**
      * Get attribute
      *
-     * @return mixed
+     * @return Rakit\Validation\Attribute|null
      */
     public function getAttribute()
     {
-        return $this->attribute ?: get_class($this);
+        return $this->attribute;
     }
 
     /**
@@ -96,7 +96,7 @@ abstract class Rule
      * Set params
      *
      * @param array $params
-     * @return Rule
+     * @return Rakit\Validation\Rule
      */
     public function setParameters(array $params): Rule
     {
@@ -107,11 +107,11 @@ abstract class Rule
     /**
      * Set parameters
      *
-     * @param mixed $key
+     * @param string $key
      * @param mixed $value
-     * @return Rule
+     * @return Rakit\Validation\Rule
      */
-    public function setParameter($key, $value): Rule
+    public function setParameter(string $key, $value): Rule
     {
         $this->params[$key] = $value;
         return $this;
@@ -121,7 +121,7 @@ abstract class Rule
      * Fill $params to $this->params
      *
      * @param array $params
-     * @return Rule
+     * @return Rakit\Validation\Rule
      */
     public function fillParameters(array $params): Rule
     {
@@ -135,18 +135,18 @@ abstract class Rule
     }
 
     /**
-     * Given $key and check is existed in $this->params
+     * Get parameter from given $key, return null if it not exists
      *
-     * @param mixed $key
-     * @return void
+     * @param string $key
+     * @return mixed
      */
-    public function parameter($key)
+    public function parameter(string $key)
     {
         return isset($this->params[$key])? $this->params[$key] : null;
     }
 
     /**
-     * Check $this->isImplicit is true
+     * Check whether this rule is implicit
      *
      * @return boolean
      */
@@ -156,12 +156,12 @@ abstract class Rule
     }
 
     /**
-     * Set message
+     * Just alias of setMessage
      *
-     * @param mixed $message
-     * @return Rule
+     * @param string $message
+     * @return Rakit\Validation\Rule
      */
-    public function message($message): Rule
+    public function message(string $message): Rule
     {
         return $this->setMessage($message);
     }
@@ -169,10 +169,10 @@ abstract class Rule
     /**
      * Set message
      *
-     * @param mixed $message
-     * @return Rule
+     * @param string $message
+     * @return Rakit\Validation\Rule
      */
-    public function setMessage($message): Rule
+    public function setMessage(string $message): Rule
     {
         $this->message = $message;
         return $this;
@@ -181,20 +181,21 @@ abstract class Rule
     /**
      * Get message
      *
-     * @return void
+     * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
     /**
-     * Check $params are existed in $this->params
+     * Check given $params must be exists
      *
      * @param array $params
      * @return void
+     * @throws Rakit\Validation\MissingRequiredParameterException
      */
-    protected function requireParameters(array $params)
+    protected function requireParameters(array $params): void
     {
         foreach ($params as $param) {
             if (!isset($this->params[$param])) {
