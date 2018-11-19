@@ -7,9 +7,16 @@ use Rakit\Validation\Rule;
 class Url extends Rule
 {
 
+    /** @var string */
     protected $message = "The :attribute is not valid url";
 
-    public function fillParameters(array $params)
+    /**
+     * Given $params and assign $this->params
+     *
+     * @param array $params
+     * @return self
+     */
+    public function fillParameters(array $params): Rule
     {
         if (count($params) == 1 and is_array($params[0])) {
             $params = $params[0];
@@ -17,13 +24,25 @@ class Url extends Rule
         return $this->forScheme($params);
     }
 
-    public function forScheme($schemes)
+    /**
+     * Given $schemes and assign $this->params
+     *
+     * @param array $schemes
+     * @return self
+     */
+    public function forScheme($schemes): Rule
     {
         $this->params['schemes'] = (array) $schemes;
         return $this;
     }
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         $schemes = $this->parameter('schemes');
 
@@ -45,12 +64,25 @@ class Url extends Rule
         }
     }
 
-    public function validateBasic($value)
+    /**
+     * Validate $value is valid URL format
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function validateBasic($value): bool
     {
         return filter_var($value, FILTER_VALIDATE_URL) !== false;
     }
 
-    public function validateCommonScheme($value, $scheme = null)
+    /**
+     * Validate $value is correct $scheme format
+     *
+     * @param mixed $value
+     * @param null $scheme
+     * @return bool
+     */
+    public function validateCommonScheme($value, $scheme = null): bool
     {
         if (!$scheme) {
             return $this->validateBasic($value) && (bool) preg_match("/^\w+:\/\//i", $value);
@@ -59,12 +91,24 @@ class Url extends Rule
         }
     }
 
-    public function validateMailtoScheme($value)
+    /**
+     * Validate the $value is mailto scheme format
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function validateMailtoScheme($value): bool
     {
         return $this->validateBasic($value) && preg_match("/^mailto:/", $value);
     }
 
-    public function validateJdbcScheme($value)
+    /**
+     * Validate the $value is jdbc scheme format
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function validateJdbcScheme($value): bool
     {
         return (bool) preg_match("/^jdbc:\w+:\/\//", $value);
     }

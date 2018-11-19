@@ -7,11 +7,19 @@ use Rakit\Validation\Rule;
 class Min extends Rule
 {
 
+    /** @var string */
     protected $message = "The :attribute minimum is :min";
 
+    /** @var array */
     protected $fillableParams = ['min'];
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         $this->requireParameters($this->fillableParams);
 

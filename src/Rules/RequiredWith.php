@@ -6,17 +6,31 @@ use Rakit\Validation\Rule;
 
 class RequiredWith extends Required
 {
+    /** @var bool */
     protected $implicit = true;
 
+    /** @var string */
     protected $message = "The :attribute is required";
 
-    public function fillParameters(array $params)
+    /**
+     * Given $params and assign $this->params
+     *
+     * @param array $params
+     * @return self
+     */
+    public function fillParameters(array $params): Rule
     {
         $this->params['fields'] = $params;
         return $this;
     }
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         $this->requireParameters(['fields']);
         $fields = $this->parameter('fields');

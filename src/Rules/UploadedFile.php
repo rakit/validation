@@ -9,13 +9,25 @@ class UploadedFile extends Rule
 {
     use FileTrait;
 
+    /** @var string */
     protected $message = "The :attribute is not valid";
 
+    /** @var string|int */
     protected $maxSize = null;
+
+    /** @var string|int */
     protected $minSize = null;
+
+    /** @var array */
     protected $allowedTypes = [];
 
-    public function fillParameters(array $params)
+    /**
+     * Given $params and assign $this->params
+     *
+     * @param array $params
+     * @return self
+     */
+    public function fillParameters(array $params): Rule
     {
         $this->minSize(array_shift($params));
         $this->maxSize(array_shift($params));
@@ -24,19 +36,38 @@ class UploadedFile extends Rule
         return $this;
     }
 
-    public function maxSize($size)
+    /**
+     * Given $size and set the max size
+     *
+     * @param string|int $size
+     * @return self
+     */
+    public function maxSize($size): Rule
     {
         $this->params['max_size'] = $size;
         return $this;
     }
 
-    public function minSize($size)
+    /**
+     * Given $size and set the min size
+     *
+     * @param string|int $size
+     * @return self
+     */
+    public function minSize($size): Rule
     {
         $this->params['min_size'] = $size;
         return $this;
     }
 
-    public function sizeBetween($min, $max)
+    /**
+     * Given $min and $max then set the range size
+     *
+     * @param string|int $min
+     * @param string|int $max
+     * @return self
+     */
+    public function sizeBetween($min, $max): Rule
     {
         $this->minSize($min);
         $this->maxSize($max);
@@ -44,7 +75,13 @@ class UploadedFile extends Rule
         return $this;
     }
 
-    public function fileTypes($types)
+    /**
+     * Given $types and assign $this->params
+     *
+     * @param mixed $types
+     * @return self
+     */
+    public function fileTypes($types): Rule
     {
         if (is_string($types)) {
             $types = explode('|', $types);
@@ -55,7 +92,13 @@ class UploadedFile extends Rule
         return $this;
     }
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         $minSize = $this->parameter('min_size');
         $maxSize = $this->parameter('max_size');

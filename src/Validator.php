@@ -5,55 +5,114 @@ namespace Rakit\Validation;
 class Validator
 {
 
+    /** @var array */
     protected $messages = [];
 
+    /** @var array */
     protected $validators = [];
 
+    /** @var bool */
     protected $allowRuleOverride = false;
 
+    /** @var bool */
     protected $useHumanizedKeys = true;
 
+    /**
+     * Constructor
+     *
+     * @param array $messages
+     * @return void
+     */
     public function __construct(array $messages = [])
     {
         $this->messages = $messages;
         $this->registerBaseValidators();
     }
 
-    public function setMessage($key, $message)
+    /**
+     * Given $key and $message to set message
+     *
+     * @param mixed $key
+     * @param mixed $message
+     * @return void
+     */
+    public function setMessage(string $key, string $message)
     {
-        return $this->messages[$key] = $message;
+        $this->messages[$key] = $message;
     }
 
-    public function setMessages($messages)
+    /**
+     * Given $messages and set multiple messages
+     *
+     * @param array $messages
+     * @return void
+     */
+    public function setMessages(array $messages)
     {
         $this->messages = array_merge($this->messages, $messages);
     }
 
-    public function setValidator($key, Rule $rule)
+    /**
+     * Register or override existing validator
+     *
+     * @param mixed $key
+     * @param Rakit\Validation\Rule $rule
+     * @return void
+     */
+    public function setValidator(string $key, Rule $rule)
     {
         $this->validators[$key] = $rule;
         $rule->setKey($key);
     }
 
+    /**
+     * Get validator object from given $key
+     *
+     * @param mixed $key
+     * @return mixed
+     */
     public function getValidator($key)
     {
         return isset($this->validators[$key])? $this->validators[$key] : null;
     }
 
-    public function validate(array $inputs, array $rules, array $messages = array())
+    /**
+     * Validate $inputs
+     *
+     * @param array $inputs
+     * @param array $rules
+     * @param array $messages
+     * @return Validation
+     */
+    public function validate(array $inputs, array $rules, array $messages = []): Validation
     {
         $validation = $this->make($inputs, $rules, $messages);
         $validation->validate();
         return $validation;
     }
 
-    public function make(array $inputs, array $rules, array $messages = array())
+    /**
+     * Given $inputs, $rules and $messages to make the Validation class instance
+     *
+     * @param array $inputs
+     * @param array $rules
+     * @param array $messages
+     * @return Validation
+     */
+    public function make(array $inputs, array $rules, array $messages = []): Validation
     {
         $messages = array_merge($this->messages, $messages);
         return new Validation($this, $inputs, $rules, $messages);
     }
 
-    public function __invoke($rule)
+    /**
+     * Magic invoke method to make Rule instance
+     *
+     * @param string $rule
+     * @return Rule
+     * @throws RuleNotFoundException
+     */
+    public function __invoke(string $rule): Rule
     {
         $args = func_get_args();
         $rule = array_shift($args);
@@ -69,6 +128,11 @@ class Validator
         return $clonedValidator;
     }
 
+    /**
+     * Initialize base validators array
+     *
+     * @return void
+     */
     protected function registerBaseValidators()
     {
         $baseValidator = [
@@ -119,7 +183,14 @@ class Validator
         }
     }
 
-    public function addValidator($ruleName, Rule $rule)
+    /**
+     * Given $ruleName and $rule to add new validator
+     *
+     * @param string $ruleName
+     * @param Rakit\Validation\Rule $rule
+     * @return void
+     */
+    public function addValidator(string $ruleName, Rule $rule)
     {
         if (!$this->allowRuleOverride && array_key_exists($ruleName, $this->validators)) {
             throw new RuleQuashException(
@@ -130,17 +201,34 @@ class Validator
         $this->setValidator($ruleName, $rule);
     }
 
-    public function allowRuleOverride($status = false)
+    /**
+     * Set rule can allow to be overrided
+     *
+     * @param boolean $status
+     * @return void
+     */
+    public function allowRuleOverride(bool $status = false)
     {
         $this->allowRuleOverride = $status;
     }
 
-    public function setUseHumanizedKeys($useHumanizedKeys = true)
+    /**
+     * Set this can use humanize keys
+     *
+     * @param boolean $useHumanizedKeys
+     * @return void
+     */
+    public function setUseHumanizedKeys(bool $useHumanizedKeys = true)
     {
         $this->useHumanizedKeys = $useHumanizedKeys;
     }
 
-    public function getUseHumanizedKeys()
+    /**
+     * Get $this->useHumanizedKeys value
+     *
+     * @return void
+     */
+    public function isUsingHumanizedKey(): bool
     {
         return $this->useHumanizedKeys;
     }

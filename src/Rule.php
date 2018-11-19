@@ -6,65 +6,124 @@ use Rakit\Validation\MissingRequiredParameterException;
 
 abstract class Rule
 {
+    /** @var string */
     protected $key;
 
+    /** @var Rakit\Validation\Attribute|null */
     protected $attribute;
 
+    /** @var Rakit\Validation\Validation|null */
     protected $validation;
 
+    /** @var bool */
     protected $implicit = false;
 
+    /** @var array */
     protected $params = [];
 
+    /** @var array */
     protected $fillableParams = [];
 
+    /** @var string */
     protected $message = "The :attribute is invalid";
 
     abstract public function check($value);
 
+    /**
+     * Set Validation class instance
+     *
+     * @param Rakit\Validation\Validation $validation
+     * @return void
+     */
     public function setValidation(Validation $validation)
     {
         $this->validation = $validation;
     }
 
-    public function setKey($key)
+    /**
+     * Set key
+     *
+     * @param string $key
+     * @return void
+     */
+    public function setKey(string $key)
     {
         $this->key = $key;
     }
 
+    /**
+     * Get key
+     *
+     * @return string
+     */
     public function getKey()
     {
         return $this->key ?: get_class($this);
     }
 
-    public function setAttribute($attribute)
+    /**
+     * Set attribute
+     *
+     * @param Rakit\Validation\Attribute $attribute
+     * @return void
+     */
+    public function setAttribute(Attribute $attribute)
     {
         $this->attribute = $attribute;
     }
 
+    /**
+     * Get attribute
+     *
+     * @return Rakit\Validation\Attribute|null
+     */
     public function getAttribute()
     {
-        return $this->attribute ?: get_class($this);
+        return $this->attribute;
     }
 
-    public function getParameters()
+    /**
+     * Get parameters
+     *
+     * @return array
+     */
+    public function getParameters(): array
     {
         return $this->params;
     }
 
-    public function setParameters(array $params)
+    /**
+     * Set params
+     *
+     * @param array $params
+     * @return Rakit\Validation\Rule
+     */
+    public function setParameters(array $params): Rule
     {
         $this->params = array_merge($this->params, $params);
         return $this;
     }
 
-    public function setParameter($key, $value)
+    /**
+     * Set parameters
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return Rakit\Validation\Rule
+     */
+    public function setParameter(string $key, $value): Rule
     {
         $this->params[$key] = $value;
         return $this;
     }
 
-    public function fillParameters(array $params)
+    /**
+     * Fill $params to $this->params
+     *
+     * @param array $params
+     * @return Rakit\Validation\Rule
+     */
+    public function fillParameters(array $params): Rule
     {
         foreach ($this->fillableParams as $key) {
             if (empty($params)) {
@@ -75,32 +134,67 @@ abstract class Rule
         return $this;
     }
 
-    public function parameter($key)
+    /**
+     * Get parameter from given $key, return null if it not exists
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function parameter(string $key)
     {
         return isset($this->params[$key])? $this->params[$key] : null;
     }
 
-    public function isImplicit()
+    /**
+     * Check whether this rule is implicit
+     *
+     * @return boolean
+     */
+    public function isImplicit(): bool
     {
-        return $this->implicit === true;
+        return $this->implicit;
     }
 
-    public function message($message)
+    /**
+     * Just alias of setMessage
+     *
+     * @param string $message
+     * @return Rakit\Validation\Rule
+     */
+    public function message(string $message): Rule
     {
         return $this->setMessage($message);
     }
 
-    public function setMessage($message)
+    /**
+     * Set message
+     *
+     * @param string $message
+     * @return Rakit\Validation\Rule
+     */
+    public function setMessage(string $message): Rule
     {
         $this->message = $message;
         return $this;
     }
 
-    public function getMessage()
+    /**
+     * Get message
+     *
+     * @return string
+     */
+    public function getMessage(): string
     {
         return $this->message;
     }
 
+    /**
+     * Check given $params must be exists
+     *
+     * @param array $params
+     * @return void
+     * @throws Rakit\Validation\MissingRequiredParameterException
+     */
     protected function requireParameters(array $params)
     {
         foreach ($params as $param) {

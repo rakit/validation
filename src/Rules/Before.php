@@ -8,11 +8,20 @@ class Before extends Rule
 {
     use DateUtils;
 
+    /** @var string */
     protected $message = "The :attribute must be a date before :time.";
 
+    /** @var array */
     protected $fillableParams = ['time'];
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     * @throws Exception
+     */
+    public function check($value): bool
     {
         $this->requireParameters($this->fillableParams);
         $time = $this->parameter('time');

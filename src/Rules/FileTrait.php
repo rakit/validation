@@ -11,8 +11,9 @@ trait FileTrait
      * Check whether value is from $_FILES
      *
      * @param mixed $value
+     * @return bool
      */
-    public function isValueFromUploadedFiles($value)
+    public function isValueFromUploadedFiles($value): bool
     {
         if (!is_array($value)) {
             return false;
@@ -28,12 +29,24 @@ trait FileTrait
         return true;
     }
 
-    public function isUploadedFile($value)
+    /**
+     * Check the $value is uploaded file
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function isUploadedFile($value): bool
     {
-        return $this->isValueFromUploadedFiles($value) and is_uploaded_file($value['tmp_name']);
+        return $this->isValueFromUploadedFiles($value) && is_uploaded_file($value['tmp_name']);
     }
 
-    protected function getBytes($size)
+    /**
+     * Given $size and get the bytes
+     *
+     * @param string|int $size
+     * @return int
+     */
+    protected function getBytes($size): int
     {
         if (is_int($size)) {
             return $size;

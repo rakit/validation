@@ -7,25 +7,45 @@ use Rakit\Validation\Rule;
 class In extends Rule
 {
 
+    /** @var string */
     protected $message = "The :attribute is not allowing :value";
 
+    /** @var bool */
     protected $strict = false;
 
-    public function fillParameters(array $params)
+    /**
+     * Given $params and assign the $this->params
+     *
+     * @param array $params
+     * @return self
+     */
+    public function fillParameters(array $params): Rule
     {
-        if (count($params) == 1 and is_array($params[0])) {
+        if (count($params) == 1 && is_array($params[0])) {
             $params = $params[0];
         }
         $this->params['allowed_values'] = $params;
         return $this;
     }
 
-    public function strict($strict = true)
+    /**
+     * Set strict value
+     *
+     * @param bool $strict
+     * @return void
+     */
+    public function strict(bool $strict = true)
     {
         $this->strict = $strict;
     }
 
-    public function check($value)
+    /**
+     * Check $value is existed
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         $this->requireParameters(['allowed_values']);
 

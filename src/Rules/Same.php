@@ -7,11 +7,19 @@ use Rakit\Validation\Rule;
 class Same extends Rule
 {
 
+    /** @var string */
     protected $message = "The :attribute must be same with :field";
 
+    /** @var array */
     protected $fillableParams = ['field'];
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         $this->requireParameters($this->fillableParams);
 
