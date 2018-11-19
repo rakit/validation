@@ -9,8 +9,8 @@ class Helper
      * Determine if a given string matches a given pattern.
      * Adapted from: https://github.com/illuminate/support/blob/v5.3.23/Str.php#L119
      *
-     * @param  string  $pattern
-     * @param  string  $value
+     * @param  string $pattern
+     * @param  string $value
      * @return bool
      */
     public static function strIs(string $pattern, string $value): bool
@@ -33,11 +33,11 @@ class Helper
      * Check if an item or items exist in an array using "dot" notation.
      * Adapted from: https://github.com/illuminate/support/blob/v5.3.23/Arr.php#L81
      *
-     * @param  array  $array
-     * @param  string|array  $keys
+     * @param  array $array
+     * @param  string $key
      * @return bool
      */
-    public static function arrayHas(array $array, $key): bool
+    public static function arrayHas(array $array, string $key): bool
     {
         if (array_key_exists($key, $array)) {
             return true;
@@ -59,11 +59,11 @@ class Helper
      * Adapted from: https://github.com/illuminate/support/blob/v5.3.23/Arr.php#L246
      *
      * @param  array  $array
-     * @param  string  $key
-     * @param  mixed   $default
+     * @param  string $key
+     * @param  mixed  $default
      * @return mixed
      */
-    public static function arrayGet(array $array, $key, $default = null)
+    public static function arrayGet(array $array, string $key, $default = null)
     {
         if (is_null($key)) {
             return $array;
@@ -88,8 +88,8 @@ class Helper
      * Flatten a multi-dimensional associative array with dots.
      * Adapted from: https://github.com/illuminate/support/blob/v5.3.23/Arr.php#L81
      *
-     * @param  array   $array
-     * @param  string  $prepend
+     * @param  array  $array
+     * @param  string $prepend
      * @return array
      */
     public static function arrayDot(array $array, string $prepend = ''): array
@@ -111,10 +111,10 @@ class Helper
      * Set an item on an array or object using dot notation.
      * Adapted from: https://github.com/illuminate/support/blob/v5.3.23/helpers.php#L437
      *
-     * @param  mixed  $target
-     * @param  string|array  $key
-     * @param  mixed  $value
-     * @param  bool  $overwrite
+     * @param  mixed        $target
+     * @param  string|array $key
+     * @param  mixed        $value
+     * @param  bool         $overwrite
      * @return mixed
      */
     public static function arraySet(&$target, $key, $value, $overwrite = true): array
@@ -158,12 +158,11 @@ class Helper
         return $target;
     }
 
-
     /**
      * Unset an item on an array or object using dot notation.
      *
-     * @param  mixed  $target
-     * @param  string|array  $key
+     * @param  mixed        $target
+     * @param  string|array $key
      * @return mixed
      */
     public static function arrayUnset(&$target, $key): array

@@ -20,14 +20,14 @@ class ErrorBag
     }
 
     /**
-     * Add key,rule and message
+     * Add message for given key and rule
      *
-     * @param mixed $key
-     * @param mixed $rule
-     * @param mixed $message
+     * @param string $key
+     * @param string $rule
+     * @param string $message
      * @return void
      */
-    public function add($key, $rule, $message)
+    public function add(string $key, string $rule, string $message)
     {
         if (!isset($this->messages[$key])) {
             $this->messages[$key] = [];
@@ -37,7 +37,7 @@ class ErrorBag
     }
 
     /**
-     * Get results count
+     * Get messages count
      *
      * @return int
      */
@@ -49,10 +49,10 @@ class ErrorBag
     /**
      * Check given key is existed
      *
-     * @param mixed $key
+     * @param string $key
      * @return bool
      */
-    public function has($key): bool
+    public function has(string $key): bool
     {
         list($key, $ruleName) = $this->parsekey($key);
         if ($this->isWildcardKey($key)) {
@@ -72,10 +72,10 @@ class ErrorBag
     /**
      * Get the first value of array
      *
-     * @param mixed $key
+     * @param string $key
      * @return mixed
      */
-    public function first($key)
+    public function first(string $key)
     {
         list($key, $ruleName) = $this->parsekey($key);
         if ($this->isWildcardKey($key)) {
@@ -98,13 +98,13 @@ class ErrorBag
     }
 
     /**
-     * Given $key and $format then get the results
+     * Get messages from given key, can be use custom format
      *
-     * @param mixed $key
+     * @param string $key
      * @param string $format
      * @return array
      */
-    public function get($key, string $format = ':message'): array
+    public function get(string $key, string $format = ':message'): array
     {
         list($key, $ruleName) = $this->parsekey($key);
         $results = [];
@@ -129,7 +129,7 @@ class ErrorBag
     }
 
     /**
-     * Get all results
+     * Get all messages
      *
      * @param string $format
      * @return array
@@ -147,7 +147,7 @@ class ErrorBag
     }
 
     /**
-     * Get the first result of results
+     * Get the first message from existing keys
      *
      * @param string $format
      * @param boolean $dotNotation
@@ -168,7 +168,7 @@ class ErrorBag
     }
 
     /**
-     * Get messagees
+     * Get plain array messages
      *
      * @return array
      */
@@ -180,10 +180,10 @@ class ErrorBag
     /**
      * Parse $key to get the array of $key and $ruleName
      *
-     * @param mixed $key
+     * @param string $key
      * @return array
      */
-    protected function parseKey($key): array
+    protected function parseKey(string $key): array
     {
         $expl = explode(':', $key, 2);
         $key = $expl[0];
@@ -197,7 +197,7 @@ class ErrorBag
      * @param mixed $key
      * @return bool
      */
-    protected function isWildcardKey($key): bool
+    protected function isWildcardKey(string $key): bool
     {
         return false !== strpos($key, '*');
     }
@@ -205,11 +205,11 @@ class ErrorBag
     /**
      * Filter messages with wildcard key
      *
-     * @param mixed $key
-     * @param mixed $ruleName
+     * @param string $key
+     * @param mixed  $ruleName
      * @return array
      */
-    protected function filterMessagesForWildcardKey($key, $ruleName = null): array
+    protected function filterMessagesForWildcardKey(string $key, $ruleName = null): array
     {
         $messages = $this->messages;
         $pattern = preg_quote($key, '#');
@@ -236,11 +236,11 @@ class ErrorBag
     /**
      * Get formatted message
      *
-     * @param mixed $message
-     * @param mixed $format
+     * @param string $message
+     * @param string $format
      * @return string
      */
-    protected function formatMessage($message, $format): string
+    protected function formatMessage(string $message, string $format): string
     {
         return str_replace(':message', $message, $format);
     }

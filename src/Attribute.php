@@ -8,19 +8,19 @@ class Attribute
     /** @var array */
     protected $rules = [];
 
-    /** @var mixed */
+    /** @var string */
     protected $key;
 
-    /** @var mixed */
+    /** @var string|null */
     protected $alias;
 
-    /** @var mixed */
+    /** @var Rakit\Validation\Validation */
     protected $validation;
 
     /** @var bool */
     protected $required = false;
 
-    /** @var Attribute */
+    /** @var Rakit\Validation\Validation|null */
     protected $primaryAttribute = null;
 
     /** @var array */
@@ -32,14 +32,18 @@ class Attribute
     /**
      * Constructor
      *
-     * @param Validation $validation
-     * @param mixed $key
-     * @param mixed $alias
-     * @param array $rules
+     * @param Rakit\Validation\Validation  $validation
+     * @param string      $key
+     * @param string|null $alias
+     * @param array       $rules
      * @return void
      */
-    public function __construct(Validation $validation, $key, $alias = null, array $rules = [])
-    {
+    public function __construct(
+        Validation $validation,
+        string $key,
+        $alias = null,
+        array $rules = []
+    ) {
         $this->validation = $validation;
         $this->alias = $alias;
         $this->key = $key;
@@ -51,7 +55,7 @@ class Attribute
     /**
      * Set the primary attribute
      *
-     * @param Attribute $primaryAttribute
+     * @param Rakit\Validation\Attribute $primaryAttribute
      * @return void
      */
     public function setPrimaryAttribute(Attribute $primaryAttribute)
@@ -73,7 +77,7 @@ class Attribute
     /**
      * Get primary attributes
      *
-     * @return mixed
+     * @return Rakit\Validation\Attribute|null
      */
     public function getPrimaryAttribute()
     {
@@ -97,7 +101,7 @@ class Attribute
     /**
      * Add other attributes
      *
-     * @param Attribute $otherAttribute
+     * @param Rakit\Validation\Attribute $otherAttribute
      * @return void
      */
     public function addOtherAttribute(Attribute $otherAttribute)
@@ -118,7 +122,7 @@ class Attribute
     /**
      * Add rule
      *
-     * @param Rule $rule
+     * @param Rakit\Validation\Rule $rule
      * @return void
      */
     public function addRule(Rule $rule)
@@ -131,10 +135,10 @@ class Attribute
     /**
      * Get rule
      *
-     * @param mixed $ruleKey
+     * @param string $ruleKey
      * @return void
      */
-    public function getRule($ruleKey)
+    public function getRule(string $ruleKey)
     {
         return $this->hasRule($ruleKey)? $this->rules[$ruleKey] : null;
     }
@@ -152,10 +156,10 @@ class Attribute
     /**
      * Check the $ruleKey has in the rule
      *
-     * @param mixed $ruleKey
+     * @param string $ruleKey
      * @return bool
      */
-    public function hasRule($ruleKey): bool
+    public function hasRule(string $ruleKey): bool
     {
         return isset($this->rules[$ruleKey]);
     }
@@ -163,10 +167,10 @@ class Attribute
     /**
      * Set required
      *
-     * @param mixed $required
+     * @param boolean $required
      * @return void
      */
-    public function setRequired($required)
+    public function setRequired(bool $required)
     {
         $this->required = $required;
     }
@@ -204,10 +208,10 @@ class Attribute
     /**
      * Get value
      *
-     * @param mixed $key
+     * @param string|null $key
      * @return void
      */
-    public function getValue($key = null)
+    public function getValue(string $key = null)
     {
         if ($key && $this->isArrayAttribute()) {
             $key = $this->resolveSiblingKey($key);
@@ -225,17 +229,17 @@ class Attribute
      *
      * @return boolean
      */
-    public function isArrayAttribute()
+    public function isArrayAttribute(): bool
     {
         return count($this->getKeyIndexes()) > 0;
     }
 
     /**
-     * Check that is using dot notation
+     * Check this attribute is using dot notation
      *
      * @return boolean
      */
-    public function isUsingDotNotation()
+    public function isUsingDotNotation(): bool
     {
         return strpos($this->getKey(), '.') !== false;
     }
@@ -243,10 +247,10 @@ class Attribute
     /**
      * Resolve sibling key
      *
-     * @param mixed $key
-     * @return mixed
+     * @param string $key
+     * @return string
      */
-    public function resolveSiblingKey($key)
+    public function resolveSiblingKey(string $key): string
     {
         $indexes = $this->getKeyIndexes();
         $keys = explode("*", $key);
@@ -285,10 +289,10 @@ class Attribute
     /**
      * Set alias
      *
-     * @param mixed $alias
+     * @param string $alias
      * @return void
      */
-    public function setAlias($alias)
+    public function setAlias(string $alias)
     {
         $this->alias = $alias;
     }
@@ -296,7 +300,7 @@ class Attribute
     /**
      * Get alias
      *
-     * @return mixed
+     * @return string|null
      */
     public function getAlias()
     {
