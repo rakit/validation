@@ -13,7 +13,7 @@ class Helper
      * @param  string  $value
      * @return bool
      */
-    public static function strIs($pattern, $value)
+    public static function strIs(string $pattern, string $value): bool
     {
         if ($pattern == $value) {
             return true;
@@ -37,7 +37,7 @@ class Helper
      * @param  string|array  $keys
      * @return bool
      */
-    public static function arrayHas(array $array, $key)
+    public static function arrayHas(array $array, $key): bool
     {
         if (array_key_exists($key, $array)) {
             return true;
@@ -92,7 +92,7 @@ class Helper
      * @param  string  $prepend
      * @return array
      */
-    public static function arrayDot(array $array, $prepend = '')
+    public static function arrayDot(array $array, string $prepend = ''): array
     {
         $results = [];
 
@@ -117,7 +117,7 @@ class Helper
      * @param  bool  $overwrite
      * @return mixed
      */
-    public static function arraySet(&$target, $key, $value, $overwrite = true)
+    public static function arraySet(&$target, $key, $value, $overwrite = true): array
     {
         $segments = is_array($key) ? $key : explode('.', $key);
 
@@ -166,7 +166,7 @@ class Helper
      * @param  string|array  $key
      * @return mixed
      */
-    public static function arrayUnset(&$target, $key)
+    public static function arrayUnset(&$target, $key): array
     {
         if (!is_array($target)) {
             return $target;
@@ -195,7 +195,7 @@ class Helper
      * @param  string $delimiter
      * @return string
      */
-    public static function snakeCase($value, $delimiter = '_')
+    public static function snakeCase(string $value, string $delimiter = '_'): string
     {
         if (! ctype_lower($value)) {
             $value = preg_replace('/\s+/u', '', ucwords($value));

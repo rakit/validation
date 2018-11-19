@@ -5,6 +5,7 @@ namespace Rakit\Validation;
 class MimeTypeGuesser
 {
 
+    /** @var array */
     protected $mimeTypes = [
         'application/andrew-inset' => 'ez',
         'application/applixware' => 'aw',
@@ -778,11 +779,23 @@ class MimeTypeGuesser
         'x-conference/x-cooltalk' => 'ice'
     ];
 
+    /**
+     * Get extension name
+     *
+     * @param mixed $mimeType
+     * @return mixed
+     */
     public function getExtension($mimeType)
     {
         return isset($this->mimeTypes[$mimeType])? $this->mimeTypes[$mimeType] : null;
     }
 
+    /**
+     * Get mime type
+     *
+     * @param mixed $extension
+     * @return mixed
+     */
     public function getMimeType($extension)
     {
         $key = array_search($extension, $this->mimeTypes);

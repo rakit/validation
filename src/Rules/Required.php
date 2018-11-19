@@ -8,11 +8,19 @@ class Required extends Rule
 {
     use FileTrait;
 
+    /** @var bool */
     protected $implicit = true;
 
+    /** @var string */
     protected $message = "The :attribute is required";
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         $this->setAttributeAsRequired();
 
@@ -29,6 +37,11 @@ class Required extends Rule
         return !is_null($value);
     }
 
+    /**
+     * Set attribute is required if $this->attribute is true
+     *
+     * @return void
+     */
     protected function setAttributeAsRequired()
     {
         if ($this->attribute) {

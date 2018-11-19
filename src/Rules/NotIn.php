@@ -7,11 +7,19 @@ use Rakit\Validation\Rule;
 class NotIn extends Rule
 {
 
+    /** @var string */
     protected $message = "The :attribute is not allowing :value";
 
+    /** @var bool */
     protected $strict = false;
 
-    public function fillParameters(array $params)
+    /**
+     * Given $params and assign the $this->params
+     *
+     * @param array $params
+     * @return self
+     */
+    public function fillParameters(array $params): Rule
     {
         if (count($params) == 1 and is_array($params[0])) {
             $params = $params[0];
@@ -20,12 +28,24 @@ class NotIn extends Rule
         return $this;
     }
 
+    /**
+     * Set strict value
+     *
+     * @param bool $strict
+     * @return void
+     */
     public function strict($strict = true)
     {
         $this->strict = $strict;
     }
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         $this->requireParameters(['disallowed_values']);
         $disallowedValues = (array) $this->parameter('disallowed_values');

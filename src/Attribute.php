@@ -5,23 +5,40 @@ namespace Rakit\Validation;
 class Attribute
 {
 
+    /** @var array */
     protected $rules = [];
 
+    /** @var mixed */
     protected $key;
 
+    /** @var mixed */
     protected $alias;
 
+    /** @var mixed */
     protected $validation;
 
+    /** @var bool */
     protected $required = false;
 
+    /** @var Attribute */
     protected $primaryAttribute = null;
 
+    /** @var array */
     protected $otherAttributes = [];
 
+    /** @var array */
     protected $keyIndexes = [];
 
-    public function __construct(Validation $validation, $key, $alias = null, array $rules = array())
+    /**
+     * Constructor
+     *
+     * @param Validation $validation
+     * @param mixed $key
+     * @param mixed $alias
+     * @param array $rules
+     * @return void
+     */
+    public function __construct(Validation $validation, $key, $alias = null, array $rules = [])
     {
         $this->validation = $validation;
         $this->alias = $alias;
@@ -31,21 +48,44 @@ class Attribute
         }
     }
 
+    /**
+     * Set the primary attribute
+     *
+     * @param Attribute $primaryAttribute
+     * @return void
+     */
     public function setPrimaryAttribute(Attribute $primaryAttribute)
     {
         $this->primaryAttribute = $primaryAttribute;
     }
 
+    /**
+     * Set key indexes
+     *
+     * @param array $keyIndexes
+     * @return void
+     */
     public function setKeyIndexes(array $keyIndexes)
     {
         $this->keyIndexes = $keyIndexes;
     }
 
+    /**
+     * Get primary attributes
+     *
+     * @return mixed
+     */
     public function getPrimaryAttribute()
     {
         return $this->primaryAttribute;
     }
 
+    /**
+     * Set other attributes
+     *
+     * @param array $otherAttributes
+     * @return void
+     */
     public function setOtherAttributes(array $otherAttributes)
     {
         $this->otherAttributes = [];
@@ -54,16 +94,33 @@ class Attribute
         }
     }
 
+    /**
+     * Add other attributes
+     *
+     * @param Attribute $otherAttribute
+     * @return void
+     */
     public function addOtherAttribute(Attribute $otherAttribute)
     {
         $this->otherAttributes[] = $otherAttribute;
     }
 
-    public function getOtherAttributes()
+    /**
+     * Get other attributes
+     *
+     * @return array
+     */
+    public function getOtherAttributes(): array
     {
         return $this->otherAttributes;
     }
 
+    /**
+     * Add rule
+     *
+     * @param Rule $rule
+     * @return void
+     */
     public function addRule(Rule $rule)
     {
         $rule->setAttribute($this);
@@ -71,41 +128,85 @@ class Attribute
         $this->rules[$rule->getKey()] = $rule;
     }
 
+    /**
+     * Get rule
+     *
+     * @param mixed $ruleKey
+     * @return void
+     */
     public function getRule($ruleKey)
     {
         return $this->hasRule($ruleKey)? $this->rules[$ruleKey] : null;
     }
 
-    public function getRules()
+    /**
+     * Get rules
+     *
+     * @return array
+     */
+    public function getRules(): array
     {
         return $this->rules;
     }
 
-    public function hasRule($ruleKey)
+    /**
+     * Check the $ruleKey has in the rule
+     *
+     * @param mixed $ruleKey
+     * @return bool
+     */
+    public function hasRule($ruleKey): bool
     {
         return isset($this->rules[$ruleKey]);
     }
 
+    /**
+     * Set required
+     *
+     * @param mixed $required
+     * @return void
+     */
     public function setRequired($required)
     {
         $this->required = $required;
     }
 
-    public function isRequired()
+    /**
+     * Set rule is required
+     *
+     * @return boolean
+     */
+    public function isRequired(): bool
     {
         return $this->required === true;
     }
 
-    public function getKey()
+    /**
+     * Get key
+     *
+     * @return string
+     */
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    public function getKeyIndexes()
+    /**
+     * Get key indexes
+     *
+     * @return array
+     */
+    public function getKeyIndexes(): array
     {
         return $this->keyIndexes;
     }
 
+    /**
+     * Get value
+     *
+     * @param mixed $key
+     * @return void
+     */
     public function getValue($key = null)
     {
         if ($key && $this->isArrayAttribute()) {
@@ -119,16 +220,32 @@ class Attribute
         return $this->validation->getValue($key);
     }
 
+    /**
+     * Get that is array attribute
+     *
+     * @return boolean
+     */
     public function isArrayAttribute()
     {
         return count($this->getKeyIndexes()) > 0;
     }
 
+    /**
+     * Check that is using dot notation
+     *
+     * @return boolean
+     */
     public function isUsingDotNotation()
     {
         return strpos($this->getKey(), '.') !== false;
     }
 
+    /**
+     * Resolve sibling key
+     *
+     * @param mixed $key
+     * @return mixed
+     */
     public function resolveSiblingKey($key)
     {
         $indexes = $this->getKeyIndexes();
@@ -141,6 +258,11 @@ class Attribute
         return call_user_func_array('sprintf', $args);
     }
 
+    /**
+     * Get humanize key
+     *
+     * @return string
+     */
     public function getHumanizedKey()
     {
         $primaryAttribute = $this->getPrimaryAttribute();
@@ -160,11 +282,22 @@ class Attribute
         return ucfirst($key);
     }
 
+    /**
+     * Set alias
+     *
+     * @param mixed $alias
+     * @return void
+     */
     public function setAlias($alias)
     {
         $this->alias = $alias;
     }
 
+    /**
+     * Get alias
+     *
+     * @return mixed
+     */
     public function getAlias()
     {
         return $this->alias;

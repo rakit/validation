@@ -9,13 +9,25 @@ class UploadedFile extends Rule
 {
     use FileTrait;
 
+    /** @var string */
     protected $message = "The :attribute is not valid";
 
+    /** @var mixed */
     protected $maxSize = null;
+
+    /** @var mixed */
     protected $minSize = null;
+
+    /** @var array */
     protected $allowedTypes = [];
 
-    public function fillParameters(array $params)
+    /**
+     * Given $params and assign $this->params
+     *
+     * @param array $params
+     * @return Rule
+     */
+    public function fillParameters(array $params): Rule
     {
         $this->minSize(array_shift($params));
         $this->maxSize(array_shift($params));
@@ -24,18 +36,37 @@ class UploadedFile extends Rule
         return $this;
     }
 
+    /**
+     * Given $size and set the max size
+     *
+     * @param mixed $size
+     * @return Rule
+     */
     public function maxSize($size)
     {
         $this->params['max_size'] = $size;
         return $this;
     }
 
+    /**
+     * Given $size and set the min size
+     *
+     * @param mixed $size
+     * @return Rule
+     */
     public function minSize($size)
     {
         $this->params['min_size'] = $size;
         return $this;
     }
 
+    /**
+     * Given $min and $max then set the range size
+     *
+     * @param mixed $min
+     * @param mixed $max
+     * @return Rule
+     */
     public function sizeBetween($min, $max)
     {
         $this->minSize($min);
@@ -44,6 +75,12 @@ class UploadedFile extends Rule
         return $this;
     }
 
+    /**
+     * Given $types and assign $this->params
+     *
+     * @param mixed $types
+     * @return Rule
+     */
     public function fileTypes($types)
     {
         if (is_string($types)) {
@@ -55,7 +92,13 @@ class UploadedFile extends Rule
         return $this;
     }
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         $minSize = $this->parameter('min_size');
         $maxSize = $this->parameter('max_size');

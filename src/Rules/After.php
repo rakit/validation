@@ -9,10 +9,19 @@ class After extends Rule
 
     use DateUtils;
 
+    /** @var string */
     protected $message = "The :attribute must be a date after :time.";
 
+    /** @var array */
     protected $fillableParams = ['time'];
 
+    /**
+     * Check the value is valid
+     *
+     * @param mixed $value
+     * @return mixed
+     * @throws Exception
+     */
     public function check($value)
     {
         $this->requireParameters($this->fillableParams);

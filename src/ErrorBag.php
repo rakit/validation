@@ -5,13 +5,28 @@ namespace Rakit\Validation;
 class ErrorBag
 {
 
+    /** @var array */
     protected $messages = [];
 
+    /**
+     * Constructor
+     *
+     * @param array $messages
+     * @return void
+     */
     public function __construct(array $messages = [])
     {
         $this->messages = $messages;
     }
 
+    /**
+     * Add key,rule and message
+     *
+     * @param mixed $key
+     * @param mixed $rule
+     * @param mixed $message
+     * @return void
+     */
     public function add($key, $rule, $message)
     {
         if (!isset($this->messages[$key])) {
@@ -21,12 +36,23 @@ class ErrorBag
         $this->messages[$key][$rule] = $message;
     }
 
-    public function count()
+    /**
+     * Get results count
+     *
+     * @return int
+     */
+    public function count(): int
     {
         return count($this->all());
     }
 
-    public function has($key)
+    /**
+     * Check given key is existed
+     *
+     * @param mixed $key
+     * @return bool
+     */
+    public function has($key): bool
     {
         list($key, $ruleName) = $this->parsekey($key);
         if ($this->isWildcardKey($key)) {
@@ -43,6 +69,12 @@ class ErrorBag
         }
     }
 
+    /**
+     * Get the first value of array
+     *
+     * @param mixed $key
+     * @return mixed
+     */
     public function first($key)
     {
         list($key, $ruleName) = $this->parsekey($key);
@@ -65,7 +97,14 @@ class ErrorBag
         }
     }
 
-    public function get($key, $format = ':message')
+    /**
+     * Given $key and $format then get the results
+     *
+     * @param mixed $key
+     * @param string $format
+     * @return array
+     */
+    public function get($key, string $format = ':message'): array
     {
         list($key, $ruleName) = $this->parsekey($key);
         $results = [];
@@ -89,7 +128,13 @@ class ErrorBag
         return $results;
     }
 
-    public function all($format = ':message')
+    /**
+     * Get all results
+     *
+     * @param string $format
+     * @return array
+     */
+    public function all(string $format = ':message'): array
     {
         $messages = $this->messages;
         $results = [];
@@ -101,7 +146,14 @@ class ErrorBag
         return $results;
     }
 
-    public function firstOfAll($format = ':message', $dotNotation = false)
+    /**
+     * Get the first result of results
+     *
+     * @param string $format
+     * @param boolean $dotNotation
+     * @return array
+     */
+    public function firstOfAll(string $format = ':message', bool $dotNotation = false): array
     {
         $messages = $this->messages;
         $results = [];
@@ -115,12 +167,23 @@ class ErrorBag
         return $results;
     }
 
-    public function toArray()
+    /**
+     * Get messagees
+     *
+     * @return array
+     */
+    public function toArray(): array
     {
         return $this->messages;
     }
 
-    protected function parseKey($key)
+    /**
+     * Parse $key to get the array of $key and $ruleName
+     *
+     * @param mixed $key
+     * @return array
+     */
+    protected function parseKey($key): array
     {
         $expl = explode(':', $key, 2);
         $key = $expl[0];
@@ -128,12 +191,25 @@ class ErrorBag
         return [$key, $ruleName];
     }
 
-    protected function isWildcardKey($key)
+    /**
+     * Check the $key is wildcard
+     *
+     * @param mixed $key
+     * @return bool
+     */
+    protected function isWildcardKey($key): bool
     {
         return false !== strpos($key, '*');
     }
 
-    protected function filterMessagesForWildcardKey($key, $ruleName = null)
+    /**
+     * Filter messages with wildcard key
+     *
+     * @param mixed $key
+     * @param mixed $ruleName
+     * @return array
+     */
+    protected function filterMessagesForWildcardKey($key, $ruleName = null): array
     {
         $messages = $this->messages;
         $pattern = preg_quote($key, '#');
@@ -157,7 +233,14 @@ class ErrorBag
         return $filteredMessages;
     }
 
-    protected function formatMessage($message, $format)
+    /**
+     * Get formatted message
+     *
+     * @param mixed $message
+     * @param mixed $format
+     * @return string
+     */
+    protected function formatMessage($message, $format): string
     {
         return str_replace(':message', $message, $format);
     }

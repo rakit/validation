@@ -9,15 +9,30 @@ use Closure;
 class Callback extends Rule
 {
 
+    /** @var string */
     protected $message = "The :attribute is not valid";
 
+    /** @var array */
     protected $fillableParams = ['callback'];
 
-    public function setCallback(Closure $callback)
+    /**
+     * Set the Callback closure
+     *
+     * @param Closure $callback
+     * @return self
+     */
+    public function setCallback(Closure $callback): self
     {
         return $this->setParameter('callback', $callback);
     }
 
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return mixed
+     * @throws Exception
+     */
     public function check($value)
     {
         $this->requireParameters($this->fillableParams);
