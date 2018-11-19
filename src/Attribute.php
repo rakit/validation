@@ -182,7 +182,7 @@ class Attribute
      */
     public function isRequired(): bool
     {
-        return $this->required === true;
+        return $this->required;
     }
 
     /**

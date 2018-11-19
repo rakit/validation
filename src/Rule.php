@@ -152,7 +152,7 @@ abstract class Rule
      */
     public function isImplicit(): bool
     {
-        return $this->implicit === true;
+        return $this->implicit;
     }
 
     /**
