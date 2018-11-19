@@ -64,7 +64,7 @@ class Validation
      * @param string|array $rules
      * @return void
      */
-    public function addAttribute(string $attributeKey, $rules): void
+    public function addAttribute(string $attributeKey, $rules)
     {
         $resolvedRules = $this->resolveRules($rules);
         $attribute = new Attribute($this, $attributeKey, $this->getAlias($attributeKey), $resolvedRules);
@@ -88,7 +88,7 @@ class Validation
      * @param array $inputs
      * @return void
      */
-    public function validate(array $inputs = []): void
+    public function validate(array $inputs = [])
     {
         $this->errors = new ErrorBag; // reset error bag
         $this->inputs = array_merge($this->inputs, $this->resolveInputAttributes($inputs));
@@ -113,7 +113,7 @@ class Validation
      * @param Rakit\Validation\Attribute $attribute
      * @return void
      */
-    protected function validateAttribute(Attribute $attribute): void
+    protected function validateAttribute(Attribute $attribute)
     {
         if ($this->isArrayAttribute($attribute)) {
             $attributes = $this->parseArrayAttribute($attribute);
@@ -311,7 +311,7 @@ class Validation
      * @param Rakit\Validation\Rule $ruleValidator
      * @return void
      */
-    protected function addError(Attribute $attribute, $value, Rule $ruleValidator): void
+    protected function addError(Attribute $attribute, $value, Rule $ruleValidator)
     {
         $ruleName = $ruleValidator->getKey();
         $message = $this->resolveMessage($attribute, $value, $ruleValidator);
@@ -518,7 +518,7 @@ class Validation
      * @param mixed $message
      * @return void
      */
-    public function setMessage(string $key, string $message): void
+    public function setMessage(string $key, string $message)
     {
         $this->messages[$key] = $message;
     }
@@ -529,7 +529,7 @@ class Validation
      * @param array $messages
      * @return void
      */
-    public function setMessages(array $messages): void
+    public function setMessages(array $messages)
     {
         $this->messages = array_merge($this->messages, $messages);
     }
@@ -541,7 +541,7 @@ class Validation
      * @param mixed $alias
      * @return void
      */
-    public function setAlias(string $attributeKey, string $alias): void
+    public function setAlias(string $attributeKey, string $alias)
     {
         $this->aliases[$attributeKey] = $alias;
     }
@@ -563,7 +563,7 @@ class Validation
      * @param array $aliases
      * @return void
      */
-    public function setAliases(array $aliases): void
+    public function setAliases(array $aliases)
     {
         $this->aliases = array_merge($this->aliases, $aliases);
     }
@@ -660,7 +660,7 @@ class Validation
      * @param mixed $value
      * @return void
      */
-    protected function setValidData(Attribute $attribute, $value): void
+    protected function setValidData(Attribute $attribute, $value)
     {
         $key = $attribute->getKey();
         if ($attribute->isArrayAttribute() || $attribute->isUsingDotNotation()) {
@@ -688,7 +688,7 @@ class Validation
      * @param mixed $value
      * @return void
      */
-    protected function setInvalidData(Attribute $attribute, $value): void
+    protected function setInvalidData(Attribute $attribute, $value)
     {
         $key = $attribute->getKey();
         if ($attribute->isArrayAttribute() || $attribute->isUsingDotNotation()) {

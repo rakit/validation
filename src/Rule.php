@@ -35,7 +35,7 @@ abstract class Rule
      * @param Rakit\Validation\Validation $validation
      * @return void
      */
-    public function setValidation(Validation $validation): void
+    public function setValidation(Validation $validation)
     {
         $this->validation = $validation;
     }
@@ -46,7 +46,7 @@ abstract class Rule
      * @param string $key
      * @return void
      */
-    public function setKey(string $key): void
+    public function setKey(string $key)
     {
         $this->key = $key;
     }
@@ -67,7 +67,7 @@ abstract class Rule
      * @param Rakit\Validation\Attribute $attribute
      * @return void
      */
-    public function setAttribute(Attribute $attribute): void
+    public function setAttribute(Attribute $attribute)
     {
         $this->attribute = $attribute;
     }
@@ -195,7 +195,7 @@ abstract class Rule
      * @return void
      * @throws Rakit\Validation\MissingRequiredParameterException
      */
-    protected function requireParameters(array $params): void
+    protected function requireParameters(array $params)
     {
         foreach ($params as $param) {
             if (!isset($this->params[$param])) {

@@ -36,7 +36,7 @@ class Validator
      * @param mixed $message
      * @return void
      */
-    public function setMessage(string $key, string $message): void
+    public function setMessage(string $key, string $message)
     {
         $this->messages[$key] = $message;
     }
@@ -47,7 +47,7 @@ class Validator
      * @param array $messages
      * @return void
      */
-    public function setMessages(array $messages): void
+    public function setMessages(array $messages)
     {
         $this->messages = array_merge($this->messages, $messages);
     }
@@ -59,7 +59,7 @@ class Validator
      * @param Rule $rule
      * @return void
      */
-    public function setValidator(string $key, Rule $rule): void
+    public function setValidator(string $key, Rule $rule)
     {
         $this->validators[$key] = $rule;
         $rule->setKey($key);
@@ -133,7 +133,7 @@ class Validator
      *
      * @return void
      */
-    protected function registerBaseValidators(): void
+    protected function registerBaseValidators()
     {
         $baseValidator = [
             'required'                  => new Rules\Required,
@@ -190,7 +190,7 @@ class Validator
      * @param Rule $rule
      * @return void
      */
-    public function addValidator(string $ruleName, Rule $rule): void
+    public function addValidator(string $ruleName, Rule $rule)
     {
         if (!$this->allowRuleOverride && array_key_exists($ruleName, $this->validators)) {
             throw new RuleQuashException(
@@ -207,7 +207,7 @@ class Validator
      * @param boolean $status
      * @return void
      */
-    public function allowRuleOverride(bool $status = false): void
+    public function allowRuleOverride(bool $status = false)
     {
         $this->allowRuleOverride = $status;
     }
@@ -218,7 +218,7 @@ class Validator
      * @param boolean $useHumanizedKeys
      * @return void
      */
-    public function setUseHumanizedKeys(bool $useHumanizedKeys = true): void
+    public function setUseHumanizedKeys(bool $useHumanizedKeys = true)
     {
         $this->useHumanizedKeys = $useHumanizedKeys;
     }
