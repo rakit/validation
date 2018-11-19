@@ -19,10 +19,10 @@ class After extends Rule
      * Check the value is valid
      *
      * @param mixed $value
-     * @return mixed
+     * @return bool
      * @throws Exception
      */
-    public function check($value)
+    public function check($value): bool
     {
         $this->requireParameters($this->fillableParams);
         $time = $this->parameter('time');

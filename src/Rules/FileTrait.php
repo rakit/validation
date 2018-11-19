@@ -11,9 +11,9 @@ trait FileTrait
      * Check whether value is from $_FILES
      *
      * @param mixed $value
-     * @return mixed
+     * @return bool
      */
-    public function isValueFromUploadedFiles($value)
+    public function isValueFromUploadedFiles($value): bool
     {
         if (!is_array($value)) {
             return false;
@@ -43,10 +43,10 @@ trait FileTrait
     /**
      * Given $size and get the bytes
      *
-     * @param mixed $size
-     * @return mixed
+     * @param string|int $size
+     * @return int
      */
-    protected function getBytes($size)
+    protected function getBytes($size): int
     {
         if (is_int($size)) {
             return $size;

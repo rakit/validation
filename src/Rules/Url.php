@@ -30,7 +30,7 @@ class Url extends Rule
      * @param array $schemes
      * @return self
      */
-    public function forScheme($schemes): self
+    public function forScheme($schemes): Rule
     {
         $this->params['schemes'] = (array) $schemes;
         return $this;

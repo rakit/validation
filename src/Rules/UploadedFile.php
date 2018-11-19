@@ -12,10 +12,10 @@ class UploadedFile extends Rule
     /** @var string */
     protected $message = "The :attribute is not valid";
 
-    /** @var mixed */
+    /** @var string|int */
     protected $maxSize = null;
 
-    /** @var mixed */
+    /** @var string|int */
     protected $minSize = null;
 
     /** @var array */
@@ -25,7 +25,7 @@ class UploadedFile extends Rule
      * Given $params and assign $this->params
      *
      * @param array $params
-     * @return Rule
+     * @return self
      */
     public function fillParameters(array $params): Rule
     {
@@ -39,10 +39,10 @@ class UploadedFile extends Rule
     /**
      * Given $size and set the max size
      *
-     * @param mixed $size
-     * @return Rule
+     * @param string|int $size
+     * @return self
      */
-    public function maxSize($size)
+    public function maxSize($size): Rule
     {
         $this->params['max_size'] = $size;
         return $this;
@@ -51,10 +51,10 @@ class UploadedFile extends Rule
     /**
      * Given $size and set the min size
      *
-     * @param mixed $size
-     * @return Rule
+     * @param string|int $size
+     * @return self
      */
-    public function minSize($size)
+    public function minSize($size): Rule
     {
         $this->params['min_size'] = $size;
         return $this;
@@ -63,11 +63,11 @@ class UploadedFile extends Rule
     /**
      * Given $min and $max then set the range size
      *
-     * @param mixed $min
-     * @param mixed $max
-     * @return Rule
+     * @param string|int $min
+     * @param string|int $max
+     * @return self
      */
-    public function sizeBetween($min, $max)
+    public function sizeBetween($min, $max): Rule
     {
         $this->minSize($min);
         $this->maxSize($max);
@@ -79,9 +79,9 @@ class UploadedFile extends Rule
      * Given $types and assign $this->params
      *
      * @param mixed $types
-     * @return Rule
+     * @return self
      */
-    public function fileTypes($types)
+    public function fileTypes($types): Rule
     {
         if (is_string($types)) {
             $types = explode('|', $types);

@@ -21,7 +21,7 @@ class Callback extends Rule
      * @param Closure $callback
      * @return self
      */
-    public function setCallback(Closure $callback): self
+    public function setCallback(Closure $callback): Rule
     {
         return $this->setParameter('callback', $callback);
     }
@@ -30,10 +30,10 @@ class Callback extends Rule
      * Check the $value is valid
      *
      * @param mixed $value
-     * @return mixed
+     * @return bool
      * @throws Exception
      */
-    public function check($value)
+    public function check($value): bool
     {
         $this->requireParameters($this->fillableParams);
 

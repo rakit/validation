@@ -45,7 +45,7 @@ class In extends Rule
      * @param mixed $value
      * @return bool
      */
-    public function check($value)
+    public function check($value): bool
     {
         $this->requireParameters(['allowed_values']);
 
