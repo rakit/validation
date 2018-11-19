@@ -17,13 +17,13 @@ class Defaults extends Rule
      * Check the $value is valid
      *
      * @param mixed $value
-     * @return mixed
+     * @return bool
      */
-    public function check($value)
+    public function check($value): bool
     {
         $this->requireParameters($this->fillableParams);
 
         $default = $this->parameter('default');
-        return $default;
+        return true;
     }
 }

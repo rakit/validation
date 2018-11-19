@@ -134,7 +134,7 @@ class Validation
             $ruleValidator->setAttribute($attribute);
 
             if ($isEmptyValue && $ruleValidator instanceof Defaults) {
-                $value = $ruleValidator->check(null);
+                $value = $ruleValidator->parameter('default');
                 $isEmptyValue = $this->isEmptyValue($value);
                 continue;
             }
