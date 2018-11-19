@@ -56,7 +56,7 @@ class Validator
      * Register or override existing validator
      *
      * @param mixed $key
-     * @param Rule $rule
+     * @param Rakit\Validation\Rule $rule
      * @return void
      */
     public function setValidator(string $key, Rule $rule)
@@ -187,7 +187,7 @@ class Validator
      * Given $ruleName and $rule to add new validator
      *
      * @param string $ruleName
-     * @param Rule $rule
+     * @param Rakit\Validation\Rule $rule
      * @return void
      */
     public function addValidator(string $ruleName, Rule $rule)

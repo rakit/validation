@@ -36,7 +36,7 @@ class Validation
     /**
      * Constructor
      *
-     * @param Validator $validator
+     * @param Rakit\Validation\Validator $validator
      * @param array $inputs
      * @param array $rules
      * @param array $messages
