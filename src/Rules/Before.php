@@ -6,7 +6,7 @@ use Rakit\Validation\Rule;
 
 class Before extends Rule
 {
-    use DateUtils;
+    use Traits\DateUtilsTrait;
 
     /** @var string */
     protected $message = "The :attribute must be a date before :time.";

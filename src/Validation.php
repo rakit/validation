@@ -483,7 +483,8 @@ class Validation
                 $validator = call_user_func_array($validatorFactory, ['callback', $rule]);
             } else {
                 $ruleName = is_object($rule) ? get_class($rule) : gettype($rule);
-                throw new \Exception("Rule must be a string, closure or Rakit\Validation\Rule instance. ".$ruleName." given");
+                $message = "Rule must be a string, Closure or '".Rule::class."' instance. ".$ruleName." given";
+                throw new \Exception();
             }
 
             $resolvedRules[] = $validator;

@@ -7,7 +7,7 @@ use Rakit\Validation\Rule;
 class After extends Rule
 {
 
-    use DateUtils;
+    use Traits\DateUtilsTrait;
 
     /** @var string */
     protected $message = "The :attribute must be a date after :time.";
