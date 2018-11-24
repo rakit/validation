@@ -6,7 +6,7 @@ use Rakit\Validation\Rule;
 
 class Required extends Rule
 {
-    use FileTrait;
+    use Traits\FileTrait;
 
     /** @var bool */
     protected $implicit = true;

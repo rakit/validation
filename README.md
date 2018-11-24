@@ -269,7 +269,8 @@ Below is list of all available validation rules
 * [required_without](#rule-required_without)
 * [required_with_all](#rule-required_with_all)
 * [required_without_all](#rule-required_without_all)
-* [uploaded_file](#rule-uploaded_file)
+* [uploaded_file](#rule-uploaded_file) (uploaded file)
+* [mimes](#rule-mimes) (uploaded file)
 * [default/defaults](#rule-default)
 * [email](#rule-email)
 * [uppercase](#rule-uppercase)
@@ -355,7 +356,7 @@ The field under validation must be present and not empty only if all of the othe
 The field under validation must be present and not empty only when all of the other specified fields are not present.
 
 <a id="rule-uploaded_file"></a>
-#### uploaded_file:min_size,max_size,file_type_a,file_type_b,...
+#### uploaded_file:min_size,max_size,extension_a,extension_b,...
 
 This rule will validate `$_FILES` data, but not for multiple uploaded files. 
 Field under this rule must be following rules below to be valid:
@@ -371,6 +372,12 @@ Here are some example definitions and explanations:
 * `required|uploaded_file`: uploaded file is required, and it must be `ERR_UPLOAD_OK`. 
 * `uploaded_file:0,1M`: uploaded file size must be between 0 - 1 MB, but uploaded file is optional.
 * `required|uploaded_file:0,1M,png,jpeg`: uploaded file size must be between 0 - 1MB and mime types must be `image/jpeg` or `image/png`.
+
+
+<a id="rule-default"></a>
+#### mimes:extension_a,extension_b,...
+
+The `$_FILES` item under validation must have a MIME type corresponding to one of the listed extensions.
 
 <a id="rule-default"></a>
 #### default/defaults
@@ -468,17 +475,50 @@ The field under this rule must have a size greater or equal than the given numbe
 
 For string data, value corresponds to the number of characters. For numeric data, value corresponds to a given integer value. For an array, size corresponds to the count of the array.
 
+You can also validate uploaded file using this rule to validate minimum size of uploaded file.
+For example:
+
+```php
+$validation = $validator->validate([
+    'photo' => $_FILES['photo']
+], [
+    'photo' => 'required|min:1M'
+]);
+```
+
 <a id="rule-max"></a>
 #### max:number
 
 The field under this rule must have a size lower or equal than the given number. 
 Value size calculated in same way like `min` rule.
 
+You can also validate uploaded file using this rule to validate maximum size of uploaded file.
+For example:
+
+```php
+$validation = $validator->validate([
+    'photo' => $_FILES['photo']
+], [
+    'photo' => 'required|max:2M'
+]);
+```
+
 <a id="rule-between"></a>
 #### between:min,max
 
 The field under this rule must have a size between min and max params. 
 Value size calculated in same way like `min` and `max` rule.
+
+You can also validate uploaded file using this rule to validate size of uploaded file.
+For example:
+
+```php
+$validation = $validator->validate([
+    'photo' => $_FILES['photo']
+], [
+    'photo' => 'required|between:1M,2M'
+]);
+```
 
 <a id="rule-digits"></a>
 #### digits:value

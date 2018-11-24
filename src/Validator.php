@@ -166,6 +166,7 @@ class Validator
             'present'                   => new Rules\Present,
             'different'                 => new Rules\Different,
             'uploaded_file'             => new Rules\UploadedFile,
+            'mimes'                     => new Rules\Mimes,
             'callback'                  => new Rules\Callback,
             'before'                    => new Rules\Before,
             'after'                     => new Rules\After,

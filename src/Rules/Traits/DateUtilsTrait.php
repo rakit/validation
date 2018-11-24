@@ -1,10 +1,10 @@
 <?php
 
-namespace Rakit\Validation\Rules;
+namespace Rakit\Validation\Rules\Traits;
 
 use Exception;
 
-trait DateUtils
+trait DateUtilsTrait
 {
 
     /**
@@ -26,9 +26,8 @@ trait DateUtils
      */
     protected function throwException(string $value)
     {
-        return new Exception(
-            "Expected a valid date, got '{$value}' instead. 2016-12-08, 2016-12-02 14:58, tomorrow are considered valid dates"
-        );
+        // phpcs:ignore
+        return new Exception("Expected a valid date, got '{$value}' instead. 2016-12-08, 2016-12-02 14:58, tomorrow are considered valid dates");
     }
 
     /**

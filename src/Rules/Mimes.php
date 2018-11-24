@@ -5,12 +5,12 @@ namespace Rakit\Validation\Rules;
 use Rakit\Validation\Rule;
 use Rakit\Validation\MimeTypeGuesser;
 
-class UploadedFile extends Rule
+class Mimes extends Rule
 {
-    use Traits\FileTrait, Traits\SizeTrait;
+    use Traits\FileTrait;
 
     /** @var string */
-    protected $message = "The :attribute is not valid";
+    protected $message = "The :attribute file type is not allowed";
 
     /** @var string|int */
     protected $maxSize = null;
@@ -29,49 +29,7 @@ class UploadedFile extends Rule
      */
     public function fillParameters(array $params): Rule
     {
-        $this->minSize(array_shift($params));
-        $this->maxSize(array_shift($params));
-        $this->fileTypes($params);
-
-        return $this;
-    }
-
-    /**
-     * Given $size and set the max size
-     *
-     * @param string|int $size
-     * @return self
-     */
-    public function maxSize($size): Rule
-    {
-        $this->params['max_size'] = $size;
-        return $this;
-    }
-
-    /**
-     * Given $size and set the min size
-     *
-     * @param string|int $size
-     * @return self
-     */
-    public function minSize($size): Rule
-    {
-        $this->params['min_size'] = $size;
-        return $this;
-    }
-
-    /**
-     * Given $min and $max then set the range size
-     *
-     * @param string|int $min
-     * @param string|int $max
-     * @return self
-     */
-    public function sizeBetween($min, $max): Rule
-    {
-        $this->minSize($min);
-        $this->maxSize($max);
-
+        $this->allowTypes($params);
         return $this;
     }
 
@@ -81,7 +39,7 @@ class UploadedFile extends Rule
      * @param mixed $types
      * @return self
      */
-    public function fileTypes($types): Rule
+    public function allowTypes($types): Rule
     {
         if (is_string($types)) {
             $types = explode('|', $types);
@@ -100,8 +58,6 @@ class UploadedFile extends Rule
      */
     public function check($value): bool
     {
-        $minSize = $this->parameter('min_size');
-        $maxSize = $this->parameter('max_size');
         $allowedTypes = $this->parameter('allowed_types');
 
         // below is Required rule job
@@ -116,20 +72,6 @@ class UploadedFile extends Rule
         // just make sure there is no error
         if ($value['error']) {
             return false;
-        }
-
-        if ($minSize) {
-            $bytesMinSize = $this->getBytesSize($minSize);
-            if ($value['size'] < $bytesMinSize) {
-                return false;
-            }
-        }
-
-        if ($maxSize) {
-            $bytesMaxSize = $this->getBytesSize($maxSize);
-            if ($value['size'] > $bytesMaxSize) {
-                return false;
-            }
         }
 
         if (!empty($allowedTypes)) {
