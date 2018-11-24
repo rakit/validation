@@ -370,7 +370,8 @@ class ValidatorTest extends TestCase
     {
         $this->validator->allowRuleOverride(true);
 
-        $this->validator->addValidator('required', new Required()); //This is a custom rule defined in the fixtures directory
+        //This is a custom rule defined in the fixtures directory
+        $this->validator->addValidator('required', new Required());
 
         $data = ['s' => json_encode(['name' => 'space x', 'human' => false])];
 

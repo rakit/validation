@@ -31,4 +31,22 @@ class MaxTest extends TestCase
         $this->assertFalse($this->rule->fillParameters([2])->check([1,2,3]));
         $this->assertFalse($this->rule->fillParameters([100])->check(123));
     }
+
+    public function testUploadedFileValue()
+    {
+        $twoMega = 1024 * 1024 * 2;
+        $sampleFile = [
+            'name' => pathinfo(__FILE__, PATHINFO_BASENAME),
+            'type' => 'text/plain',
+            'size' => $twoMega,
+            'tmp_name' => __FILE__,
+            'error' => 0
+        ];
+
+        $this->assertTrue($this->rule->fillParameters([$twoMega])->check($sampleFile));
+        $this->assertTrue($this->rule->fillParameters(['2M'])->check($sampleFile));
+
+        $this->assertFalse($this->rule->fillParameters([$twoMega - 1])->check($sampleFile));
+        $this->assertFalse($this->rule->fillParameters(['1.9M'])->check($sampleFile));
+    }
 }

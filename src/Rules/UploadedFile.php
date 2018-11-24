@@ -7,7 +7,7 @@ use Rakit\Validation\MimeTypeGuesser;
 
 class UploadedFile extends Rule
 {
-    use Traits\FileTrait;
+    use Traits\FileTrait, Traits\SizeTrait;
 
     /** @var string */
     protected $message = "The :attribute is not valid";
@@ -119,14 +119,14 @@ class UploadedFile extends Rule
         }
 
         if ($minSize) {
-            $bytesMinSize = $this->getBytes($minSize);
+            $bytesMinSize = $this->getBytesSize($minSize);
             if ($value['size'] < $bytesMinSize) {
                 return false;
             }
         }
 
         if ($maxSize) {
-            $bytesMaxSize = $this->getBytes($maxSize);
+            $bytesMaxSize = $this->getBytesSize($maxSize);
             if ($value['size'] > $bytesMaxSize) {
                 return false;
             }

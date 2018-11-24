@@ -6,6 +6,7 @@ use Rakit\Validation\Rule;
 
 class Min extends Rule
 {
+    use Traits\SizeTrait;
 
     /** @var string */
     protected $message = "The :attribute minimum is :min";
@@ -23,15 +24,13 @@ class Min extends Rule
     {
         $this->requireParameters($this->fillableParams);
 
-        $min = (int) $this->parameter('min');
-        if (is_int($value)) {
-            return $value >= $min;
-        } elseif (is_string($value)) {
-            return mb_strlen($value, 'UTF-8') >= $min;
-        } elseif (is_array($value)) {
-            return count($value) >= $min;
-        } else {
+        $min = $this->getBytesSize($this->parameter('min'));
+        $valueSize = $this->getValueSize($value);
+
+        if (!is_numeric($valueSize)) {
             return false;
         }
+
+        return $valueSize >= $min;
     }
 }

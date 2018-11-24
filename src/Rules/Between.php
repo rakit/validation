@@ -6,6 +6,7 @@ use Rakit\Validation\Rule;
 
 class Between extends Rule
 {
+    use Traits\SizeTrait;
 
     /** @var string */
     protected $message = "The :attribute must be between :min and :max";
@@ -23,17 +24,15 @@ class Between extends Rule
     {
         $this->requireParameters($this->fillableParams);
 
-        $min = (int) $this->parameter('min');
-        $max = (int) $this->parameter('max');
+        $min = $this->getBytesSize($this->parameter('min'));
+        $max = $this->getBytesSize($this->parameter('max'));
 
-        if (is_int($value) || is_float($value)) {
-            return $value >= $min and $value <= $max;
-        } elseif (is_string($value)) {
-            return mb_strlen($value, 'UTF-8') >= $min and mb_strlen($value, 'UTF-8') <= $max;
-        } elseif (is_array($value)) {
-            return count($value) >= $min and count($value) <= $max;
-        } else {
+        $valueSize = $this->getValueSize($value);
+
+        if (!is_numeric($valueSize)) {
             return false;
         }
+
+        return ($valueSize >= $min && $valueSize <= $max);
     }
 }
