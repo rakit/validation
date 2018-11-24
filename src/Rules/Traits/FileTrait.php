@@ -1,6 +1,6 @@
 <?php
 
-namespace Rakit\Validation\Rules;
+namespace Rakit\Validation\Rules\Traits;
 
 use InvalidArgumentException;
 

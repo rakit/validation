@@ -7,7 +7,7 @@ use Rakit\Validation\MimeTypeGuesser;
 
 class UploadedFile extends Rule
 {
-    use FileTrait;
+    use Traits\FileTrait;
 
     /** @var string */
     protected $message = "The :attribute is not valid";

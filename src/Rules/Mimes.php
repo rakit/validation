@@ -7,7 +7,7 @@ use Rakit\Validation\MimeTypeGuesser;
 
 class Mimes extends Rule
 {
-    use FileTrait;
+    use Traits\FileTrait;
 
     /** @var string */
     protected $message = "The :attribute file type is not allowed";
