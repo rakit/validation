@@ -475,17 +475,50 @@ The field under this rule must have a size greater or equal than the given numbe
 
 For string data, value corresponds to the number of characters. For numeric data, value corresponds to a given integer value. For an array, size corresponds to the count of the array.
 
+You can also validate uploaded file using this rule to validate minimum size of uploaded file.
+For example:
+
+```php
+$validation = $validator->validate([
+    'photo' => $_FILES['photo']
+], [
+    'photo' => 'required|min:1M'
+]);
+```
+
 <a id="rule-max"></a>
 #### max:number
 
 The field under this rule must have a size lower or equal than the given number. 
 Value size calculated in same way like `min` rule.
 
+You can also validate uploaded file using this rule to validate maximum size of uploaded file.
+For example:
+
+```php
+$validation = $validator->validate([
+    'photo' => $_FILES['photo']
+], [
+    'photo' => 'required|max:2M'
+]);
+```
+
 <a id="rule-between"></a>
 #### between:min,max
 
 The field under this rule must have a size between min and max params. 
 Value size calculated in same way like `min` and `max` rule.
+
+You can also validate uploaded file using this rule to validate size of uploaded file.
+For example:
+
+```php
+$validation = $validator->validate([
+    'photo' => $_FILES['photo']
+], [
+    'photo' => 'required|between:1M,2M'
+]);
+```
 
 <a id="rule-digits"></a>
 #### digits:value
