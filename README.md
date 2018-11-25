@@ -666,7 +666,7 @@ $validation = $validator->validate($_POST, [
 </details>
 
 
-## Register/Modify Rule
+## Register/Override Rule
 
 Another way to use custom validation rule is to create a class extending `Rakit\Validation\Rule`. 
 Then register it using `setValidator` or `addValidator`.
@@ -693,7 +693,7 @@ class UniqueRule extends Rule
         $this->pdo = $pdo;
     }
     
-    public function check($value)
+    public function check($value): bool
     {
         // make sure required parameters exists
         $this->requireParameters(['table', 'column']);
