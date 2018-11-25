@@ -258,6 +258,123 @@ $validation_a = $validator->make($dataset_a, [
 $validation_a->validate();
 ```
 
+## Working with Error Message
+
+Errors messages are collected in `Rakit\Validation\ErrorBag` object that you can get it using `errors()` method.
+
+```php
+$validation = $validator->validate($inputs, $rules);
+
+$errors = $validation->errors(); // << ErrorBag
+```
+
+Now you can use methods below to retrieves errors messages:
+
+#### `all(string $format = ':message')`
+
+Get all messages as flatten array.
+
+Examples:
+
+```php
+$messages = $errors->all(); 
+// [
+//     'Email is not valid email',
+//     'Password minimum 6 character',
+//     'Password must contains capital letters'
+// ]
+
+$messages = $errors->all('<li>:message</li>');
+// [
+//     '<li>Email is not valid email</li>',
+//     '<li>Password minimum 6 character</li>',
+//     '<li>Password must contains capital letters</li>'
+// ]
+```
+
+#### `firstOfAll(string $format = ':message', bool $dotNotation = false)`
+
+Get only first message from all existing keys.
+
+Examples:
+
+```php
+$messages = $errors->firstOfAll(); 
+// [
+//     'email' => Email is not valid email',
+//     'password' => 'Password minimum 6 character',
+// ]
+
+$messages = $errors->firstOfAll('<li>:message</li>');
+// [
+//     'email' => '<li>Email is not valid email</li>',
+//     'password' => '<li>Password minimum 6 character</li>',
+// ]
+```
+
+Argument `$dotNotation` is for array validation. 
+If it is `false` it will return original array structure, if it `true` it will return flatten array with dot notation keys.
+
+For example:
+
+```php
+$messages = $errors->firstOfAll(':message', false); 
+// [
+//     'contacts' => [
+//          1 => [
+//              'email' => 'Email is not valid email',
+//              'phone' => 'Phone is not valid phone number'
+//          ],
+//     ],
+// ]
+
+$messages = $errors->firstOfAll(':message', true);
+// [
+//     'contacts.1.email' => 'Email is not valid email',
+//     'contacts.1.phone' => 'Email is not valid phone number',
+// ]
+```
+
+#### `first(string $key)`
+
+Get first message from given key. It will return `string` if key has any error message, or `null` if key has no errors.
+
+For example:
+
+```php
+if ($emailError = $errors->first('email')) {
+    echo $emailError;
+}
+```
+
+#### `toArray()`
+
+Get all messages grouped by it's keys.
+
+For example:
+
+```php
+$messages = $errors->toArray();
+// [
+//     'email' => [
+//         'Email is not valid email'
+//     ],
+//     'password' => [
+//         'Password minimum 6 character',
+//         'Password must contains capital letters'
+//     ]
+// ]
+```
+
+#### `count()`
+
+Get count messages.
+
+#### `has(string $key)`
+
+Check if given key has an error. It returns `bool` if a key has an error, and otherwise.
+
+
 ## Available Rules
 
 > Click to show details.
