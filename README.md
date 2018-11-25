@@ -260,51 +260,7 @@ $validation_a->validate();
 
 ## Available Rules
 
-Below is list of all available validation rules
-
-* [required](#rule-required)
-* [required_if](#rule-required_if)
-* [required_unless](#rule-required_unless)
-* [required_with](#rule-required_with)
-* [required_without](#rule-required_without)
-* [required_with_all](#rule-required_with_all)
-* [required_without_all](#rule-required_without_all)
-* [uploaded_file](#rule-uploaded_file) (uploaded file)
-* [mimes](#rule-mimes) (uploaded file)
-* [default/defaults](#rule-default)
-* [email](#rule-email)
-* [uppercase](#rule-uppercase)
-* [lowercase](#rule-lowercase)
-* [json](#rule-json)
-* [alpha](#rule-alpha)
-* [numeric](#rule-numeric)
-* [alpha_num](#rule-alpha_num)
-* [alpha_dash](#rule-alpha_dash)
-* [in](#rule-in)
-* [not_in](#rule-not_in)
-* [min](#rule-min)
-* [max](#rule-max)
-* [between](#rule-between)
-* [digits](#rule-digits)
-* [digits_between](#rule-digits_between)
-* [url](#rule-url)
-* [integer](#rule-integer)
-* [ip](#rule-ip)
-* [ipv4](#rule-ipv4)
-* [ipv6](#rule-ipv6)
-* [array](#rule-array)
-* [same](#rule-same)
-* [regex](#rule-regex)
-* [date](#rule-date)
-* [accepted](#rule-accepted)
-* [present](#rule-present)
-* [different](#rule-different)
-* [after](#after)
-* [before](#before)
-* [callback](#callback)
-
-<a id="rule-required"></a>
-#### required
+<details><summary><strong>required</strong></summary>
 
 The field under this validation must be present and not 'empty'.
 
@@ -323,40 +279,47 @@ Here are some examples:
 
 For uploaded file, `$_FILES['key']['error']` must not `UPLOAD_ERR_NO_FILE`.
 
-<a id="rule-required_if"></a>
-#### required_if:another_field,value_1,value_2,...
+</details>
+
+<details><summary><strong>required_if</strong>:another_field,value_1,value_2,...</summary>
 
 The field under this rule must be present and not empty if the anotherfield field is equal to any value.
 
 For example `required_if:something,1,yes,on` will be required if `something` value is one of `1`, `'1'`, `'yes'`, or `'on'`.
 
-<a id="rule-required_unless"></a>
-#### required_unless:another_field,value_1,value_2,...
+</details>
+
+<details><summary><strong>required_unless</strong>:another_field,value_1,value_2,...</summary>
 
 The field under validation must be present and not empty unless the anotherfield field is equal to any value.
 
-<a id="rule-required_with"></a>
-#### required_with:field_1,field_2,...
+</details>
+
+<details><summary><strong>required_with</strong>:field_1,field_2,...</summary>
 
 The field under validation must be present and not empty only if any of the other specified fields are present.
 
-<a id="rule-required_without"></a>
-#### required_without:field_1,field_2,...
+</details>
+
+<details><summary><strong>required_without</strong>:field_1,field_2,...</summary>
 
 The field under validation must be present and not empty only when any of the other specified fields are not present.
 
-<a id="rule-required_with_all"></a>
-#### required_with_all:field_1,field_2,...
+</details>
+
+<details><summary><strong>required_with_all</strong>:field_1,field_2,...</summary>
 
 The field under validation must be present and not empty only if all of the other specified fields are present.
 
-<a id="rule-required_without_all"></a>
-#### required_without_all:field_1,field_2,...
+</details>
+
+<details><summary><strong>required_without_all</strong>:field_1,field_2,...</summary>
 
 The field under validation must be present and not empty only when all of the other specified fields are not present.
 
-<a id="rule-uploaded_file"></a>
-#### uploaded_file:min_size,max_size,extension_a,extension_b,...
+</details>
+
+<details><summary><strong>uploaded_file</strong>:min_size,max_size,extension_a,extension_b,...</summary>
 
 This rule will validate `$_FILES` data, but not for multiple uploaded files. 
 Field under this rule must be following rules below to be valid:
@@ -374,13 +337,15 @@ Here are some example definitions and explanations:
 * `required|uploaded_file:0,1M,png,jpeg`: uploaded file size must be between 0 - 1MB and mime types must be `image/jpeg` or `image/png`.
 
 
-<a id="rule-default"></a>
-#### mimes:extension_a,extension_b,...
+</details>
+
+<details><summary><strong>mimes</strong>:extension_a,extension_b,...</summary>
 
 The `$_FILES` item under validation must have a MIME type corresponding to one of the listed extensions.
 
-<a id="rule-default"></a>
-#### default/defaults
+</details>
+
+<details><summary><strong>default</strong>/defaults</summary>
 
 This is special rule that doesn't validate anything. 
 It just set default value to your attribute if that attribute is empty or not present.
@@ -400,48 +365,57 @@ $validation->passes(); // true
 
 Validation passes because we sets default value for `enabled` and `published` to `1` and `0` which is valid.
 
-<a id="rule-email"></a>
-#### email
+</details>
+
+<details><summary><strong>email</strong></summary>
 
 The field under this validation must be valid email address.
 
-<a id="rule-uppercase"></a>
-#### uppercase
+</details>
+
+<details><summary><strong>uppercase</strong></summary>
 
 The field under this validation must be valid uppercase.
 
-<a id="rule-lowercase"></a>
-#### lowercase
+</details>
+
+<details><summary><strong>lowercase</strong></summary>
 
 The field under this validation must be valid lowercase.
 
-<a id="rule-json"></a>
-#### json
+</details>
+
+<details><summary><strong>json</strong></summary>
 
 The field under this validation must be valid JSON string.
 
-<a id="rule-alpha"></a>
-#### alpha
+</details>
+
+<details><summary><strong>alpha</strong></summary>
 
 The field under this rule must be entirely alphabetic characters.
 
-<a id="rule-numeric"></a>
-#### numeric
+</details>
+
+<details><summary><strong>numeric</strong></summary>
 
 The field under this rule must be numeric.
 
-<a id="rule-alpha_num"></a>
-#### alpha_num
+</details>
+
+<details><summary><strong>alpha_num</strong></summary>
 
 The field under this rule must be entirely alpha-numeric characters.
 
-<a id="rule-alpha_dash"></a>
-#### alpha_dash
+</details>
+
+<details><summary><strong>alpha_dash</strong></summary>
 
 The field under this rule may have alpha-numeric characters, as well as dashes and underscores.
 
-<a id="rule-in"></a>
-#### in:value_1,value_2,...
+</details>
+
+<details><summary><strong>in</strong>:value_1,value_2,...</summary>
 
 The field under this rule must be included in the given list of values.
 
@@ -461,15 +435,17 @@ $validation = $validator->validate($data, [
 
 Then 'enabled' value should be boolean `true`, or int `1`.
 
-<a id="rule-not_in"></a>
-#### not_in:value_1,value_2,...
+</details>
+
+<details><summary><strong>not_in</strong>:value_1,value_2,...</summary>
 
 The field under this rule must not be included in the given list of values.
 
 This rule also using `in_array`. You can enable strict checking by invoking validator and call `strict()` like example in rule `in` above.
 
-<a id="rule-min"></a>
-#### min:number
+</details>
+
+<details><summary><strong>min</strong>:number</summary>
 
 The field under this rule must have a size greater or equal than the given number. 
 
@@ -486,8 +462,9 @@ $validation = $validator->validate([
 ]);
 ```
 
-<a id="rule-max"></a>
-#### max:number
+</details>
+
+<details><summary><strong>max</strong>:number</summary>
 
 The field under this rule must have a size lower or equal than the given number. 
 Value size calculated in same way like `min` rule.
@@ -503,8 +480,9 @@ $validation = $validator->validate([
 ]);
 ```
 
-<a id="rule-between"></a>
-#### between:min,max
+</details>
+
+<details><summary><strong>between</strong>:min,max</summary>
 
 The field under this rule must have a size between min and max params. 
 Value size calculated in same way like `min` and `max` rule.
@@ -520,18 +498,21 @@ $validation = $validator->validate([
 ]);
 ```
 
-<a id="rule-digits"></a>
-#### digits:value
+</details>
+
+<details><summary><strong>digits</strong>:value</summary>
 
 The field under validation must be numeric and must have an exact length of `value`.
 
-<a id="rule-digits_between"></a>
-#### digits_between:min,max
+</details>
+
+<details><summary><strong>digits_between</strong>:min,max</summary>
 
 The field under validation must have a length between the given `min` and `max`.
 
-<a id="rule-url"></a>
-#### url
+</details>
+
+<details><summary><strong>url</strong></summary>
 
 The field under this rule must be valid url format.
 By default it check common URL scheme format like `any_scheme://...`.
@@ -554,62 +535,74 @@ $validation = $validator->validate($inputs, [
 > For common URL scheme and mailto, we combine `FILTER_VALIDATE_URL` to validate URL format and `preg_match` to validate it's scheme. 
   Except for JDBC URL, currently it just check a valid JDBC scheme.
 
-<a id="rule-integer"></a>
-#### integer
-The field under this rule must be integer.
+</details>
 
-<a id="rule-ip"></a>
-#### ip
+<details><summary><strong>integer</strong></summary>
+The field under t rule must be integer.
+
+</details>
+
+<details><summary><strong>ip</strong></summary>
 
 The field under this rule must be valid ipv4 or ipv6.
 
-<a id="rule-ipv4"></a>
-#### ipv4
+</details>
+
+<details><summary><strong>ipv4</strong></summary>
 
 The field under this rule must be valid ipv4.
 
-<a id="rule-ipv6"></a>
-#### ipv6
+</details>
+
+<details><summary><strong>ipv6</strong></summary>
 
 The field under this rule must be valid ipv6.
 
-<a id="rule-array"></a>
-#### array
+</details>
+
+<details><summary><strong>array</strong></summary>
 
 The field under this rule must be array.
 
-<a id="rule-same"></a>
-#### same:another_field
+</details>
+
+<details><summary><strong>same</strong>:another_field</summary>
 
 The field value under this rule must be same with `another_field` value.
 
-<a id="rule-regex"></a>
-#### regex:/your-regex/
+</details>
+
+<details><summary><strong>regex</strong>:/your-regex/</summary>
 
 The field under this rule must be match with given regex.
 
-<a id="rule-date"></a>
-#### date:format
+</details>
+
+<details><summary><strong>date</strong>:format</summary>
 
 The field under this rule must be valid date format. Parameter `format` is optional, default format is `Y-m-d`.
 
-<a id="rule-accepted"></a>
-#### accepted
+</details>
+
+<details><summary><strong>accepted</strong></summary>
 
 The field under this rule must be one of `'on'`, `'yes'`, `'1'`, `'true'`, or `true`.
 
-<a id="rule-present"></a>
-#### present
+</details>
+
+<details><summary><strong>present</strong></summary>
 
 The field under this rule must be exists, whatever the value is.
 
-<a id="rule-different"></a>
-#### different:another_field
+</details>
+
+<details><summary><strong>different</strong>:another_field</summary>
 
 Opposite of `same`. The field value under this rule must be different with `another_field` value.
 
-<a id="after"></a>
-#### after:tomorrow
+</details>
+
+<details><summary><strong>after</strong>:tomorrow</summary>
 
 Anything that can be parsed by `strtotime` can be passed as a parameter to this rule. Valid examples include :
 - after:next week
@@ -617,13 +610,15 @@ Anything that can be parsed by `strtotime` can be passed as a parameter to this 
 - after:2016
 - after:2016-12-31 09:56:02
 
-<a id="before"></a>
-#### before:yesterday
+</details>
+
+<details><summary><strong>before</strong>:yesterday</summary>
 
 This also works the same way as the [after rule](#after). Pass anything that can be parsed by `strtotime`
 
-<a id="callback"></a>
-#### callback
+</details>
+
+<details><summary><strong>callback</strong></summary>
 
 You can use this rule to define your own validation rule.
 This rule can't be registered using string pipe.
@@ -665,6 +660,9 @@ $validation = $validator->validate($_POST, [
 
 > Note: `Rakit\Validation\Rules\Callback` instance is binded into your Closure. 
   So you can access rule properties and methods using `$this`.
+
+</details>
+
 
 ## Register/Modify Rule
 
