@@ -260,6 +260,8 @@ $validation_a->validate();
 
 ## Available Rules
 
+> Click to show details.
+
 <details><summary><strong>required</strong></summary>
 
 The field under this validation must be present and not 'empty'.
@@ -345,7 +347,7 @@ The `$_FILES` item under validation must have a MIME type corresponding to one o
 
 </details>
 
-<details><summary><strong>default</strong>/defaults</summary>
+<details><summary><strong>default/defaults</strong></summary>
 
 This is special rule that doesn't validate anything. 
 It just set default value to your attribute if that attribute is empty or not present.
