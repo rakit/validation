@@ -133,7 +133,6 @@ class UploadedFileTest extends TestCase
 
     public function testFileTypes()
     {
-
         $rule = $this->getMockBuilder(UploadedFile::class)
             ->setMethods(['isUploadedFile'])
             ->getMock();

@@ -2,10 +2,12 @@
 
 namespace Rakit\Validation\Rules;
 
-use Rakit\Validation\Rule;
+use Rakit\Validation\Helper;
 use Rakit\Validation\MimeTypeGuesser;
+use Rakit\Validation\Rule;
+use Rakit\Validation\Rules\Interfaces\BeforeValidate;
 
-class UploadedFile extends Rule
+class UploadedFile extends Rule implements BeforeValidate
 {
     use Traits\FileTrait, Traits\SizeTrait;
 
@@ -90,6 +92,33 @@ class UploadedFile extends Rule
         $this->params['allowed_types'] = $types;
 
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function beforeValidate()
+    {
+        $attribute = $this->getAttribute();
+
+        // We only resolve uploaded file value
+        // from complex attribute such as 'files.photo', 'images.*', 'images.foo.bar', etc.
+        if (!$attribute->isUsingDotNotation()) {
+            return;
+        }
+
+        $keys = explode(".", $attribute->getKey());
+        $firstKey = array_shift($keys);
+        $firstKeyValue = $this->validation->getValue($firstKey);
+
+        $resolvedValue = $this->resolveUploadedFileValue($firstKeyValue);
+
+        // Return original value if $value can't be resolved as uploaded file value
+        if (!$resolvedValue) {
+            return;
+        }
+
+        $this->validation->setValue($firstKey, $resolvedValue);
     }
 
     /**
