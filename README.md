@@ -440,8 +440,8 @@ The field under validation must be present and not empty only when all of the ot
 
 <details><summary><strong>uploaded_file</strong>:min_size,max_size,extension_a,extension_b,...</summary>
 
-This rule will validate `$_FILES` data, but not for multiple uploaded files. 
-Field under this rule must be following rules below to be valid:
+This rule will validate data from `$_FILES`. 
+Field under this rule must be follows rules below to be valid:
 
 * `$_FILES['key']['error']` must be `UPLOAD_ERR_OK` or `UPLOAD_ERR_NO_FILE`. For `UPLOAD_ERR_NO_FILE` you can validate it with `required` rule. 
 * If min size is given, uploaded file size **MUST NOT** be lower than min size.
@@ -455,6 +455,56 @@ Here are some example definitions and explanations:
 * `uploaded_file:0,1M`: uploaded file size must be between 0 - 1 MB, but uploaded file is optional.
 * `required|uploaded_file:0,1M,png,jpeg`: uploaded file size must be between 0 - 1MB and mime types must be `image/jpeg` or `image/png`.
 
+Optionally, if you want to have separate error message between size and type validation.
+You can use `mimes` rule to validate file types, and `min`, `max`, or `between` to validate it's size.
+
+For multiple file upload, PHP will give you undesirable array `$_FILES` structure ([here](http://php.net/manual/en/features.file-upload.multiple.php#53240) is the topic). So we make `uploaded_file` rule to automatically resolve your `$_FILES` value to be well-organized array structure. That means, you cannot only use `min`, `max`, `between`, or `mimes` rules to validate multiple file upload. You should put `uploaded_file` just to resolve it's value and make sure that value is correct uploaded file value.
+
+For example if you have input files like this:
+
+```html
+<input type="file" name="photos[]"/>
+<input type="file" name="photos[]"/>
+<input type="file" name="photos[]"/>
+```
+
+You can  simply validate it like this:
+
+```php
+$validation = $validator->validate($_FILES, [
+    'photos.*' => 'uploaded_file:0,2M,jpeg,png'
+]);
+
+// or
+
+$validation = $validator->validate($_FILES, [
+    'photos.*' => 'uploaded_file|max:2M|mimes:jpeg,png'
+]);
+```
+
+Or if you have input files like this:
+
+```html
+<input type="file" name="images[profile]"/>
+<input type="file" name="images[cover]"/>
+```
+
+You can validate it like this:
+
+```php
+$validation = $validator->validate($_FILES, [
+    'images.*' => 'uploaded_file|max:2M|mimes:jpeg,png',
+]);
+
+// or
+
+$validation = $validator->validate($_FILES, [
+    'images.profile' => 'uploaded_file|max:2M|mimes:jpeg,png',
+    'images.cover' => 'uploaded_file|max:5M|mimes:jpeg,png',
+]);
+```
+
+Now when you use `getValidData()` or `getInvalidData()` you will get well array structure just like single file upload.
 
 </details>
 

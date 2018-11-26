@@ -2,9 +2,10 @@
 
 namespace Rakit\Validation;
 
-use Rakit\Validation\Rules\Required;
 use Closure;
-use Rakit\Validation\Rules\Defaults;
+use Rakit\Validation\Rules\Interfaces\BeforeValidate;
+use Rakit\Validation\Rules\Interfaces\ModifyValue;
+use Rakit\Validation\Rules\Required;
 
 class Validation
 {
@@ -92,6 +93,16 @@ class Validation
     {
         $this->errors = new ErrorBag; // reset error bag
         $this->inputs = array_merge($this->inputs, $this->resolveInputAttributes($inputs));
+
+        // Before validation hooks
+        foreach ($this->attributes as $attributeKey => $attribute) {
+            foreach ($attribute->getRules() as $rule) {
+                if ($rule instanceof BeforeValidate) {
+                    $rule->beforeValidate();
+                }
+            }
+        }
+
         foreach ($this->attributes as $attributeKey => $attribute) {
             $this->validateAttribute($attribute);
         }
@@ -133,10 +144,9 @@ class Validation
         foreach ($rules as $ruleValidator) {
             $ruleValidator->setAttribute($attribute);
 
-            if ($isEmptyValue && $ruleValidator instanceof Defaults) {
-                $value = $ruleValidator->parameter('default');
+            if ($ruleValidator instanceof ModifyValue) {
+                $value = $ruleValidator->modifyValue($value);
                 $isEmptyValue = $this->isEmptyValue($value);
-                continue;
             }
 
             $valid = $ruleValidator->check($value);
@@ -598,6 +608,18 @@ class Validation
     public function getValue(string $key)
     {
         return Helper::arrayGet($this->inputs, $key);
+    }
+
+    /**
+     * Set input value
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function setValue(string $key, $value)
+    {
+        Helper::arraySet($this->inputs, $key, $value);
     }
 
     /**
