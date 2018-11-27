@@ -270,7 +270,7 @@ $validation_a->validate();
 ## Translation
 
 Translation is different with custom messages. 
-Translation needed when you use custom message for rule `in`, `not_in`, `mimes`, and `uploadede_file`.
+Translation may needed when you use custom message for rule `in`, `not_in`, `mimes`, and `uploaded_file`.
 
 For example if you use rule `in:1,2,3` we will set invalid message like "The Attribute only allows '1', '2', or '3'" 
 where message "'1', '2', or '3'" is comes from ":allowed_values" tag.
