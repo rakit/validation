@@ -12,7 +12,7 @@ class UploadedFile extends Rule implements BeforeValidate
     use Traits\FileTrait, Traits\SizeTrait;
 
     /** @var string */
-    protected $message = "The :attribute is not valid";
+    protected $message = "The :attribute is not valid uploaded file";
 
     /** @var string|int */
     protected $maxSize = null;
@@ -133,6 +133,11 @@ class UploadedFile extends Rule implements BeforeValidate
         $maxSize = $this->parameter('max_size');
         $allowedTypes = $this->parameter('allowed_types');
 
+        if ($allowedTypes) {
+            $or = $this->validation ? $this->validation->getTranslation('or') : 'or';
+            $this->setParameterText('allowed_types', Helper::join(Helper::wraps($allowedTypes, "'"), ', ', ", {$or} "));
+        }
+
         // below is Required rule job
         if (!$this->isValueFromUploadedFiles($value) or $value['error'] == UPLOAD_ERR_NO_FILE) {
             return true;
@@ -150,6 +155,7 @@ class UploadedFile extends Rule implements BeforeValidate
         if ($minSize) {
             $bytesMinSize = $this->getBytesSize($minSize);
             if ($value['size'] < $bytesMinSize) {
+                $this->setMessage('The :attribute file is too small, minimum size is :min_size');
                 return false;
             }
         }
@@ -157,6 +163,7 @@ class UploadedFile extends Rule implements BeforeValidate
         if ($maxSize) {
             $bytesMaxSize = $this->getBytesSize($maxSize);
             if ($value['size'] > $bytesMaxSize) {
+                $this->setMessage('The :attribute file is too large, maximum size is :max_size');
                 return false;
             }
         }
@@ -167,6 +174,7 @@ class UploadedFile extends Rule implements BeforeValidate
             unset($guesser);
 
             if (!in_array($ext, $allowedTypes)) {
+                $this->setMessage('The :attribute file type must be :allowed_types');
                 return false;
             }
         }

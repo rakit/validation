@@ -22,6 +22,9 @@ abstract class Rule
     protected $params = [];
 
     /** @var array */
+    protected $paramsTexts = [];
+
+    /** @var array */
     protected $fillableParams = [];
 
     /** @var string */
@@ -143,6 +146,28 @@ abstract class Rule
     public function parameter(string $key)
     {
         return isset($this->params[$key])? $this->params[$key] : null;
+    }
+
+    /**
+     * Set parameter text that can be displayed in error message using ':param_key'
+     *
+     * @param string $key
+     * @param string $text
+     * @return void
+     */
+    public function setParameterText(string $key, string $text)
+    {
+        $this->paramsTexts[$key] = $text;
+    }
+
+    /**
+     * Get $paramsTexts
+     *
+     * @return array
+     */
+    public function getParametersTexts(): array
+    {
+        return $this->paramsTexts;
     }
 
     /**

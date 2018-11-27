@@ -4,9 +4,13 @@ namespace Rakit\Validation;
 
 class Validator
 {
+    use Traits\TranslationsTrait;
 
     /** @var array */
     protected $messages = [];
+
+    /** @var translations */
+    protected $translations = [];
 
     /** @var array */
     protected $validators = [];
@@ -102,7 +106,10 @@ class Validator
     public function make(array $inputs, array $rules, array $messages = []): Validation
     {
         $messages = array_merge($this->messages, $messages);
-        return new Validation($this, $inputs, $rules, $messages);
+        $validation = new Validation($this, $inputs, $rules, $messages);
+        $validation->setTranslations($this->getTranslations());
+
+        return $validation;
     }
 
     /**

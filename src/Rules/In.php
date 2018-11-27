@@ -2,13 +2,14 @@
 
 namespace Rakit\Validation\Rules;
 
+use Rakit\Validation\Helper;
 use Rakit\Validation\Rule;
 
 class In extends Rule
 {
 
     /** @var string */
-    protected $message = "The :attribute is not allowing :value";
+    protected $message = "The :attribute only allows :allowed_values";
 
     /** @var bool */
     protected $strict = false;
@@ -49,7 +50,12 @@ class In extends Rule
     {
         $this->requireParameters(['allowed_values']);
 
-        $allowed_values = $this->parameter('allowed_values');
-        return in_array($value, $allowed_values, $this->strict);
+        $allowedValues = $this->parameter('allowed_values');
+
+        $or = $this->validation ? $this->validation->getTranslation('or') : 'or';
+        $allowedValuesText = Helper::join(Helper::wraps($allowedValues, "'"), ', ', ", {$or} ");
+        $this->setParameterText('allowed_values', $allowedValuesText);
+
+        return in_array($value, $allowedValues, $this->strict);
     }
 }

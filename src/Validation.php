@@ -9,6 +9,7 @@ use Rakit\Validation\Rules\Required;
 
 class Validation
 {
+    use Traits\TranslationsTrait;
 
     /** @var mixed */
     protected $validator;
@@ -386,7 +387,7 @@ class Validation
     protected function resolveMessage(Attribute $attribute, $value, Rule $validator): string
     {
         $primaryAttribute = $attribute->getPrimaryAttribute();
-        $params = $validator->getParameters();
+        $params = array_merge($validator->getParameters(), $validator->getParametersTexts());
         $attributeKey = $attribute->getKey();
         $ruleKey = $validator->getKey();
         $alias = $attribute->getAlias() ?: $this->resolveAttributeName($attribute);

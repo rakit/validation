@@ -2,15 +2,16 @@
 
 namespace Rakit\Validation\Rules;
 
-use Rakit\Validation\Rule;
+use Rakit\Validation\Helper;
 use Rakit\Validation\MimeTypeGuesser;
+use Rakit\Validation\Rule;
 
 class Mimes extends Rule
 {
     use Traits\FileTrait;
 
     /** @var string */
-    protected $message = "The :attribute file type is not allowed";
+    protected $message = "The :attribute file type must be :allowed_types";
 
     /** @var string|int */
     protected $maxSize = null;
@@ -59,6 +60,11 @@ class Mimes extends Rule
     public function check($value): bool
     {
         $allowedTypes = $this->parameter('allowed_types');
+
+        if ($allowedTypes) {
+            $or = $this->validation ? $this->validation->getTranslation('or') : 'or';
+            $this->setParameterText('allowed_types', Helper::join(Helper::wraps($allowedTypes, "'"), ', ', ", {$or} "));
+        }
 
         // below is Required rule job
         if (!$this->isValueFromUploadedFiles($value) or $value['error'] == UPLOAD_ERR_NO_FILE) {
