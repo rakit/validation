@@ -7,6 +7,15 @@ Rakit Validation - PHP Standalone Validation Library
 
 PHP Standalone library for validating data. Inspired by `Illuminate\Validation` Laravel.
 
+## Features
+
+* API like Laravel validation.
+* Array validation.
+* `$_FILES` validation with multiple file support.
+* Custom attribute aliases.
+* Custom validation messages.
+* Custom rule.
+
 ## Requirements
 
 * PHP 7.0 or higher
@@ -374,6 +383,48 @@ Get count messages.
 
 Check if given key has an error. It returns `bool` if a key has an error, and otherwise.
 
+
+## Getting Validated, Valid, and Invalid Data
+
+For example you have validation like this:
+
+```php
+$validation = $validator->validate([
+    'title' => 'Lorem Ipsum',
+    'body' => 'Lorem ipsum dolor sit amet ...',
+    'published' => null,
+    'something' => '-invalid-'
+], [
+    'title' => 'required',
+    'body' => 'required',
+    'published' => 'default:1|required|in:0,1',
+    'something' => 'required|numeric'
+]);
+```
+
+You can get validated data, valid data, or invalid data using methods in example below:
+
+```php
+$validatedData = $validation->getValidatedData();
+// [
+//     'title' => 'Lorem Ipsum',
+//     'body' => 'Lorem ipsum dolor sit amet ...',
+//     'published' => '1' // notice this
+//     'something' => '-invalid-'
+// ]
+
+$validData = $validation->getValidData();
+// [
+//     'title' => 'Lorem Ipsum',
+//     'body' => 'Lorem ipsum dolor sit amet ...',
+//     'published' => '1'
+// ]
+
+$invalidData = $validation->getInvalidData();
+// [
+//     'something' => '-invalid-'
+// ]
+```
 
 ## Available Rules
 
@@ -972,45 +1023,82 @@ $validation = $validator->validate($_POST, [
 ]);
 ```
 
-## Getting Validated, Valid, and Invalid Data
+#### Implicit Rule
 
-For example you have validation like this:
+Implicit rule is a rule that if it's invalid, then next rules will be ignored. For example if attribute didn't pass `required*` rules, mostly it's next rules will also be invalids. So to prevent our next rules messages to get collected, we make `required*` rules to be implicit.
 
-```php
-$validation = $validator->validate([
-    'title' => 'Lorem Ipsum',
-    'body' => 'Lorem ipsum dolor sit amet ...',
-    'published' => null,
-    'something' => '-invalid-'
-], [
-    'title' => 'required',
-    'body' => 'required',
-    'published' => 'default:1|required|in:0,1',
-    'something' => 'required|numeric'
-]);
-```
-
-You can get validated data, valid data, or invalid data using methods in example below:
+To make your custom rule implicit, you can make `$implicit` property value to be `true`. For example:
 
 ```php
-$validatedData = $validation->getValidatedData();
-// [
-//     'title' => 'Lorem Ipsum',
-//     'body' => 'Lorem ipsum dolor sit amet ...',
-//     'published' => '1' // notice this
-//     'something' => '-invalid-'
-// ]
+<?php
 
-$validData = $validation->getValidData();
-// [
-//     'title' => 'Lorem Ipsum',
-//     'body' => 'Lorem ipsum dolor sit amet ...',
-//     'published' => '1'
-// ]
+use Rakit\Validation\Rule;
 
-$invalidData = $validation->getInvalidData();
-// [
-//     'something' => '-invalid-'
-// ]
+class YourCustomRule extends Rule
+{
+
+    protected $implicit = true;
+
+}
+``` 
+
+#### Modify Value
+
+In some case, you may want your custom rule to be able to modify it's attribute value like our `default/defaults` rule. So in current and next rules checks, your modified value will be used. 
+
+To do this, you should implements `Rakit\Validation\Rules\Interfaces\ModifyValue` and create method `modifyValue($value)` to your custom rule class.
+
+For example:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+use Rakit\Validation\Rules\Interfaces\ModifyValue;
+
+class YourCustomRule extends Rule implements ModifyValue
+{
+    ...
+
+    public function modifyValue($value)
+    {
+        // Do something with $value
+
+        return $value;
+    }
+
+    ...
+}
 ```
 
+#### Before Validation Hook
+
+You may want to do some preparation before validation running. For example our `uploaded_file` rule will resolves attribute value that come from `$_FILES` (undesirable) array structure to be well-organized array structure, so we can validate multiple file upload just like validating other data.
+
+To do this, you should implements `Rakit\Validation\Rules\Interfaces\BeforeValidate` and create method `beforeValidate()` to your custom rule class.
+
+For example:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+use Rakit\Validation\Rules\Interfaces\BeforeValidate;
+
+class YourCustomRule extends Rule implements BeforeValidate
+{
+    ...
+
+    public function beforeValidate()
+    {
+        $attribute = $this->getAttribute(); // Rakit\Validation\Attribute instance
+        $validation = $this->validation; // Rakit\Validation\Validation instance
+
+        // Do something with $attribute and $validation
+        // For example change attribute value
+        $validation->setValue($attribute->getKey(), "your custom value");
+    }
+
+    ...
+}
+```
