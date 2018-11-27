@@ -981,6 +981,87 @@ $validation = $validator->validate($_POST, [
 ]);
 ```
 
+#### Implicit Rule
+
+Implicit rule is a rule that if it's invalid, then next rules will be ignored.
+For example `required*` rules, if some attribute didn't pass `required*` rules, it's next rules will also be invalids. So to prevent our next rules messages to get collected, we make `required*` rules to be implicit.
+
+To make your custom rule implicit, you can make `$implicit` property value to be `true`. For example:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+
+class YourCustomRule extends Rule
+{
+
+    protected $implicit = true;
+
+}
+``` 
+
+#### Modify Value
+
+In some case, you may want your custom rule to be able to modify it's attribute value like our `default/defaults` rule. So in current and next rules checks, your modified value will be used. 
+
+To do this, you should implements `Rakit\Validation\Rules\Interfaces\ModifyValue` and create method `modifyValue($value)` to your custom rule class.
+
+For example:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+use Rakit\Validation\Rules\Interfaces\ModifyValue;
+
+class YourCustomRule extends Rule implements ModifyValue
+{
+    ...
+
+    public function modifyValue($value)
+    {
+        // Do something with $value
+
+        return $value;
+    }
+
+    ...
+}
+```
+
+#### Before Validation Hook
+
+You may want to do some preparation before validation running. For example our `uploaded_file` rule will resolves attribute value that come from `$_FILES` (undesirable) array structure to be well-organized array structure, so we can validate multiple file upload just like validating other data.
+
+To do this, you should implements `Rakit\Validation\Rules\Interfaces\BeforeValidate` and create method `beforeValidate()` to your custom rule class.
+
+For example:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+use Rakit\Validation\Rules\Interfaces\BeforeValidate;
+
+class YourCustomRule extends Rule implements BeforeValidate
+{
+    ...
+
+    public function beforeValidate()
+    {
+        $attribute = $this->getAttribute(); // Rakit\Validation\Attribute instance
+        $validation = $this->validation; // Rakit\Validation\Validation instance
+
+        // Do something with $attribute and $validation
+        // For example change attribute value
+        $validation->setValue($attribute->getKey(), "your custom value");
+    }
+
+    ...
+}
+```
+
 ## Getting Validated, Valid, and Invalid Data
 
 For example you have validation like this:
