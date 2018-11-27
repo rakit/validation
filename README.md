@@ -983,8 +983,7 @@ $validation = $validator->validate($_POST, [
 
 #### Implicit Rule
 
-Implicit rule is a rule that if it's invalid, then next rules will be ignored.
-For example `required*` rules, if some attribute didn't pass `required*` rules, it's next rules will also be invalids. So to prevent our next rules messages to get collected, we make `required*` rules to be implicit.
+Implicit rule is a rule that if it's invalid, then next rules will be ignored. For example if attribute didn't pass `required*` rules, mostly it's next rules will also be invalids. So to prevent our next rules messages to get collected, we make `required*` rules to be implicit.
 
 To make your custom rule implicit, you can make `$implicit` property value to be `true`. For example:
 
