@@ -384,6 +384,48 @@ Get count messages.
 Check if given key has an error. It returns `bool` if a key has an error, and otherwise.
 
 
+## Getting Validated, Valid, and Invalid Data
+
+For example you have validation like this:
+
+```php
+$validation = $validator->validate([
+    'title' => 'Lorem Ipsum',
+    'body' => 'Lorem ipsum dolor sit amet ...',
+    'published' => null,
+    'something' => '-invalid-'
+], [
+    'title' => 'required',
+    'body' => 'required',
+    'published' => 'default:1|required|in:0,1',
+    'something' => 'required|numeric'
+]);
+```
+
+You can get validated data, valid data, or invalid data using methods in example below:
+
+```php
+$validatedData = $validation->getValidatedData();
+// [
+//     'title' => 'Lorem Ipsum',
+//     'body' => 'Lorem ipsum dolor sit amet ...',
+//     'published' => '1' // notice this
+//     'something' => '-invalid-'
+// ]
+
+$validData = $validation->getValidData();
+// [
+//     'title' => 'Lorem Ipsum',
+//     'body' => 'Lorem ipsum dolor sit amet ...',
+//     'published' => '1'
+// ]
+
+$invalidData = $validation->getInvalidData();
+// [
+//     'something' => '-invalid-'
+// ]
+```
+
 ## Available Rules
 
 > Click to show details.
@@ -1060,46 +1102,3 @@ class YourCustomRule extends Rule implements BeforeValidate
     ...
 }
 ```
-
-## Getting Validated, Valid, and Invalid Data
-
-For example you have validation like this:
-
-```php
-$validation = $validator->validate([
-    'title' => 'Lorem Ipsum',
-    'body' => 'Lorem ipsum dolor sit amet ...',
-    'published' => null,
-    'something' => '-invalid-'
-], [
-    'title' => 'required',
-    'body' => 'required',
-    'published' => 'default:1|required|in:0,1',
-    'something' => 'required|numeric'
-]);
-```
-
-You can get validated data, valid data, or invalid data using methods in example below:
-
-```php
-$validatedData = $validation->getValidatedData();
-// [
-//     'title' => 'Lorem Ipsum',
-//     'body' => 'Lorem ipsum dolor sit amet ...',
-//     'published' => '1' // notice this
-//     'something' => '-invalid-'
-// ]
-
-$validData = $validation->getValidData();
-// [
-//     'title' => 'Lorem Ipsum',
-//     'body' => 'Lorem ipsum dolor sit amet ...',
-//     'published' => '1'
-// ]
-
-$invalidData = $validation->getInvalidData();
-// [
-//     'something' => '-invalid-'
-// ]
-```
-
