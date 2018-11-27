@@ -203,4 +203,49 @@ class Helper
 
         return $value;
     }
+
+    /**
+     * Join string[] to string with given $separator and $lastSeparator.
+     *
+     * @param  array        $pieces
+     * @param  string       $separator
+     * @param  string|null  $lastSeparator
+     * @return string
+     */
+    public static function join(array $pieces, string $separator, string $lastSeparator = null): string
+    {
+        if (is_null($lastSeparator)) {
+            $lastSeparator = $separator;
+        }
+
+        $last = array_pop($pieces);
+
+        switch (count($pieces)) {
+            case 0:
+                return $last ?: '';
+            case 1:
+                return $pieces[0] . $lastSeparator . $last;
+            default:
+                return implode($separator, $pieces) . $lastSeparator . $last;
+        }
+    }
+
+    /**
+     * Wrap string[] by given $prefix and $suffix
+     *
+     * @param  array        $strings
+     * @param  string       $prefix
+     * @param  string|null  $suffix
+     * @return array
+     */
+    public static function wraps(array $strings, string $prefix, string $suffix = null): array
+    {
+        if (is_null($suffix)) {
+            $suffix = $prefix;
+        }
+
+        return array_map(function ($str) use ($prefix, $suffix) {
+            return $prefix . $str . $suffix;
+        }, $strings);
+    }
 }
