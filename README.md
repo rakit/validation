@@ -273,11 +273,11 @@ Translation is different with custom messages.
 Translation may needed when you use custom message for rule `in`, `not_in`, `mimes`, and `uploaded_file`.
 
 For example if you use rule `in:1,2,3` we will set invalid message like "The Attribute only allows '1', '2', or '3'" 
-where message "'1', '2', or '3'" is comes from ":allowed_values" tag.
-So if you have custom Indonesian message ":attribute hanya mengizinkan :allowed_values", 
-we will set invalid message like "Attribute hanya mengizinkan '1', '2', or '3'" which is the "or" word is not Indonesian language.
+where part "'1', '2', or '3'" is comes from ":allowed_values" tag.
+So if you have custom Indonesian message ":attribute hanya memperbolehkan :allowed_values", 
+we will set invalid message like "Attribute hanya memperbolehkan '1', '2', or '3'" which is the "or" word is not part of Indonesian language.
 
-So, to solves this problem, we can use translation like this:
+So, to solve this problem, we can use translation like this:
 
 ```php
 // Set translation for words 'and' and 'or'.
@@ -287,14 +287,14 @@ $validator->setTranslations([
 ]);
 
 // Set custom message for 'in' rule
-$validator->setMessage('in', ":attribute hanya mengizinkan :allowed_values");
+$validator->setMessage('in', ":attribute hanya memperbolehkan :allowed_values");
 
 // Validate
 $validation = $validator->validate($inputs, [
     'nomor' => 'in:1,2,3'
 ]);
 
-$message = $validation->errors()->first('nomor'); // "Nomor hanya mengizinkan '1', '2', atau '3'" 
+$message = $validation->errors()->first('nomor'); // "Nomor hanya memperbolehkan '1', '2', atau '3'" 
 ```
 
 > Actually, our built-in rules only use words 'and' and 'or' that you may need to translates.
