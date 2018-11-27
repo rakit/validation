@@ -7,6 +7,15 @@ Rakit Validation - PHP Standalone Validation Library
 
 PHP Standalone library for validating data. Inspired by `Illuminate\Validation` Laravel.
 
+## Features
+
+* API like Laravel validation.
+* Array validation.
+* `$_FILES` validation with multiple file support.
+* Custom attribute aliases.
+* Custom validation messages.
+* Custom rule.
+
 ## Requirements
 
 * PHP 7.0 or higher
