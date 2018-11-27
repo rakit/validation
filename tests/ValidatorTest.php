@@ -1277,4 +1277,144 @@ class ValidatorTest extends TestCase
         $this->assertFalse(isset($stuffs['one']));
         $this->assertFalse(isset($stuffs['two']));
     }
+
+    public function testRuleInInvalidMessages()
+    {
+        $validation = $this->validator->validate([
+            'number' => 1
+        ], [
+            'number' => 'in:7,8,9',
+        ]);
+
+        $this->assertEquals($validation->errors()->first('number'), "The Number only allows '7', '8', or '9'");
+
+        // Using translation
+        $this->validator->setTranslation('or', 'atau');
+
+        $validation = $this->validator->validate([
+            'number' => 1
+        ], [
+            'number' => 'in:7,8,9',
+        ]);
+
+        $this->assertEquals($validation->errors()->first('number'), "The Number only allows '7', '8', atau '9'");
+    }
+
+    public function testRuleNotInInvalidMessages()
+    {
+        $validation = $this->validator->validate([
+            'number' => 1
+        ], [
+            'number' => 'not_in:1,2,3',
+        ]);
+
+        $this->assertEquals($validation->errors()->first('number'), "The Number is not allowing '1', '2', and '3'");
+
+        // Using translation
+        $this->validator->setTranslation('and', 'dan');
+
+        $validation = $this->validator->validate([
+            'number' => 1
+        ], [
+            'number' => 'not_in:1,2,3',
+        ]);
+
+        $this->assertEquals($validation->errors()->first('number'), "The Number is not allowing '1', '2', dan '3'");
+    }
+
+    public function testRuleMimesInvalidMessages()
+    {
+        $file = [
+            'name' => 'sample.txt',
+            'type' => 'plain/text',
+            'tmp_name' => __FILE__,
+            'size' => 1000,
+            'error' => UPLOAD_ERR_OK,
+        ];
+
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => 'mimes:jpeg,png,bmp',
+        ]);
+
+        $expectedMessage = "The Sample file type must be 'jpeg', 'png', or 'bmp'";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+
+        // Using translation
+        $this->validator->setTranslation('or', 'atau');
+
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => 'mimes:jpeg,png,bmp',
+        ]);
+
+        $expectedMessage = "The Sample file type must be 'jpeg', 'png', atau 'bmp'";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+    }
+
+    public function testRuleUploadedFileInvalidMessages()
+    {
+        $file = [
+            'name' => 'sample.txt',
+            'type' => 'plain/text',
+            'tmp_name' => __FILE__,
+            'size' => 1024 * 1024 * 2, // 2M
+            'error' => UPLOAD_ERR_OK,
+        ];
+
+        $rule = $this->getMockedUploadedFileRule();
+
+        // Invalid uploaded file (!is_uploaded_file($file['tmp_name']))
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => 'uploaded_file',
+        ]);
+
+        $expectedMessage = "The Sample is not valid uploaded file";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+
+        // Invalid min size
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => [(clone $rule)->minSize('3M')],
+        ]);
+
+        $expectedMessage = "The Sample file is too small, minimum size is 3M";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+
+        // Invalid max size
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => [(clone $rule)->maxSize('1M')],
+        ]);
+
+        $expectedMessage = "The Sample file is too large, maximum size is 1M";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+
+        // Invalid file types
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => [(clone $rule)->fileTypes(['jpeg', 'png', 'bmp'])],
+        ]);
+
+        $expectedMessage = "The Sample file type must be 'jpeg', 'png', or 'bmp'";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+
+        // Invalid file types with translation
+        $this->validator->setTranslation('or', 'atau');
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => [(clone $rule)->fileTypes(['jpeg', 'png', 'bmp'])],
+        ]);
+
+        $expectedMessage = "The Sample file type must be 'jpeg', 'png', atau 'bmp'";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+    }
 }
