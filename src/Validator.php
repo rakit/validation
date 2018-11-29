@@ -4,10 +4,7 @@ namespace Rakit\Validation;
 
 class Validator
 {
-    use Traits\TranslationsTrait;
-
-    /** @var array */
-    protected $messages = [];
+    use Traits\TranslationsTrait, Traits\MessagesTrait;
 
     /** @var translations */
     protected $translations = [];
@@ -31,29 +28,6 @@ class Validator
     {
         $this->messages = $messages;
         $this->registerBaseValidators();
-    }
-
-    /**
-     * Given $key and $message to set message
-     *
-     * @param mixed $key
-     * @param mixed $message
-     * @return void
-     */
-    public function setMessage(string $key, string $message)
-    {
-        $this->messages[$key] = $message;
-    }
-
-    /**
-     * Given $messages and set multiple messages
-     *
-     * @param array $messages
-     * @return void
-     */
-    public function setMessages(array $messages)
-    {
-        $this->messages = array_merge($this->messages, $messages);
     }
 
     /**
