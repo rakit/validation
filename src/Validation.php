@@ -9,7 +9,7 @@ use Rakit\Validation\Rules\Required;
 
 class Validation
 {
-    use Traits\TranslationsTrait;
+    use Traits\TranslationsTrait, Traits\MessagesTrait;
 
     /** @var mixed */
     protected $validator;
@@ -19,9 +19,6 @@ class Validation
 
     /** @var array */
     protected $attributes = [];
-
-    /** @var array */
-    protected $messages = [];
 
     /** @var array */
     protected $aliases = [];
@@ -521,29 +518,6 @@ class Validation
         }
 
         return [$rulename, $params];
-    }
-
-    /**
-     * Set message
-     *
-     * @param mixed $key
-     * @param mixed $message
-     * @return void
-     */
-    public function setMessage(string $key, string $message)
-    {
-        $this->messages[$key] = $message;
-    }
-
-    /**
-     * Set multiple messages
-     *
-     * @param array $messages
-     * @return void
-     */
-    public function setMessages(array $messages)
-    {
-        $this->messages = array_merge($this->messages, $messages);
     }
 
     /**
