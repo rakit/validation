@@ -6,18 +6,27 @@ use Rakit\Validation\Rule;
 
 class Before extends Rule
 {
-    use DateUtils;
+    use Traits\DateUtilsTrait;
 
+    /** @var string */
     protected $message = "The :attribute must be a date before :time.";
 
-    protected $fillable_params = ['time'];
+    /** @var array */
+    protected $fillableParams = ['time'];
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     * @throws Exception
+     */
+    public function check($value): bool
     {
-        $this->requireParameters($this->fillable_params);
+        $this->requireParameters($this->fillableParams);
         $time = $this->parameter('time');
 
-        if (!$this->isValidDate($value)){
+        if (!$this->isValidDate($value)) {
             throw $this->throwException($value);
         }
 

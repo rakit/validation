@@ -1,8 +1,12 @@
 <?php
 
-use Rakit\Validation\Rules\Required;
+namespace Rakit\Validation\Tests;
 
-class RequiredTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Required;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+
+class RequiredTest extends TestCase
 {
 
     public function setUp()
@@ -18,7 +22,7 @@ class RequiredTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->rule->check(true));
         $this->assertTrue($this->rule->check('0'));
         $this->assertTrue($this->rule->check(0));
-        $this->assertTrue($this->rule->check(new \stdClass));
+        $this->assertTrue($this->rule->check(new stdClass));
     }
 
     public function testInvalids()
@@ -27,5 +31,4 @@ class RequiredTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->check(''));
         $this->assertFalse($this->rule->check([]));
     }
-
 }

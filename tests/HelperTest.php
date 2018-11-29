@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Helper;
+namespace Rakit\Validation\Tests;
 
-class HelperTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Helper;
+use PHPUnit\Framework\TestCase;
+
+class HelperTest extends TestCase
 {
 
     public function testArrayHas()
@@ -129,4 +132,27 @@ class HelperTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    public function testJoin()
+    {
+        $pieces0 = [];
+        $pieces1 = [1];
+        $pieces2 = [1, 2];
+        $pieces3 = [1, 2, 3];
+
+        $separator = ', ';
+        $lastSeparator = ', and ';
+
+        $this->assertEquals(Helper::join($pieces0, $separator, $lastSeparator), '');
+        $this->assertEquals(Helper::join($pieces1, $separator, $lastSeparator), '1');
+        $this->assertEquals(Helper::join($pieces2, $separator, $lastSeparator), '1, and 2');
+        $this->assertEquals(Helper::join($pieces3, $separator, $lastSeparator), '1, 2, and 3');
+    }
+
+    public function testWraps()
+    {
+        $inputs = [1, 2, 3];
+
+        $this->assertEquals(Helper::wraps($inputs, '-'), ['-1-', '-2-', '-3-']);
+        $this->assertEquals(Helper::wraps($inputs, '-', '+'), ['-1+', '-2+', '-3+']);
+    }
 }

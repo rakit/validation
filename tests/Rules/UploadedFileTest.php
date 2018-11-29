@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\UploadedFile;
+namespace Rakit\Validation\Tests;
 
-class UploadedFileTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\UploadedFile;
+use PHPUnit\Framework\TestCase;
+
+class UploadedFileTest extends TestCase
 {
 
     public function setUp()
@@ -130,7 +133,6 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase
 
     public function testFileTypes()
     {
-
         $rule = $this->getMockBuilder(UploadedFile::class)
             ->setMethods(['isUploadedFile'])
             ->getMock();

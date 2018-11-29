@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Ip;
+namespace Rakit\Validation\Tests;
 
-class IpTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Ip;
+use PHPUnit\Framework\TestCase;
+
+class IpTest extends TestCase
 {
 
     public function setUp()
@@ -25,5 +28,4 @@ class IpTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->check('hf02::2'));
         $this->assertFalse($this->rule->check('12345:0000:3238:DFE1:0063:0000:0000:FEFB'));
     }
-
 }

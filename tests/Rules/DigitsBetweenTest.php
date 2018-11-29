@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\DigitsBetween;
+namespace Rakit\Validation\Tests;
 
-class DigitsBetweenTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\DigitsBetween;
+use PHPUnit\Framework\TestCase;
+
+class DigitsBetweenTest extends TestCase
 {
 
     public function setUp()
@@ -25,5 +28,4 @@ class DigitsBetweenTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->fillParameters([1, 3])->check(12345));
         $this->assertFalse($this->rule->fillParameters([3, 6])->check('foobar'));
     }
-
 }

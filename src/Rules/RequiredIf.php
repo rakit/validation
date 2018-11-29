@@ -6,18 +6,32 @@ use Rakit\Validation\Rule;
 
 class RequiredIf extends Required
 {
+    /** @var bool */
     protected $implicit = true;
 
+    /** @var string */
     protected $message = "The :attribute is required";
 
-    public function fillParameters(array $params)
+    /**
+     * Given $params and assign the $this->params
+     *
+     * @param array $params
+     * @return self
+     */
+    public function fillParameters(array $params): Rule
     {
         $this->params['field'] = array_shift($params);
         $this->params['values'] = $params;
         return $this;
     }
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         $this->requireParameters(['field', 'values']);
 
@@ -26,14 +40,13 @@ class RequiredIf extends Required
         $anotherValue = $this->getAttribute()->getValue($anotherAttribute);
 
         $validator = $this->validation->getValidator();
-        $required_validator = $validator('required');
+        $requiredValidator = $validator('required');
 
         if (in_array($anotherValue, $definedValues)) {
             $this->setAttributeAsRequired();
-            return $required_validator->check($value, []); 
+            return $requiredValidator->check($value, []);
         }
 
         return true;
     }
-
 }

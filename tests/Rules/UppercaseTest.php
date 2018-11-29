@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Uppercase;
+namespace Rakit\Validation\Tests;
 
-class UppercaseTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Uppercase;
+use PHPUnit\Framework\TestCase;
+
+class UppercaseTest extends TestCase
 {
 
     public function setUp()
@@ -23,5 +26,4 @@ class UppercaseTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->check('Username'));
         $this->assertFalse($this->rule->check('userName'));
     }
-
 }

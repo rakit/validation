@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Json;
+namespace Rakit\Validation\Tests;
 
-class JsonTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Json;
+use PHPUnit\Framework\TestCase;
+
+class JsonTest extends TestCase
 {
 
     public function setUp()
@@ -28,6 +31,4 @@ class JsonTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->check('{"username": John Doe}'));
         $this->assertFalse($this->rule->check('{number: 12345678}'));
     }
-
 }
-

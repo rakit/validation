@@ -1,8 +1,12 @@
 <?php
 
-use Rakit\Validation\Rules\Alpha;
+namespace Rakit\Validation\Tests;
 
-class AlphaTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Alpha;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+
+class AlphaTest extends TestCase
 {
 
     public function setUp()
@@ -26,5 +30,4 @@ class AlphaTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->check('foo123bar'));
         $this->assertFalse($this->rule->check('foo bar'));
     }
-
 }

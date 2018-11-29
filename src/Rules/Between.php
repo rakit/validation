@@ -6,27 +6,33 @@ use Rakit\Validation\Rule;
 
 class Between extends Rule
 {
+    use Traits\SizeTrait;
 
+    /** @var string */
     protected $message = "The :attribute must be between :min and :max";
 
-    protected $fillable_params = ['min', 'max'];
+    /** @var array */
+    protected $fillableParams = ['min', 'max'];
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
-        $this->requireParameters($this->fillable_params);
+        $this->requireParameters($this->fillableParams);
 
-        $min = (int) $this->parameter('min');
-        $max = (int) $this->parameter('max');
+        $min = $this->getBytesSize($this->parameter('min'));
+        $max = $this->getBytesSize($this->parameter('max'));
 
-        if (is_int($value) || is_float($value)) {
-            return $value >= $min AND $value <= $max;
-        } elseif(is_string($value)) {
-            return mb_strlen($value, 'UTF-8') >= $min AND mb_strlen($value, 'UTF-8') <= $max;
-        } elseif(is_array($value)) {
-            return count($value) >= $min AND count($value) <= $max;
-        } else {
+        $valueSize = $this->getValueSize($value);
+
+        if (!is_numeric($valueSize)) {
             return false;
         }
-    }
 
+        return ($valueSize >= $min && $valueSize <= $max);
+    }
 }

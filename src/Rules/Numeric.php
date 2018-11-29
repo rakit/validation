@@ -7,11 +7,17 @@ use Rakit\Validation\Rule;
 class Numeric extends Rule
 {
 
+    /** @var string */
     protected $message = "The :attribute must be numeric";
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
         return is_numeric($value);
     }
-
 }

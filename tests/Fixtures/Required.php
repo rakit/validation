@@ -1,10 +1,13 @@
 <?php
 
+namespace Rakit\Validation\Tests;
 
-class Required extends \Rakit\Validation\Rule
+use Rakit\Validation\Rule;
+
+class Required extends Rule
 {
 
-    public function check($value)
+    public function check($value): bool
     {
         return true;
     }

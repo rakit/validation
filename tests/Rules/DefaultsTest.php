@@ -1,10 +1,12 @@
 <?php
 
+namespace Rakit\Validation\Tests;
+
 use Rakit\Validation\Rules\Defaults;
+use PHPUnit\Framework\TestCase;
 
-class DefaultsTest extends PHPUnit_Framework_TestCase
+class DefaultsTest extends TestCase
 {
-
     public function setUp()
     {
         $this->rule = new Defaults;
@@ -12,9 +14,9 @@ class DefaultsTest extends PHPUnit_Framework_TestCase
 
     public function testDefaults()
     {
-        $this->assertEquals($this->rule->fillParameters([10])->check(null), 10);
-        $this->assertEquals($this->rule->fillParameters(['something'])->check(null), 'something');
-        $this->assertEquals($this->rule->fillParameters([[1,2,3]])->check('anything'), [1,2,3]);
+        $this->assertTrue($this->rule->fillParameters([10])->check(0));
+        $this->assertTrue($this->rule->fillParameters(['something'])->check(null));
+        $this->assertTrue($this->rule->fillParameters([[1,2,3]])->check(false));
+        $this->assertTrue($this->rule->fillParameters([[1,2,3]])->check([]));
     }
-
 }

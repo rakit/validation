@@ -6,25 +6,31 @@ use Rakit\Validation\Rule;
 
 class Min extends Rule
 {
+    use Traits\SizeTrait;
 
+    /** @var string */
     protected $message = "The :attribute minimum is :min";
 
-    protected $fillable_params = ['min'];
+    /** @var array */
+    protected $fillableParams = ['min'];
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
-        $this->requireParameters($this->fillable_params);
-        
-        $min = (int) $this->parameter('min');
-        if (is_int($value)) {
-            return $value >= $min;
-        } elseif(is_string($value)) {
-            return mb_strlen($value, 'UTF-8') >= $min;
-        } elseif(is_array($value)) {
-            return count($value) >= $min;
-        } else {
+        $this->requireParameters($this->fillableParams);
+
+        $min = $this->getBytesSize($this->parameter('min'));
+        $valueSize = $this->getValueSize($value);
+
+        if (!is_numeric($valueSize)) {
             return false;
         }
-    }
 
+        return $valueSize >= $min;
+    }
 }

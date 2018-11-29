@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Integer;
+namespace Rakit\Validation\Tests;
 
-class IntegerTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Integer;
+use PHPUnit\Framework\TestCase;
+
+class IntegerTest extends TestCase
 {
 
     public function setUp()
@@ -18,7 +21,6 @@ class IntegerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->rule->check('-123'));
         $this->assertTrue($this->rule->check(123));
         $this->assertTrue($this->rule->check(-123));
-
     }
 
     public function testInvalids()
@@ -29,5 +31,4 @@ class IntegerTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->check('123.456'));
         $this->assertFalse($this->rule->check('-123.456'));
     }
-
 }

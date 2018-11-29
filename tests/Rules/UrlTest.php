@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Url;
+namespace Rakit\Validation\Tests;
 
-class UrlTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Url;
+use PHPUnit\Framework\TestCase;
+
+class UrlTest extends TestCase
 {
 
     public function setUp()
@@ -47,5 +50,4 @@ class UrlTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->forScheme('jdbc')->check('http://www.foobar.com'));
         $this->assertFalse($this->rule->forScheme(['http', 'https'])->check('any://www.foobar.com'));
     }
-
 }

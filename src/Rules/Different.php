@@ -7,18 +7,25 @@ use Rakit\Validation\Rule;
 class Different extends Rule
 {
 
+    /** @var string */
     protected $message = "The :attribute must be different with :field";
 
-    protected $fillable_params = ['field'];
+    /** @var array */
+    protected $fillableParams = ['field'];
 
-    public function check($value)
+    /**
+     * Check the $value is valid
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function check($value): bool
     {
-        $this->requireParameters($this->fillable_params);
+        $this->requireParameters($this->fillableParams);
 
         $field = $this->parameter('field');
-        $another_value = $this->validation->getValue($field);
+        $anotherValue = $this->validation->getValue($field);
 
-        return $value != $another_value;
+        return $value != $anotherValue;
     }
-
 }

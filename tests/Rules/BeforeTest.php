@@ -1,7 +1,12 @@
 <?php
 
+namespace Rakit\Validation\Tests;
 
-class BeforeTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Before;
+use PHPUnit\Framework\TestCase;
+use DateTime;
+
+class BeforeTest extends TestCase
 {
 
     /**
@@ -11,7 +16,7 @@ class BeforeTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->validator = new \Rakit\Validation\Rules\Before();
+        $this->validator = new Before();
     }
 
     /**

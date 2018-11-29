@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\AlphaNum;
+namespace Rakit\Validation\Tests;
 
-class AlphaNumTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\AlphaNum;
+use PHPUnit\Framework\TestCase;
+
+class AlphaNumTest extends TestCase
 {
 
     public function setUp()
@@ -24,5 +27,4 @@ class AlphaNumTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->check('123 foo'));
         $this->assertFalse($this->rule->check(' foo123 '));
     }
-
 }

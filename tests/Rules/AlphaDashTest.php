@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\AlphaDash;
+namespace Rakit\Validation\Tests;
 
-class AlphaDashTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\AlphaDash;
+use PHPUnit\Framework\TestCase;
+
+class AlphaDashTest extends TestCase
 {
 
     public function setUp()
@@ -25,5 +28,4 @@ class AlphaDashTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->check('foo bar'));
         $this->assertFalse($this->rule->check('123 bar '));
     }
-
 }

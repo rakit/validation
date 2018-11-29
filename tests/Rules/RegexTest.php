@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Regex;
+namespace Rakit\Validation\Tests;
 
-class RegexTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Regex;
+use PHPUnit\Framework\TestCase;
+
+class RegexTest extends TestCase
 {
 
     public function setUp()
@@ -19,5 +22,4 @@ class RegexTest extends PHPUnit_Framework_TestCase
     {
         $this->assertFalse($this->rule->fillParameters(["/^F/i"])->check("bar"));
     }
-
 }

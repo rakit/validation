@@ -1,8 +1,11 @@
 <?php
 
-use Rakit\Validation\Rules\Date;
+namespace Rakit\Validation\Tests;
 
-class DateTest extends PHPUnit_Framework_TestCase
+use Rakit\Validation\Rules\Date;
+use PHPUnit\Framework\TestCase;
+
+class DateTest extends TestCase
 {
 
     public function setUp()
@@ -21,5 +24,4 @@ class DateTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->check("10-10-2010"));
         $this->assertFalse($this->rule->fillParameters(['Y-m-d'])->check("2010-10-10 10:10"));
     }
-
 }

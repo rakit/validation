@@ -7,9 +7,18 @@ Rakit Validation - PHP Standalone Validation Library
 
 PHP Standalone library for validating data. Inspired by `Illuminate\Validation` Laravel.
 
+## Features
+
+* API like Laravel validation.
+* Array validation.
+* `$_FILES` validation with multiple file support.
+* Custom attribute aliases.
+* Custom validation messages.
+* Custom rule.
+
 ## Requirements
 
-* PHP 5.5 or higher
+* PHP 7.0 or higher
 * Composer for installation
 
 ## Quick Start
@@ -258,52 +267,202 @@ $validation_a = $validator->make($dataset_a, [
 $validation_a->validate();
 ```
 
+## Translation
+
+Translation is different with custom messages. 
+Translation may needed when you use custom message for rule `in`, `not_in`, `mimes`, and `uploaded_file`.
+
+For example if you use rule `in:1,2,3` we will set invalid message like "The Attribute only allows '1', '2', or '3'" 
+where part "'1', '2', or '3'" is comes from ":allowed_values" tag.
+So if you have custom Indonesian message ":attribute hanya memperbolehkan :allowed_values", 
+we will set invalid message like "Attribute hanya memperbolehkan '1', '2', or '3'" which is the "or" word is not part of Indonesian language.
+
+So, to solve this problem, we can use translation like this:
+
+```php
+// Set translation for words 'and' and 'or'.
+$validator->setTranslations([
+    'and' => 'dan',
+    'or' => 'atau'
+]);
+
+// Set custom message for 'in' rule
+$validator->setMessage('in', ":attribute hanya memperbolehkan :allowed_values");
+
+// Validate
+$validation = $validator->validate($inputs, [
+    'nomor' => 'in:1,2,3'
+]);
+
+$message = $validation->errors()->first('nomor'); // "Nomor hanya memperbolehkan '1', '2', atau '3'" 
+```
+
+> Actually, our built-in rules only use words 'and' and 'or' that you may need to translates.
+
+## Working with Error Message
+
+Errors messages are collected in `Rakit\Validation\ErrorBag` object that you can get it using `errors()` method.
+
+```php
+$validation = $validator->validate($inputs, $rules);
+
+$errors = $validation->errors(); // << ErrorBag
+```
+
+Now you can use methods below to retrieves errors messages:
+
+#### `all(string $format = ':message')`
+
+Get all messages as flatten array.
+
+Examples:
+
+```php
+$messages = $errors->all(); 
+// [
+//     'Email is not valid email',
+//     'Password minimum 6 character',
+//     'Password must contains capital letters'
+// ]
+
+$messages = $errors->all('<li>:message</li>');
+// [
+//     '<li>Email is not valid email</li>',
+//     '<li>Password minimum 6 character</li>',
+//     '<li>Password must contains capital letters</li>'
+// ]
+```
+
+#### `firstOfAll(string $format = ':message', bool $dotNotation = false)`
+
+Get only first message from all existing keys.
+
+Examples:
+
+```php
+$messages = $errors->firstOfAll(); 
+// [
+//     'email' => Email is not valid email',
+//     'password' => 'Password minimum 6 character',
+// ]
+
+$messages = $errors->firstOfAll('<li>:message</li>');
+// [
+//     'email' => '<li>Email is not valid email</li>',
+//     'password' => '<li>Password minimum 6 character</li>',
+// ]
+```
+
+Argument `$dotNotation` is for array validation. 
+If it is `false` it will return original array structure, if it `true` it will return flatten array with dot notation keys.
+
+For example:
+
+```php
+$messages = $errors->firstOfAll(':message', false); 
+// [
+//     'contacts' => [
+//          1 => [
+//              'email' => 'Email is not valid email',
+//              'phone' => 'Phone is not valid phone number'
+//          ],
+//     ],
+// ]
+
+$messages = $errors->firstOfAll(':message', true);
+// [
+//     'contacts.1.email' => 'Email is not valid email',
+//     'contacts.1.phone' => 'Email is not valid phone number',
+// ]
+```
+
+#### `first(string $key)`
+
+Get first message from given key. It will return `string` if key has any error message, or `null` if key has no errors.
+
+For example:
+
+```php
+if ($emailError = $errors->first('email')) {
+    echo $emailError;
+}
+```
+
+#### `toArray()`
+
+Get all messages grouped by it's keys.
+
+For example:
+
+```php
+$messages = $errors->toArray();
+// [
+//     'email' => [
+//         'Email is not valid email'
+//     ],
+//     'password' => [
+//         'Password minimum 6 character',
+//         'Password must contains capital letters'
+//     ]
+// ]
+```
+
+#### `count()`
+
+Get count messages.
+
+#### `has(string $key)`
+
+Check if given key has an error. It returns `bool` if a key has an error, and otherwise.
+
+
+## Getting Validated, Valid, and Invalid Data
+
+For example you have validation like this:
+
+```php
+$validation = $validator->validate([
+    'title' => 'Lorem Ipsum',
+    'body' => 'Lorem ipsum dolor sit amet ...',
+    'published' => null,
+    'something' => '-invalid-'
+], [
+    'title' => 'required',
+    'body' => 'required',
+    'published' => 'default:1|required|in:0,1',
+    'something' => 'required|numeric'
+]);
+```
+
+You can get validated data, valid data, or invalid data using methods in example below:
+
+```php
+$validatedData = $validation->getValidatedData();
+// [
+//     'title' => 'Lorem Ipsum',
+//     'body' => 'Lorem ipsum dolor sit amet ...',
+//     'published' => '1' // notice this
+//     'something' => '-invalid-'
+// ]
+
+$validData = $validation->getValidData();
+// [
+//     'title' => 'Lorem Ipsum',
+//     'body' => 'Lorem ipsum dolor sit amet ...',
+//     'published' => '1'
+// ]
+
+$invalidData = $validation->getInvalidData();
+// [
+//     'something' => '-invalid-'
+// ]
+```
+
 ## Available Rules
 
-Below is list of all available validation rules
+> Click to show details.
 
-* [required](#rule-required)
-* [required_if](#rule-required_if)
-* [required_unless](#rule-required_unless)
-* [required_with](#rule-required_with)
-* [required_without](#rule-required_without)
-* [required_with_all](#rule-required_with_all)
-* [required_without_all](#rule-required_without_all)
-* [uploaded_file](#rule-uploaded_file)
-* [default/defaults](#rule-default)
-* [email](#rule-email)
-* [uppercase](#rule-uppercase)
-* [lowercase](#rule-lowercase)
-* [json](#rule-json)
-* [alpha](#rule-alpha)
-* [numeric](#rule-numeric)
-* [alpha_num](#rule-alpha_num)
-* [alpha_dash](#rule-alpha_dash)
-* [in](#rule-in)
-* [not_in](#rule-not_in)
-* [min](#rule-min)
-* [max](#rule-max)
-* [between](#rule-between)
-* [digits](#rule-digits)
-* [digits_between](#rule-digits_between)
-* [url](#rule-url)
-* [integer](#rule-integer)
-* [ip](#rule-ip)
-* [ipv4](#rule-ipv4)
-* [ipv6](#rule-ipv6)
-* [array](#rule-array)
-* [same](#rule-same)
-* [regex](#rule-regex)
-* [date](#rule-date)
-* [accepted](#rule-accepted)
-* [present](#rule-present)
-* [different](#rule-different)
-* [after](#after)
-* [before](#before)
-* [callback](#callback)
-
-<a id="rule-required"></a>
-#### required
+<details><summary><strong>required</strong></summary>
 
 The field under this validation must be present and not 'empty'.
 
@@ -322,43 +481,50 @@ Here are some examples:
 
 For uploaded file, `$_FILES['key']['error']` must not `UPLOAD_ERR_NO_FILE`.
 
-<a id="rule-required_if"></a>
-#### required_if:another_field,value_1,value_2,...
+</details>
+
+<details><summary><strong>required_if</strong>:another_field,value_1,value_2,...</summary>
 
 The field under this rule must be present and not empty if the anotherfield field is equal to any value.
 
 For example `required_if:something,1,yes,on` will be required if `something` value is one of `1`, `'1'`, `'yes'`, or `'on'`.
 
-<a id="rule-required_unless"></a>
-#### required_unless:another_field,value_1,value_2,...
+</details>
+
+<details><summary><strong>required_unless</strong>:another_field,value_1,value_2,...</summary>
 
 The field under validation must be present and not empty unless the anotherfield field is equal to any value.
 
-<a id="rule-required_with"></a>
-#### required_with:field_1,field_2,...
+</details>
+
+<details><summary><strong>required_with</strong>:field_1,field_2,...</summary>
 
 The field under validation must be present and not empty only if any of the other specified fields are present.
 
-<a id="rule-required_without"></a>
-#### required_without:field_1,field_2,...
+</details>
+
+<details><summary><strong>required_without</strong>:field_1,field_2,...</summary>
 
 The field under validation must be present and not empty only when any of the other specified fields are not present.
 
-<a id="rule-required_with_all"></a>
-#### required_with_all:field_1,field_2,...
+</details>
+
+<details><summary><strong>required_with_all</strong>:field_1,field_2,...</summary>
 
 The field under validation must be present and not empty only if all of the other specified fields are present.
 
-<a id="rule-required_without_all"></a>
-#### required_without_all:field_1,field_2,...
+</details>
+
+<details><summary><strong>required_without_all</strong>:field_1,field_2,...</summary>
 
 The field under validation must be present and not empty only when all of the other specified fields are not present.
 
-<a id="rule-uploaded_file"></a>
-#### uploaded_file:min_size,max_size,file_type_a,file_type_b,...
+</details>
 
-This rule will validate `$_FILES` data, but not for multiple uploaded files. 
-Field under this rule must be following rules below to be valid:
+<details><summary><strong>uploaded_file</strong>:min_size,max_size,extension_a,extension_b,...</summary>
+
+This rule will validate data from `$_FILES`. 
+Field under this rule must be follows rules below to be valid:
 
 * `$_FILES['key']['error']` must be `UPLOAD_ERR_OK` or `UPLOAD_ERR_NO_FILE`. For `UPLOAD_ERR_NO_FILE` you can validate it with `required` rule. 
 * If min size is given, uploaded file size **MUST NOT** be lower than min size.
@@ -372,8 +538,66 @@ Here are some example definitions and explanations:
 * `uploaded_file:0,1M`: uploaded file size must be between 0 - 1 MB, but uploaded file is optional.
 * `required|uploaded_file:0,1M,png,jpeg`: uploaded file size must be between 0 - 1MB and mime types must be `image/jpeg` or `image/png`.
 
-<a id="rule-default"></a>
-#### default/defaults
+Optionally, if you want to have separate error message between size and type validation.
+You can use `mimes` rule to validate file types, and `min`, `max`, or `between` to validate it's size.
+
+For multiple file upload, PHP will give you undesirable array `$_FILES` structure ([here](http://php.net/manual/en/features.file-upload.multiple.php#53240) is the topic). So we make `uploaded_file` rule to automatically resolve your `$_FILES` value to be well-organized array structure. That means, you cannot only use `min`, `max`, `between`, or `mimes` rules to validate multiple file upload. You should put `uploaded_file` just to resolve it's value and make sure that value is correct uploaded file value.
+
+For example if you have input files like this:
+
+```html
+<input type="file" name="photos[]"/>
+<input type="file" name="photos[]"/>
+<input type="file" name="photos[]"/>
+```
+
+You can  simply validate it like this:
+
+```php
+$validation = $validator->validate($_FILES, [
+    'photos.*' => 'uploaded_file:0,2M,jpeg,png'
+]);
+
+// or
+
+$validation = $validator->validate($_FILES, [
+    'photos.*' => 'uploaded_file|max:2M|mimes:jpeg,png'
+]);
+```
+
+Or if you have input files like this:
+
+```html
+<input type="file" name="images[profile]"/>
+<input type="file" name="images[cover]"/>
+```
+
+You can validate it like this:
+
+```php
+$validation = $validator->validate($_FILES, [
+    'images.*' => 'uploaded_file|max:2M|mimes:jpeg,png',
+]);
+
+// or
+
+$validation = $validator->validate($_FILES, [
+    'images.profile' => 'uploaded_file|max:2M|mimes:jpeg,png',
+    'images.cover' => 'uploaded_file|max:5M|mimes:jpeg,png',
+]);
+```
+
+Now when you use `getValidData()` or `getInvalidData()` you will get well array structure just like single file upload.
+
+</details>
+
+<details><summary><strong>mimes</strong>:extension_a,extension_b,...</summary>
+
+The `$_FILES` item under validation must have a MIME type corresponding to one of the listed extensions.
+
+</details>
+
+<details><summary><strong>default/defaults</strong></summary>
 
 This is special rule that doesn't validate anything. 
 It just set default value to your attribute if that attribute is empty or not present.
@@ -393,48 +617,57 @@ $validation->passes(); // true
 
 Validation passes because we sets default value for `enabled` and `published` to `1` and `0` which is valid.
 
-<a id="rule-email"></a>
-#### email
+</details>
+
+<details><summary><strong>email</strong></summary>
 
 The field under this validation must be valid email address.
 
-<a id="rule-uppercase"></a>
-#### uppercase
+</details>
+
+<details><summary><strong>uppercase</strong></summary>
 
 The field under this validation must be valid uppercase.
 
-<a id="rule-lowercase"></a>
-#### lowercase
+</details>
+
+<details><summary><strong>lowercase</strong></summary>
 
 The field under this validation must be valid lowercase.
 
-<a id="rule-json"></a>
-#### json
+</details>
+
+<details><summary><strong>json</strong></summary>
 
 The field under this validation must be valid JSON string.
 
-<a id="rule-alpha"></a>
-#### alpha
+</details>
+
+<details><summary><strong>alpha</strong></summary>
 
 The field under this rule must be entirely alphabetic characters.
 
-<a id="rule-numeric"></a>
-#### numeric
+</details>
+
+<details><summary><strong>numeric</strong></summary>
 
 The field under this rule must be numeric.
 
-<a id="rule-alpha_num"></a>
-#### alpha_num
+</details>
+
+<details><summary><strong>alpha_num</strong></summary>
 
 The field under this rule must be entirely alpha-numeric characters.
 
-<a id="rule-alpha_dash"></a>
-#### alpha_dash
+</details>
+
+<details><summary><strong>alpha_dash</strong></summary>
 
 The field under this rule may have alpha-numeric characters, as well as dashes and underscores.
 
-<a id="rule-in"></a>
-#### in:value_1,value_2,...
+</details>
+
+<details><summary><strong>in</strong>:value_1,value_2,...</summary>
 
 The field under this rule must be included in the given list of values.
 
@@ -454,44 +687,84 @@ $validation = $validator->validate($data, [
 
 Then 'enabled' value should be boolean `true`, or int `1`.
 
-<a id="rule-not_in"></a>
-#### not_in:value_1,value_2,...
+</details>
+
+<details><summary><strong>not_in</strong>:value_1,value_2,...</summary>
 
 The field under this rule must not be included in the given list of values.
 
 This rule also using `in_array`. You can enable strict checking by invoking validator and call `strict()` like example in rule `in` above.
 
-<a id="rule-min"></a>
-#### min:number
+</details>
+
+<details><summary><strong>min</strong>:number</summary>
 
 The field under this rule must have a size greater or equal than the given number. 
 
 For string data, value corresponds to the number of characters. For numeric data, value corresponds to a given integer value. For an array, size corresponds to the count of the array.
 
-<a id="rule-max"></a>
-#### max:number
+You can also validate uploaded file using this rule to validate minimum size of uploaded file.
+For example:
+
+```php
+$validation = $validator->validate([
+    'photo' => $_FILES['photo']
+], [
+    'photo' => 'required|min:1M'
+]);
+```
+
+</details>
+
+<details><summary><strong>max</strong>:number</summary>
 
 The field under this rule must have a size lower or equal than the given number. 
 Value size calculated in same way like `min` rule.
 
-<a id="rule-between"></a>
-#### between:min,max
+You can also validate uploaded file using this rule to validate maximum size of uploaded file.
+For example:
+
+```php
+$validation = $validator->validate([
+    'photo' => $_FILES['photo']
+], [
+    'photo' => 'required|max:2M'
+]);
+```
+
+</details>
+
+<details><summary><strong>between</strong>:min,max</summary>
 
 The field under this rule must have a size between min and max params. 
 Value size calculated in same way like `min` and `max` rule.
 
-<a id="rule-digits"></a>
-#### digits:value
+You can also validate uploaded file using this rule to validate size of uploaded file.
+For example:
+
+```php
+$validation = $validator->validate([
+    'photo' => $_FILES['photo']
+], [
+    'photo' => 'required|between:1M,2M'
+]);
+```
+
+</details>
+
+<details><summary><strong>digits</strong>:value</summary>
 
 The field under validation must be numeric and must have an exact length of `value`.
 
-<a id="rule-digits_between"></a>
-#### digits_between:min,max
+</details>
+
+<details><summary><strong>digits_between</strong>:min,max</summary>
 
 The field under validation must have a length between the given `min` and `max`.
 
-<a id="rule-url"></a>
-#### url
+</details>
+
+<details><summary><strong>url</strong></summary>
 
 The field under this rule must be valid url format.
 By default it check common URL scheme format like `any_scheme://...`.
@@ -514,62 +787,74 @@ $validation = $validator->validate($inputs, [
 > For common URL scheme and mailto, we combine `FILTER_VALIDATE_URL` to validate URL format and `preg_match` to validate it's scheme. 
   Except for JDBC URL, currently it just check a valid JDBC scheme.
 
-<a id="rule-integer"></a>
-#### integer
-The field under this rule must be integer.
+</details>
 
-<a id="rule-ip"></a>
-#### ip
+<details><summary><strong>integer</strong></summary>
+The field under t rule must be integer.
+
+</details>
+
+<details><summary><strong>ip</strong></summary>
 
 The field under this rule must be valid ipv4 or ipv6.
 
-<a id="rule-ipv4"></a>
-#### ipv4
+</details>
+
+<details><summary><strong>ipv4</strong></summary>
 
 The field under this rule must be valid ipv4.
 
-<a id="rule-ipv6"></a>
-#### ipv6
+</details>
+
+<details><summary><strong>ipv6</strong></summary>
 
 The field under this rule must be valid ipv6.
 
-<a id="rule-array"></a>
-#### array
+</details>
+
+<details><summary><strong>array</strong></summary>
 
 The field under this rule must be array.
 
-<a id="rule-same"></a>
-#### same:another_field
+</details>
+
+<details><summary><strong>same</strong>:another_field</summary>
 
 The field value under this rule must be same with `another_field` value.
 
-<a id="rule-regex"></a>
-#### regex:/your-regex/
+</details>
+
+<details><summary><strong>regex</strong>:/your-regex/</summary>
 
 The field under this rule must be match with given regex.
 
-<a id="rule-date"></a>
-#### date:format
+</details>
+
+<details><summary><strong>date</strong>:format</summary>
 
 The field under this rule must be valid date format. Parameter `format` is optional, default format is `Y-m-d`.
 
-<a id="rule-accepted"></a>
-#### accepted
+</details>
+
+<details><summary><strong>accepted</strong></summary>
 
 The field under this rule must be one of `'on'`, `'yes'`, `'1'`, `'true'`, or `true`.
 
-<a id="rule-present"></a>
-#### present
+</details>
+
+<details><summary><strong>present</strong></summary>
 
 The field under this rule must be exists, whatever the value is.
 
-<a id="rule-different"></a>
-#### different:another_field
+</details>
+
+<details><summary><strong>different</strong>:another_field</summary>
 
 Opposite of `same`. The field value under this rule must be different with `another_field` value.
 
-<a id="after"></a>
-#### after:tomorrow
+</details>
+
+<details><summary><strong>after</strong>:tomorrow</summary>
 
 Anything that can be parsed by `strtotime` can be passed as a parameter to this rule. Valid examples include :
 - after:next week
@@ -577,13 +862,15 @@ Anything that can be parsed by `strtotime` can be passed as a parameter to this 
 - after:2016
 - after:2016-12-31 09:56:02
 
-<a id="before"></a>
-#### before:yesterday
+</details>
+
+<details><summary><strong>before</strong>:yesterday</summary>
 
 This also works the same way as the [after rule](#after). Pass anything that can be parsed by `strtotime`
 
-<a id="callback"></a>
-#### callback
+</details>
+
+<details><summary><strong>callback</strong></summary>
 
 You can use this rule to define your own validation rule.
 This rule can't be registered using string pipe.
@@ -626,7 +913,10 @@ $validation = $validator->validate($_POST, [
 > Note: `Rakit\Validation\Rules\Callback` instance is binded into your Closure. 
   So you can access rule properties and methods using `$this`.
 
-## Register/Modify Rule
+</details>
+
+
+## Register/Override Rule
 
 Another way to use custom validation rule is to create a class extending `Rakit\Validation\Rule`. 
 Then register it using `setValidator` or `addValidator`.
@@ -653,7 +943,7 @@ class UniqueRule extends Rule
         $this->pdo = $pdo;
     }
     
-    public function check($value)
+    public function check($value): bool
     {
         // make sure required parameters exists
         $this->requireParameters(['table', 'column']);
@@ -765,45 +1055,82 @@ $validation = $validator->validate($_POST, [
 ]);
 ```
 
-## Getting Validated, Valid, and Invalid Data
+#### Implicit Rule
 
-For example you have validation like this:
+Implicit rule is a rule that if it's invalid, then next rules will be ignored. For example if attribute didn't pass `required*` rules, mostly it's next rules will also be invalids. So to prevent our next rules messages to get collected, we make `required*` rules to be implicit.
 
-```php
-$validation = $validator->validate([
-    'title' => 'Lorem Ipsum',
-    'body' => 'Lorem ipsum dolor sit amet ...',
-    'published' => null,
-    'something' => '-invalid-'
-], [
-    'title' => 'required',
-    'body' => 'required',
-    'published' => 'default:1|required|in:0,1',
-    'something' => 'required|numeric'
-]);
-```
-
-You can get validated data, valid data, or invalid data using methods in example below:
+To make your custom rule implicit, you can make `$implicit` property value to be `true`. For example:
 
 ```php
-$validatedData = $validation->getValidatedData();
-// [
-//     'title' => 'Lorem Ipsum',
-//     'body' => 'Lorem ipsum dolor sit amet ...',
-//     'published' => '1' // notice this
-//     'something' => '-invalid-'
-// ]
+<?php
 
-$validData = $validation->getValidData();
-// [
-//     'title' => 'Lorem Ipsum',
-//     'body' => 'Lorem ipsum dolor sit amet ...',
-//     'published' => '1'
-// ]
+use Rakit\Validation\Rule;
 
-$invalidData = $validation->getInvalidData();
-// [
-//     'something' => '-invalid-'
-// ]
+class YourCustomRule extends Rule
+{
+
+    protected $implicit = true;
+
+}
+``` 
+
+#### Modify Value
+
+In some case, you may want your custom rule to be able to modify it's attribute value like our `default/defaults` rule. So in current and next rules checks, your modified value will be used. 
+
+To do this, you should implements `Rakit\Validation\Rules\Interfaces\ModifyValue` and create method `modifyValue($value)` to your custom rule class.
+
+For example:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+use Rakit\Validation\Rules\Interfaces\ModifyValue;
+
+class YourCustomRule extends Rule implements ModifyValue
+{
+    ...
+
+    public function modifyValue($value)
+    {
+        // Do something with $value
+
+        return $value;
+    }
+
+    ...
+}
 ```
 
+#### Before Validation Hook
+
+You may want to do some preparation before validation running. For example our `uploaded_file` rule will resolves attribute value that come from `$_FILES` (undesirable) array structure to be well-organized array structure, so we can validate multiple file upload just like validating other data.
+
+To do this, you should implements `Rakit\Validation\Rules\Interfaces\BeforeValidate` and create method `beforeValidate()` to your custom rule class.
+
+For example:
+
+```php
+<?php
+
+use Rakit\Validation\Rule;
+use Rakit\Validation\Rules\Interfaces\BeforeValidate;
+
+class YourCustomRule extends Rule implements BeforeValidate
+{
+    ...
+
+    public function beforeValidate()
+    {
+        $attribute = $this->getAttribute(); // Rakit\Validation\Attribute instance
+        $validation = $this->validation; // Rakit\Validation\Validation instance
+
+        // Do something with $attribute and $validation
+        // For example change attribute value
+        $validation->setValue($attribute->getKey(), "your custom value");
+    }
+
+    ...
+}
+```

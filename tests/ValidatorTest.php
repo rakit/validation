@@ -1,11 +1,13 @@
 <?php
 
+namespace Rakit\Validation\Tests;
+
+use DateTime;
+use PHPUnit\Framework\TestCase;
+use Rakit\Validation\Rules\UploadedFile;
 use Rakit\Validation\Validator;
 
-require_once 'Fixtures/Even.php';
-require_once 'Fixtures/Required.php';
-
-class ValidatorTest extends PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
 
     protected $validator;
@@ -86,7 +88,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
     public function testOptionalUploadedFile()
     {
-       $empty_file = [
+        $emptyFile = [
             'name' => '',
             'type' => '',
             'size' => '',
@@ -95,7 +97,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         ];
 
         $validation = $this->validator->validate([
-            'file' => $empty_file
+            'file' => $emptyFile
         ], [
             'file' => 'uploaded_file'
         ]);
@@ -105,10 +107,10 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getSamplesMissingKeyFromUploadedFileValue
      */
-    public function testMissingKeyUploadedFile($uploaded_file)
+    public function testMissingKeyUploadedFile($uploadedFile)
     {
         $validation = $this->validator->validate([
-            'file' => $uploaded_file
+            'file' => $uploadedFile
         ], [
             'file' => 'required|uploaded_file'
         ]);
@@ -120,7 +122,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
     public function getSamplesMissingKeyFromUploadedFileValue()
     {
-        $valid_uploaded_file = [
+        $validUploadedFile = [
             'name' => 'foo',
             'type' => 'text/plain',
             'size' => 1000,
@@ -129,12 +131,277 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         ];
 
         $samples = [];
-        foreach($valid_uploaded_file as $key => $value) {
-            $uploaded_file = $valid_uploaded_file;
-            unset($uploaded_file[$key]);
-            $samples[] = $uploaded_file;
+        foreach ($validUploadedFile as $key => $value) {
+            $uploadedFile = $validUploadedFile;
+            unset($uploadedFile[$key]);
+            $samples[] = $uploadedFile;
         }
         return $samples;
+    }
+
+    public function testValidationShouldCorrectlyResolveMultipleFileUploads()
+    {
+        // Test from input files:
+        // <input type="file" name="photos[]"/>
+        // <input type="file" name="photos[]"/>
+        $sampleInputFiles = [
+            'photos' => [
+                'name' => [
+                    'a.png',
+                    'b.jpeg',
+                ],
+                'type' => [
+                    'image/png',
+                    'image/jpeg',
+                ],
+                'size' => [
+                    1000,
+                    2000,
+                ],
+                'tmp_name' => [
+                    __DIR__.'/a.png',
+                    __DIR__.'/b.jpeg',
+                ],
+                'error' => [
+                    UPLOAD_ERR_OK,
+                    UPLOAD_ERR_OK,
+                ]
+            ]
+        ];
+
+        $uploadedFileRule = $this->getMockedUploadedFileRule()->fileTypes('jpeg');
+
+        $validation = $this->validator->validate($sampleInputFiles, [
+            'photos.*' => ['required', $uploadedFileRule]
+        ]);
+
+        $this->assertFalse($validation->passes());
+        $this->assertEquals($validation->getValidData(), [
+            'photos' => [
+                1 => [
+                    'name' => 'b.jpeg',
+                    'type' => 'image/jpeg',
+                    'size' => 2000,
+                    'tmp_name' => __DIR__.'/b.jpeg',
+                    'error' => UPLOAD_ERR_OK,
+                ]
+            ]
+        ]);
+        $this->assertEquals($validation->getInvalidData(), [
+            'photos' => [
+                0 => [
+                    'name' => 'a.png',
+                    'type' => 'image/png',
+                    'size' => 1000,
+                    'tmp_name' => __DIR__.'/a.png',
+                    'error' => UPLOAD_ERR_OK,
+                ]
+            ]
+        ]);
+    }
+
+    public function testValidationShouldCorrectlyResolveAssocFileUploads()
+    {
+        // Test from input files:
+        // <input type="file" name="photos[foo]"/>
+        // <input type="file" name="photos[bar]"/>
+        $sampleInputFiles = [
+            'photos' => [
+                'name' => [
+                   'foo' => 'a.png',
+                   'bar' => 'b.jpeg',
+                ],
+                'type' => [
+                   'foo' => 'image/png',
+                   'bar' => 'image/jpeg',
+                ],
+                'size' => [
+                   'foo' => 1000,
+                   'bar' => 2000,
+                ],
+                'tmp_name' => [
+                   'foo' => __DIR__.'/a.png',
+                   'bar' => __DIR__.'/b.jpeg',
+                ],
+                'error' => [
+                   'foo' => UPLOAD_ERR_OK,
+                   'bar' => UPLOAD_ERR_OK,
+                ]
+            ]
+        ];
+
+        $uploadedFileRule = $this->getMockedUploadedFileRule()->fileTypes('jpeg');
+
+        $validation = $this->validator->validate($sampleInputFiles, [
+            'photos.foo' => ['required', clone $uploadedFileRule],
+            'photos.bar' => ['required', clone $uploadedFileRule],
+        ]);
+
+        $this->assertFalse($validation->passes());
+        $this->assertEquals($validation->getValidData(), [
+            'photos' => [
+                'bar' => [
+                    'name' => 'b.jpeg',
+                    'type' => 'image/jpeg',
+                    'size' => 2000,
+                    'tmp_name' => __DIR__.'/b.jpeg',
+                    'error' => UPLOAD_ERR_OK,
+                ]
+            ]
+        ]);
+        $this->assertEquals($validation->getInvalidData(), [
+            'photos' => [
+                'foo' => [
+                    'name' => 'a.png',
+                    'type' => 'image/png',
+                    'size' => 1000,
+                    'tmp_name' => __DIR__.'/a.png',
+                    'error' => UPLOAD_ERR_OK,
+                ]
+            ]
+        ]);
+    }
+
+    public function testValidationShouldCorrectlyResolveComplexFileUploads()
+    {
+        // Test from input files:
+        // <input type="file" name="files[foo][bar][baz]"/>
+        // <input type="file" name="files[foo][bar][qux]"/>
+        // <input type="file" name="files[photos][]"/>
+        // <input type="file" name="files[photos][]"/>
+        $sampleInputFiles = [
+            'files' => [
+                'name' => [
+                   'foo' => [
+                        'bar' => [
+                            'baz' => 'foo-bar-baz.jpeg',
+                            'qux' => 'foo-bar-qux.png',
+                        ]
+                   ],
+                   'photos' => [
+                        'photos-0.png',
+                        'photos-1.jpeg',
+                   ]
+                ],
+                'type' => [
+                    'foo' => [
+                        'bar' => [
+                            'baz' => 'image/jpeg',
+                            'qux' => 'image/png',
+                        ]
+                    ],
+                    'photos' => [
+                        'image/png',
+                        'image/jpeg',
+                    ]
+                ],
+                'size' => [
+                   'foo' => [
+                        'bar' => [
+                            'baz' => 500,
+                            'qux' => 750,
+                        ]
+                    ],
+                    'photos' => [
+                        1000,
+                        2000,
+                    ]
+                ],
+                'tmp_name' => [
+                    'foo' => [
+                        'bar' => [
+                            'baz' => __DIR__.'/foo-bar-baz.jpeg',
+                            'qux' => __DIR__.'/foo-bar-qux.png',
+                        ]
+                    ],
+                    'photos' => [
+                        __DIR__.'/photos-0.png',
+                        __DIR__.'/photos-1.jpeg',
+                    ]
+                ],
+                'error' => [
+                   'foo' => [
+                        'bar' => [
+                            'baz' => UPLOAD_ERR_OK,
+                            'qux' => UPLOAD_ERR_OK,
+                        ]
+                    ],
+                    'photos' => [
+                        UPLOAD_ERR_OK,
+                        UPLOAD_ERR_OK,
+                    ]
+                ]
+            ]
+        ];
+
+        $uploadedFileRule = $this->getMockedUploadedFileRule()->fileTypes('jpeg');
+
+        $validation = $this->validator->validate($sampleInputFiles, [
+            'files.foo.bar.baz' => ['required', clone $uploadedFileRule],
+            'files.foo.bar.qux' => ['required', clone $uploadedFileRule],
+            'files.photos.*' => ['required', clone $uploadedFileRule],
+        ]);
+
+        $this->assertFalse($validation->passes());
+        $this->assertEquals($validation->getValidData(), [
+            'files' => [
+                'foo' => [
+                    'bar' => [
+                        'baz' => [
+                            'name' => 'foo-bar-baz.jpeg',
+                            'type' => 'image/jpeg',
+                            'size' => 500,
+                            'tmp_name' => __DIR__.'/foo-bar-baz.jpeg',
+                            'error' => UPLOAD_ERR_OK,
+                        ]
+                    ]
+                ],
+                'photos' => [
+                    1 => [
+                        'name' => 'photos-1.jpeg',
+                        'type' => 'image/jpeg',
+                        'size' => 2000,
+                        'tmp_name' => __DIR__.'/photos-1.jpeg',
+                        'error' => UPLOAD_ERR_OK,
+                    ]
+                ]
+            ]
+        ]);
+        $this->assertEquals($validation->getInvalidData(), [
+            'files' => [
+                'foo' => [
+                    'bar' => [
+                        'qux' => [
+                            'name' => 'foo-bar-qux.png',
+                            'type' => 'image/png',
+                            'size' => 750,
+                            'tmp_name' => __DIR__.'/foo-bar-qux.png',
+                            'error' => UPLOAD_ERR_OK,
+                        ]
+                    ]
+                ],
+                'photos' => [
+                    0 => [
+                        'name' => 'photos-0.png',
+                        'type' => 'image/png',
+                        'size' => 1000,
+                        'tmp_name' => __DIR__.'/photos-0.png',
+                        'error' => UPLOAD_ERR_OK,
+                    ],
+                ]
+            ]
+        ]);
+    }
+
+    public function getMockedUploadedFileRule()
+    {
+        $rule = $this->getMockBuilder(UploadedFile::class)
+            ->setMethods(['isUploadedFile'])
+            ->getMock();
+
+        $rule->method('isUploadedFile')->willReturn(true);
+
+        return $rule;
     }
 
     public function testRequiredIfRule()
@@ -286,7 +553,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
             'name' => "some name"
         ], [
             'name' => 'required|xxx'
-        ],[
+        ], [
             'name.required' => "Fill in your name",
             'xxx' => "Oops"
         ]);
@@ -308,7 +575,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
         $validator2 = $this->validator->make($data, [
             'date' => "required|before:last week"
-        ],[]);
+        ], []);
 
         $validator2->validate();
 
@@ -329,7 +596,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
         $validator2 = $this->validator->make($data, [
             'date' => "required|after:next year"
-        ],[]);
+        ], []);
 
         $validator2->validate();
 
@@ -369,7 +636,8 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
     {
         $this->validator->allowRuleOverride(true);
 
-        $this->validator->addValidator('required', new Required()); //This is a custom rule defined in the fixtures directory
+        //This is a custom rule defined in the fixtures directory
+        $this->validator->addValidator('required', new Required());
 
         $data = ['s' => json_encode(['name' => 'space x', 'human' => false])];
 
@@ -629,7 +897,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
     public function testCustomMessageInCallbackRule()
     {
         $evenNumberValidator = function ($value) {
-            if (!is_numeric($value) OR $value % 2 !== 0) {
+            if (!is_numeric($value) or $value % 2 !== 0) {
                 return ":attribute must be even number";
             }
             return true;
@@ -1010,4 +1278,143 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(isset($stuffs['two']));
     }
 
+    public function testRuleInInvalidMessages()
+    {
+        $validation = $this->validator->validate([
+            'number' => 1
+        ], [
+            'number' => 'in:7,8,9',
+        ]);
+
+        $this->assertEquals($validation->errors()->first('number'), "The Number only allows '7', '8', or '9'");
+
+        // Using translation
+        $this->validator->setTranslation('or', 'atau');
+
+        $validation = $this->validator->validate([
+            'number' => 1
+        ], [
+            'number' => 'in:7,8,9',
+        ]);
+
+        $this->assertEquals($validation->errors()->first('number'), "The Number only allows '7', '8', atau '9'");
+    }
+
+    public function testRuleNotInInvalidMessages()
+    {
+        $validation = $this->validator->validate([
+            'number' => 1
+        ], [
+            'number' => 'not_in:1,2,3',
+        ]);
+
+        $this->assertEquals($validation->errors()->first('number'), "The Number is not allowing '1', '2', and '3'");
+
+        // Using translation
+        $this->validator->setTranslation('and', 'dan');
+
+        $validation = $this->validator->validate([
+            'number' => 1
+        ], [
+            'number' => 'not_in:1,2,3',
+        ]);
+
+        $this->assertEquals($validation->errors()->first('number'), "The Number is not allowing '1', '2', dan '3'");
+    }
+
+    public function testRuleMimesInvalidMessages()
+    {
+        $file = [
+            'name' => 'sample.txt',
+            'type' => 'plain/text',
+            'tmp_name' => __FILE__,
+            'size' => 1000,
+            'error' => UPLOAD_ERR_OK,
+        ];
+
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => 'mimes:jpeg,png,bmp',
+        ]);
+
+        $expectedMessage = "The Sample file type must be 'jpeg', 'png', or 'bmp'";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+
+        // Using translation
+        $this->validator->setTranslation('or', 'atau');
+
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => 'mimes:jpeg,png,bmp',
+        ]);
+
+        $expectedMessage = "The Sample file type must be 'jpeg', 'png', atau 'bmp'";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+    }
+
+    public function testRuleUploadedFileInvalidMessages()
+    {
+        $file = [
+            'name' => 'sample.txt',
+            'type' => 'plain/text',
+            'tmp_name' => __FILE__,
+            'size' => 1024 * 1024 * 2, // 2M
+            'error' => UPLOAD_ERR_OK,
+        ];
+
+        $rule = $this->getMockedUploadedFileRule();
+
+        // Invalid uploaded file (!is_uploaded_file($file['tmp_name']))
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => 'uploaded_file',
+        ]);
+
+        $expectedMessage = "The Sample is not valid uploaded file";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+
+        // Invalid min size
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => [(clone $rule)->minSize('3M')],
+        ]);
+
+        $expectedMessage = "The Sample file is too small, minimum size is 3M";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+
+        // Invalid max size
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => [(clone $rule)->maxSize('1M')],
+        ]);
+
+        $expectedMessage = "The Sample file is too large, maximum size is 1M";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+
+        // Invalid file types
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => [(clone $rule)->fileTypes(['jpeg', 'png', 'bmp'])],
+        ]);
+
+        $expectedMessage = "The Sample file type must be 'jpeg', 'png', or 'bmp'";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+
+        // Invalid file types with translation
+        $this->validator->setTranslation('or', 'atau');
+        $validation = $this->validator->validate([
+            'sample' => $file,
+        ], [
+            'sample' => [(clone $rule)->fileTypes(['jpeg', 'png', 'bmp'])],
+        ]);
+
+        $expectedMessage = "The Sample file type must be 'jpeg', 'png', atau 'bmp'";
+        $this->assertEquals($validation->errors()->first('sample'), $expectedMessage);
+    }
 }
