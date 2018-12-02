@@ -934,7 +934,7 @@ class UniqueRule extends Rule
 {
     protected $message = ":attribute :value has been used";
     
-    protected $fillable_params = ['table', 'column', 'except'];
+    protected $fillableParams = ['table', 'column', 'except'];
     
     protected $pdo;
     
