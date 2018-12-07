@@ -667,6 +667,12 @@ The field under this rule may have alpha-numeric characters, as well as dashes a
 
 </details>
 
+<details><summary><strong>alpha_spaces</strong></summary>
+
+The field under this rule may have alpha characters, as well as spaces.
+
+</details>
+
 <details><summary><strong>in</strong>:value_1,value_2,...</summary>
 
 The field under this rule must be included in the given list of values.
