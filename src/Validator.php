@@ -129,6 +129,7 @@ class Validator
             'numeric'                   => new Rules\Numeric,
             'alpha_num'                 => new Rules\AlphaNum,
             'alpha_dash'                => new Rules\AlphaDash,
+            'alpha_spaces'              => new Rules\AlphaSpaces,
             'in'                        => new Rules\In,
             'not_in'                    => new Rules\NotIn,
             'min'                       => new Rules\Min,
