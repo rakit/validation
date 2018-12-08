@@ -818,6 +818,12 @@ The field under this rule must be valid ipv6.
 
 </details>
 
+<details><summary><strong>extension</strong>:png,jpg,...</summary>
+
+The field under this rule must be a file path or url with an extension matching one of those in the given list.
+
+</details>
+
 <details><summary><strong>array</strong></summary>
 
 The field under this rule must be array.
