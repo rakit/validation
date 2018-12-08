@@ -818,9 +818,11 @@ The field under this rule must be valid ipv6.
 
 </details>
 
-<details><summary><strong>extension</strong>:png,jpg,...</summary>
+<details><summary><strong>extension</strong>:extension_a,extension_b,...</summary>
 
-The field under this rule must be a file path or url with an extension matching one of those in the given list.
+The field under this rule must end with an extension corresponding to one of those listed.
+
+This is useful for validating a file type for a given a path or url. The `mimes` rule should be used for validating uploads.
 
 </details>
 
