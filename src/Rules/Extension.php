@@ -36,8 +36,8 @@ class Extension extends Rule
     {
         $this->requireParameters(['allowed_extensions']);
         $allowedExtensions = $this->parameter('allowed_extensions');
-        foreach($allowedExtensions as $key => $ext){
-            $allowedExtensions[$key] = ltrim($ext,'.');
+        foreach ($allowedExtensions as $key => $ext) {
+            $allowedExtensions[$key] = ltrim($ext, '.');
         }
 
         $or = $this->validation ? $this->validation->getTranslation('or') : 'or';
