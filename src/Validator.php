@@ -140,6 +140,7 @@ class Validator
             'ip'                        => new Rules\Ip,
             'ipv4'                      => new Rules\Ipv4,
             'ipv6'                      => new Rules\Ipv6,
+            'extension'                 => new Rules\Extension,
             'array'                     => new Rules\TypeArray,
             'same'                      => new Rules\Same,
             'regex'                     => new Rules\Regex,
