@@ -209,7 +209,7 @@ class Attribute
      * Get value
      *
      * @param string|null $key
-     * @return void
+     * @return mixed
      */
     public function getValue(string $key = null)
     {
