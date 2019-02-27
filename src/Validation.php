@@ -32,6 +32,9 @@ class Validation
     /** @var array */
     protected $invalidData = [];
 
+    /** @var ErrorBag */
+    public $errors;
+
     /**
      * Constructor
      *
