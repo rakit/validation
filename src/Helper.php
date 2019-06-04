@@ -165,7 +165,7 @@ class Helper
      * @param  string|array $key
      * @return mixed
      */
-    public static function arrayUnset(&$target, $key): array
+    public static function arrayUnset(&$target, $key)
     {
         if (!is_array($target)) {
             return $target;
