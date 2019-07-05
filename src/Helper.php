@@ -58,12 +58,12 @@ class Helper
      * Get an item from an array using "dot" notation.
      * Adapted from: https://github.com/illuminate/support/blob/v5.3.23/Arr.php#L246
      *
-     * @param  array  $array
-     * @param  string $key
-     * @param  mixed  $default
+     * @param  array       $array
+     * @param  string|null $key
+     * @param  mixed       $default
      * @return mixed
      */
-    public static function arrayGet(array $array, string $key, $default = null)
+    public static function arrayGet(array $array, $key, $default = null)
     {
         if (is_null($key)) {
             return $array;
@@ -111,14 +111,21 @@ class Helper
      * Set an item on an array or object using dot notation.
      * Adapted from: https://github.com/illuminate/support/blob/v5.3.23/helpers.php#L437
      *
-     * @param  mixed        $target
-     * @param  string|array $key
-     * @param  mixed        $value
-     * @param  bool         $overwrite
+     * @param mixed             $target
+     * @param string|array|null $key
+     * @param mixed             $value
+     * @param bool              $overwrite
      * @return mixed
      */
     public static function arraySet(&$target, $key, $value, $overwrite = true): array
     {
+        if (is_null($key)) {
+            if ($overwrite) {
+                return $target = array_merge($target, $value);
+            }
+            return $target = array_merge($value, $target);
+        }
+
         $segments = is_array($key) ? $key : explode('.', $key);
 
         if (($segment = array_shift($segments)) === '*') {
