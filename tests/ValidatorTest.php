@@ -4,12 +4,13 @@ namespace Rakit\Validation\Tests;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Rakit\Validation\Rule;
 use Rakit\Validation\Rules\UploadedFile;
 use Rakit\Validation\Validator;
 
 class ValidatorTest extends TestCase
 {
-
+    /** @var Validator */
     protected $validator;
 
     protected function setUp()
@@ -801,6 +802,71 @@ class ValidatorTest extends TestCase
         $this->assertNotNull($errors->first('user.email:email'));
         $this->assertNotNull($errors->first('user.age:min'));
         $this->assertNull($errors->first('user.name:required'));
+    }
+
+    /**
+     * Test root asterisk validation.
+     *
+     * @dataProvider rootAsteriskProvider
+     */
+    public function testRootAsteriskValidation(array $data, array $rules, $errors = null)
+    {
+        $validation = $this->validator->validate($data, $rules);
+        $this->assertSame(empty($errors), $validation->passes());
+        $errorBag = $validation->errors();
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                $field = $error[0];
+                $rule = $error[1] ?? null;
+                $error = $errorBag->get($field);
+                $this->assertNotEmpty($error);
+                if ($rule !== null) {
+                    $this->assertArrayHasKey($rule, $error);
+                }
+            }
+        }
+    }
+
+    public function rootAsteriskProvider(): array
+    {
+        return [
+            'control sample success' => [
+                ['Body' => ['a' => 1, 'b' => 2]],
+                ['Body.*' => 'integer|min:0'],
+            ],
+            'control sample failure' => [
+                ['Body' => ['a' => 1, 'b' => -2]],
+                ['Body.*' => 'integer|min:0'],
+                [['Body.b', 'min']],
+            ],
+            'root field success' => [
+                ['a' => 1, 'b' => 2],
+                ['*' => 'integer|min:0'],
+            ],
+            'root field failure' => [
+                ['a' => 1, 'b' => -2],
+                ['*' => 'integer|min:0'],
+                [['b', 'min']],
+            ],
+            'root array success' => [
+                [[1], [2]],
+                ['*.*' => 'integer|min:0'],
+            ],
+            'root array failure' => [
+                [[1], [-2]],
+                ['*.*' => 'integer|min:0'],
+                [['1.0', 'min']],
+            ],
+            'root dict success' => [
+                ['a' => ['c' => 1, 'd' => 4], 'b' => ['c' => 'e', 'd' => 8]],
+                ['*.c' => 'required'],
+            ],
+            'root dict failure' => [
+                ['a' => ['c' => 1, 'd' => 4], 'b' => ['d' => 8]],
+                ['*.c' => 'required'],
+                [['b.c', 'required']],
+            ],
+        ];
     }
 
     public function testArrayValidation()

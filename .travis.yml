@@ -10,4 +10,4 @@ before_script:
   - ./vendor/bin/phpcs -n --standard=PSR2 src/ tests/
 
 script:
-  - phpunit --coverage-text
+  - ./vendor/bin/phpunit --coverage-text
