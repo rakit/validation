@@ -282,9 +282,9 @@ class Validation
      * Allows us to not spin through all of the flattened data for some operations.
      *
      * @param  string  $attributeKey
-     * @return string
+     * @return string|null null when root wildcard
      */
-    protected function getLeadingExplicitAttributePath(string $attributeKey): string
+    protected function getLeadingExplicitAttributePath(string $attributeKey)
     {
         return rtrim(explode('*', $attributeKey)[0], '.') ?: null;
     }
@@ -295,10 +295,10 @@ class Validation
      *
      * Used to extract a sub-section of the data for faster iteration.
      *
-     * @param  string  $attributeKey
+     * @param  string|null $attributeKey
      * @return array
      */
-    protected function extractDataFromPath(string $attributeKey): array
+    protected function extractDataFromPath($attributeKey): array
     {
         $results = [];
 
