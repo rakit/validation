@@ -804,6 +804,16 @@ class ValidatorTest extends TestCase
         $this->assertNull($errors->first('user.name:required'));
     }
 
+    public function testEmptyArrayAssocValidation()
+    {
+        $validation = $this->validator->validate([], [
+            'user'=> 'required',
+            'user.email' => 'email',
+        ]);
+
+        $this->assertFalse($validation->passes());
+    }
+  
     /**
      * Test root asterisk validation.
      *
