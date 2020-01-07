@@ -31,7 +31,7 @@ class AfterTest extends TestCase
 
     /**
      * @dataProvider getInvalidDates
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testANonWellFormedDateCannotBeValidated($date)
     {
@@ -39,7 +39,7 @@ class AfterTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testUserProvidedParamCannotBeValidatedBecauseItIsInvalid()
     {

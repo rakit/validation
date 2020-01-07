@@ -19,7 +19,7 @@ class Before extends Rule
      *
      * @param mixed $value
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function check($value): bool
     {

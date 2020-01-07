@@ -14,13 +14,13 @@ class Attribute
     /** @var string|null */
     protected $alias;
 
-    /** @var Rakit\Validation\Validation */
+    /** @var \Rakit\Validation\Validation */
     protected $validation;
 
     /** @var bool */
     protected $required = false;
 
-    /** @var Rakit\Validation\Validation|null */
+    /** @var \Rakit\Validation\Validation|null */
     protected $primaryAttribute = null;
 
     /** @var array */
@@ -32,7 +32,7 @@ class Attribute
     /**
      * Constructor
      *
-     * @param Rakit\Validation\Validation  $validation
+     * @param \Rakit\Validation\Validation  $validation
      * @param string      $key
      * @param string|null $alias
      * @param array       $rules
@@ -55,7 +55,7 @@ class Attribute
     /**
      * Set the primary attribute
      *
-     * @param Rakit\Validation\Attribute $primaryAttribute
+     * @param \Rakit\Validation\Attribute $primaryAttribute
      * @return void
      */
     public function setPrimaryAttribute(Attribute $primaryAttribute)
@@ -77,7 +77,7 @@ class Attribute
     /**
      * Get primary attributes
      *
-     * @return Rakit\Validation\Attribute|null
+     * @return \Rakit\Validation\Attribute|null
      */
     public function getPrimaryAttribute()
     {
@@ -101,7 +101,7 @@ class Attribute
     /**
      * Add other attributes
      *
-     * @param Rakit\Validation\Attribute $otherAttribute
+     * @param \Rakit\Validation\Attribute $otherAttribute
      * @return void
      */
     public function addOtherAttribute(Attribute $otherAttribute)
@@ -122,7 +122,7 @@ class Attribute
     /**
      * Add rule
      *
-     * @param Rakit\Validation\Rule $rule
+     * @param \Rakit\Validation\Rule $rule
      * @return void
      */
     public function addRule(Rule $rule)
