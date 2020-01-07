@@ -681,6 +681,22 @@ class ValidatorTest extends TestCase
         $this->assertNull($errors->first('must_accepted_field:min'));
     }
 
+    public function testNextRulesAppliedWhenEmptyValueWithPresent()
+    {
+        $validation = $this->validator->validate([
+            'must_present_field' => '',
+        ], [
+            'must_present_field' => 'present|array',
+        ]);
+
+        $errors = $validation->errors();
+
+        $this->assertEquals($errors->count(), 1);
+
+        $this->assertNull($errors->first('must_present_field:present'));
+        $this->assertNotNull($errors->first('must_present_field:array'));
+    }
+
     public function testIgnoreOtherRulesWhenAttributeIsNotRequired()
     {
         $validation = $this->validator->validate([

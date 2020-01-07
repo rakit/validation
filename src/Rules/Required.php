@@ -38,7 +38,7 @@ class Required extends Rule
     }
 
     /**
-     * Set attribute is required if $this->attribute is true
+     * Set attribute is required if $this->attribute is set
      *
      * @return void
      */

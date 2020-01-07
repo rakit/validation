@@ -20,6 +20,20 @@ class Present extends Rule
      */
     public function check($value): bool
     {
+        $this->setAttributeAsRequired();
+
         return $this->validation->hasValue($this->attribute->getKey());
+    }
+
+    /**
+     * Set attribute is required if $this->attribute is set
+     *
+     * @return void
+     */
+    protected function setAttributeAsRequired()
+    {
+        if ($this->attribute) {
+            $this->attribute->setRequired(true);
+        }
     }
 }
