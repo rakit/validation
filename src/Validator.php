@@ -160,6 +160,7 @@ class Validator
             'digits_between'            => new Rules\DigitsBetween,
             'defaults'                  => new Rules\Defaults,
             'default'                   => new Rules\Defaults, // alias of defaults
+            'nullable'                  => new Rules\Nullable,
         ];
 
         foreach ($baseValidator as $key => $validator) {
