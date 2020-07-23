@@ -929,6 +929,11 @@ $validation = $validator->validate($_POST, [
 
 </details>
 
+<details><summary><strong>nullable</strong></summary>
+
+Field under this rule may be empty.
+
+</details>
 
 ## Register/Override Rule
 
