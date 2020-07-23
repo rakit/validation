@@ -6,7 +6,7 @@ class Validator
 {
     use Traits\TranslationsTrait, Traits\MessagesTrait;
 
-    /** @var translations */
+    /** @var array */
     protected $translations = [];
 
     /** @var array */
@@ -34,7 +34,7 @@ class Validator
      * Register or override existing validator
      *
      * @param mixed $key
-     * @param Rakit\Validation\Rule $rule
+     * @param \Rakit\Validation\Rule $rule
      * @return void
      */
     public function setValidator(string $key, Rule $rule)
@@ -171,7 +171,7 @@ class Validator
      * Given $ruleName and $rule to add new validator
      *
      * @param string $ruleName
-     * @param Rakit\Validation\Rule $rule
+     * @param \Rakit\Validation\Rule $rule
      * @return void
      */
     public function addValidator(string $ruleName, Rule $rule)

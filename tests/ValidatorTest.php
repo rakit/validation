@@ -619,7 +619,7 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * @expectedException Rakit\Validation\RuleQuashException
+     * @expectedException \Rakit\Validation\RuleQuashException
      */
     public function testInternalValidationRuleCannotBeOverridden()
     {
@@ -813,7 +813,7 @@ class ValidatorTest extends TestCase
 
         $this->assertFalse($validation->passes());
     }
-  
+
     /**
      * Test root asterisk validation.
      *
