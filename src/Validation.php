@@ -141,6 +141,10 @@ class Validation
         $value = $this->getValue($attributeKey);
         $isEmptyValue = $this->isEmptyValue($value);
 
+        if ($attribute->hasRule('nullable') && $isEmptyValue) {
+            $rules = [];
+        }
+
         $isValid = true;
         foreach ($rules as $ruleValidator) {
             $ruleValidator->setAttribute($attribute);
