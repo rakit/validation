@@ -613,9 +613,15 @@ $validation = $validator->validate([
 ]);
 
 $validation->passes(); // true
+
+// Get the valid/default data
+$valid_data = $validation->getValidData();
+
+$enabled = $valid_data['enabled'];
+$published = $valid_data['published'];
 ```
 
-Validation passes because we sets default value for `enabled` and `published` to `1` and `0` which is valid.
+Validation passes because we sets default value for `enabled` and `published` to `1` and `0` which is valid. Then we can get the valid/default data.
 
 </details>
 
