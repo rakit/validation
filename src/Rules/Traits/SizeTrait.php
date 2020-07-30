@@ -15,8 +15,7 @@ trait SizeTrait
      */
     protected function getValueSize($value)
     {
-        if (
-            $this->getAttribute()
+        if ($this->getAttribute()
             && $this->getAttribute()->hasRule('numeric')
             && is_numeric($value)
         ) {
