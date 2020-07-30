@@ -17,6 +17,8 @@ trait SizeTrait
     {
         if (is_int($value) || is_numeric($value)) {
             return (float) $value;
+        } elseif ($this->getAttribute()->hasRule('numeric') && is_numeric($value)) {
+            return (float) $value;
         } elseif (is_string($value)) {
             return (float) mb_strlen($value, 'UTF-8');
         } elseif ($this->isUploadedFileValue($value)) {
