@@ -1549,4 +1549,26 @@ class ValidatorTest extends TestCase
         $this->assertTrue($validation1->passes());
         $this->assertFalse($validation2->passes());
     }
+
+    public function testNumericStringSizeWithoutNumericRule()
+    {
+        $validation = $this->validator->validate([
+            'number' => '1.2345'
+        ], [
+            'number' => 'max:2',
+        ]);
+
+        $this->assertFalse($validation->passes());
+    }
+
+    public function testNumericStringSizeWithNumericRule()
+    {
+        $validation = $this->validator->validate([
+            'number' => '1.2345'
+        ], [
+            'number' => 'numeric|max:2',
+        ]);
+
+        $this->assertTrue($validation->passes());
+    }
 }
