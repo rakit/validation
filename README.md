@@ -713,7 +713,7 @@ This rule also using `in_array`. You can enable strict checking by invoking vali
 
 The field under this rule must have a size greater or equal than the given number. 
 
-For string data, value corresponds to the number of characters. For numeric data, value corresponds to a given integer value. For an array, size corresponds to the count of the array.
+For string value, size corresponds to the number of characters. For integer or float value, size corresponds to its numerical value. For an array, size corresponds to the count of the array. If your value is numeric string, you can put `numeric` rule to treat its size by numeric value instead of number of characters.
 
 You can also validate uploaded file using this rule to validate minimum size of uploaded file.
 For example:
