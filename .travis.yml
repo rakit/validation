@@ -10,4 +10,7 @@ before_script:
   - ./vendor/bin/phpcs -n --standard=PSR2 src/ tests/
 
 script:
-  - ./vendor/bin/phpunit --coverage-text
+  - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+
+after_script:
+  - travis_retry php vendor/bin/php-coveralls -v
