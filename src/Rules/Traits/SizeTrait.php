@@ -16,7 +16,7 @@ trait SizeTrait
     protected function getValueSize($value)
     {
         if ($this->getAttribute()
-            && $this->getAttribute()->hasRule('numeric')
+            && ($this->getAttribute()->hasRule('numeric') || $this->getAttribute()->hasRule('integer'))
             && is_numeric($value)
         ) {
             $value = (float) $value;
