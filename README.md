@@ -803,13 +803,13 @@ $validation = $validator->validate($inputs, [
 </details>
 
 <details><summary><strong>integer</strong></summary>
-The field under t rule must be integer.
+The field under this rule must be integer.
 
 </details>
 
 <details><summary><strong>boolean</strong></summary>
 
-The field under this rule must be boolean. Accepted input are `true`, `false`, `1`, `0`, `"1"`, and `"0"`.
+The field under this rule must be boolean. Accepted input are `true`, `false`, `"true"`, `"false"`, `1`, `0`, `"0"`, `"1"`, `"y"`, `"n"`.
 
 </details>
 
