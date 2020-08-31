@@ -62,7 +62,7 @@ class Mimes extends Rule
         $allowedTypes = $this->parameter('allowed_types');
 
         if ($allowedTypes) {
-            $or = $this->validation ? $this->validation->getTranslation('or') : 'or';
+            $or = $this->validation ? $this->validation->getTranslation('or') : 'o';
             $this->setParameterText('allowed_types', Helper::join(Helper::wraps($allowedTypes, "'"), ', ', ", {$or} "));
         }
 

@@ -52,7 +52,7 @@ class NotIn extends Rule
 
         $disallowedValues = (array) $this->parameter('disallowed_values');
 
-        $and = $this->validation ? $this->validation->getTranslation('and') : 'and';
+        $and = $this->validation ? $this->validation->getTranslation('and') : 'y';
         $disallowedValuesText = Helper::join(Helper::wraps($disallowedValues, "'"), ', ', ", {$and} ");
         $this->setParameterText('disallowed_values', $disallowedValuesText);
 

@@ -28,7 +28,7 @@ abstract class Rule
     protected $fillableParams = [];
 
     /** @var string */
-    protected $message = "The :attribute is invalid";
+    protected $message = ":attribute no es válido.";
 
     abstract public function check($value): bool;
 
@@ -225,7 +225,7 @@ abstract class Rule
         foreach ($params as $param) {
             if (!isset($this->params[$param])) {
                 $rule = $this->getKey();
-                throw new MissingRequiredParameterException("Missing required parameter '{$param}' on rule '{$rule}'");
+                throw new MissingRequiredParameterException("Falta el parámetro obligatorio '{$param}' en la regla '{$rule}'");
             }
         }
     }

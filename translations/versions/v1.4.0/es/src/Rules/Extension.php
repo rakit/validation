@@ -40,7 +40,7 @@ class Extension extends Rule
             $allowedExtensions[$key] = ltrim($ext, '.');
         }
 
-        $or = $this->validation ? $this->validation->getTranslation('or') : 'or';
+        $or = $this->validation ? $this->validation->getTranslation('or') : 'o';
         $allowedExtensionsText = Helper::join(Helper::wraps($allowedExtensions, ".", ""), ', ', ", {$or} ");
         $this->setParameterText('allowed_extensions', $allowedExtensionsText);
 

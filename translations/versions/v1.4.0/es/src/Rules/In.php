@@ -52,7 +52,7 @@ class In extends Rule
 
         $allowedValues = $this->parameter('allowed_values');
 
-        $or = $this->validation ? $this->validation->getTranslation('or') : 'or';
+        $or = $this->validation ? $this->validation->getTranslation('or') : 'o';
         $allowedValuesText = Helper::join(Helper::wraps($allowedValues, "'"), ', ', ", {$or} ");
         $this->setParameterText('allowed_values', $allowedValuesText);
 
