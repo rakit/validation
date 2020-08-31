@@ -4,18 +4,18 @@ namespace Rakit\Validation\Rules;
 
 use Rakit\Validation\Rule;
 
-class Before extends Rule
+class After extends Rule
 {
     use Traits\DateUtilsTrait;
 
     /** @var string */
-    protected $message = "The :attribute must be a date before :time.";
+    protected $message = ":attribute debe ser una fecha posterior a :time.";
 
     /** @var array */
     protected $fillableParams = ['time'];
 
     /**
-     * Check the $value is valid
+     * Check the value is valid
      *
      * @param mixed $value
      * @return bool
@@ -34,6 +34,6 @@ class Before extends Rule
             throw $this->throwException($time);
         }
 
-        return $this->getTimeStamp($time) > $this->getTimeStamp($value);
+        return $this->getTimeStamp($time) < $this->getTimeStamp($value);
     }
 }

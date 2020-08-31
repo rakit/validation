@@ -10,7 +10,7 @@ class Callback extends Rule
 {
 
     /** @var string */
-    protected $message = "The :attribute is not valid";
+    protected $message = ":attribute no es válido.";
 
     /** @var array */
     protected $fillableParams = ['callback'];
@@ -40,7 +40,7 @@ class Callback extends Rule
         $callback = $this->parameter('callback');
         if (false === $callback instanceof Closure) {
             $key = $this->attribute->getKey();
-            throw new InvalidArgumentException("Callback rule for '{$key}' is not callable.");
+            throw new InvalidArgumentException("Callback rule para '{$key}' no se puede llamar.");
         }
 
         $callback = $callback->bindTo($this);
