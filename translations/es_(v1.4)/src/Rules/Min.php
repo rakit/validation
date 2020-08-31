@@ -9,7 +9,7 @@ class Min extends Rule
     use Traits\SizeTrait;
 
     /** @var string */
-    protected $message = "The :attribute minimum is :min";
+    protected $message = ":attribute el mínimo es :min.";
 
     /** @var array */
     protected $fillableParams = ['min'];

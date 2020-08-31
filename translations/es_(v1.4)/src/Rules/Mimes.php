@@ -11,7 +11,7 @@ class Mimes extends Rule
     use Traits\FileTrait;
 
     /** @var string */
-    protected $message = "The :attribute file type must be :allowed_types";
+    protected $message = ":attribute el tipo de archivo debe ser :allowed_types.";
 
     /** @var string|int */
     protected $maxSize = null;

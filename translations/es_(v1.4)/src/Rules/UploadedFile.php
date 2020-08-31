@@ -12,7 +12,7 @@ class UploadedFile extends Rule implements BeforeValidate
     use Traits\FileTrait, Traits\SizeTrait;
 
     /** @var string */
-    protected $message = "The :attribute is not valid uploaded file";
+    protected $message = ":attribute no es un archivo subido válido.";
 
     /** @var string|int */
     protected $maxSize = null;
@@ -155,7 +155,7 @@ class UploadedFile extends Rule implements BeforeValidate
         if ($minSize) {
             $bytesMinSize = $this->getBytesSize($minSize);
             if ($value['size'] < $bytesMinSize) {
-                $this->setMessage('The :attribute file is too small, minimum size is :min_size');
+                $this->setMessage(':attribute el archivo es demasiado pequeño, el tamaño mínimo es :min_size.');
                 return false;
             }
         }
@@ -163,7 +163,7 @@ class UploadedFile extends Rule implements BeforeValidate
         if ($maxSize) {
             $bytesMaxSize = $this->getBytesSize($maxSize);
             if ($value['size'] > $bytesMaxSize) {
-                $this->setMessage('The :attribute file is too large, maximum size is :max_size');
+                $this->setMessage(':attribute el archivo es demasiado grande, el tamaño máximo es :max_size.');
                 return false;
             }
         }
@@ -174,7 +174,7 @@ class UploadedFile extends Rule implements BeforeValidate
             unset($guesser);
 
             if (!in_array($ext, $allowedTypes)) {
-                $this->setMessage('The :attribute file type must be :allowed_types');
+                $this->setMessage(':attribute el tipo de archivo debe ser :allowed_types.');
                 return false;
             }
         }

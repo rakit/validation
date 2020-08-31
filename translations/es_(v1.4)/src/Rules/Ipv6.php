@@ -8,7 +8,7 @@ class Ipv6 extends Rule
 {
 
     /** @var string */
-    protected $message = "The :attribute is not valid IPv6 Address";
+    protected $message = ":attribute no es una dirección IPv6 válida.";
 
     /**
      * Check the $value is valid

@@ -8,7 +8,7 @@ class Same extends Rule
 {
 
     /** @var string */
-    protected $message = "The :attribute must be same with :field";
+    protected $message = ":attribute debe ser lo mismo con :field.";
 
     /** @var array */
     protected $fillableParams = ['field'];

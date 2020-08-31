@@ -8,7 +8,7 @@ class Numeric extends Rule
 {
 
     /** @var string */
-    protected $message = "The :attribute must be numeric";
+    protected $message = ":attribute debe ser numérico.";
 
     /**
      * Check the $value is valid

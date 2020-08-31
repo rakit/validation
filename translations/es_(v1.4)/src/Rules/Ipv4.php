@@ -8,7 +8,7 @@ class Ipv4 extends Rule
 {
 
     /** @var string */
-    protected $message = "The :attribute is not valid IPv4 Address";
+    protected $message = ":attribute no es una dirección IPv4 válida.";
 
     /**
      * Check the $value is valid

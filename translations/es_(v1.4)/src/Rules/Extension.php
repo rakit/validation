@@ -9,7 +9,7 @@ class Extension extends Rule
 {
     
     /** @var string */
-    protected $message = "The :attribute must be a :allowed_extensions file";
+    protected $message = ":attribute debe ser un :allowed_extensions archivo.";
 
      /**
      * Given $params and assign the $this->params
