@@ -8,7 +8,7 @@ class Date extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute no es un formato de fecha válido.";
+    protected $message = "El campo :attribute no es un formato de fecha válido.";
 
     /** @var array */
     protected $fillableParams = ['format'];

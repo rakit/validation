@@ -8,7 +8,7 @@ class Uppercase extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute debe estar en mayúsculas.";
+    protected $message = "El campo :attribute debe estar en mayúsculas.";
 
     /**
      * Check the $value is valid

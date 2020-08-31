@@ -10,7 +10,7 @@ class RequiredIf extends Required
     protected $implicit = true;
 
     /** @var string */
-    protected $message = ":attribute es requerido.";
+    protected $message = "El campo :attribute es requerido.";
 
     /**
      * Given $params and assign the $this->params

@@ -8,7 +8,7 @@ class AlphaSpaces extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute solo permite caracteres alfabéticos y espacios.";
+    protected $message = "El campo :attribute solo permite caracteres alfabéticos y espacios.";
 
     /**
      * Check the $value is valid

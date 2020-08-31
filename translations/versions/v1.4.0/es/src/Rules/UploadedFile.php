@@ -12,7 +12,7 @@ class UploadedFile extends Rule implements BeforeValidate
     use Traits\FileTrait, Traits\SizeTrait;
 
     /** @var string */
-    protected $message = ":attribute no es un archivo subido válido.";
+    protected $message = "El campo :attribute no es un archivo subido válido.";
 
     /** @var string|int */
     protected $maxSize = null;
@@ -134,7 +134,7 @@ class UploadedFile extends Rule implements BeforeValidate
         $allowedTypes = $this->parameter('allowed_types');
 
         if ($allowedTypes) {
-            $or = $this->validation ? $this->validation->getTranslation('or') : 'o';
+            $or = $this->validation ? $this->validation->getTranslation('o') : 'o';
             $this->setParameterText('allowed_types', Helper::join(Helper::wraps($allowedTypes, "'"), ', ', ", {$or} "));
         }
 

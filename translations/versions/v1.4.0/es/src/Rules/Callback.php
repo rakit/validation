@@ -10,7 +10,7 @@ class Callback extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute no es válido.";
+    protected $message = "El campo :attribute no es válido.";
 
     /** @var array */
     protected $fillableParams = ['callback'];

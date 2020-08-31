@@ -498,7 +498,7 @@ class Validation
                 $validator = call_user_func_array($validatorFactory, ['callback', $rule]);
             } else {
                 $ruleName = is_object($rule) ? get_class($rule) : gettype($rule);
-                $message = "Rule must be a string, Closure or '".Rule::class."' instance. ".$ruleName." given";
+                $message = "La regla debe ser un String, Closure o una instancia de '".Rule::class."'. ".$ruleName." obtenido.";
                 throw new \Exception();
             }
 

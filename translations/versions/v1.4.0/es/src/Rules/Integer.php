@@ -8,7 +8,7 @@ class Integer extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute debe ser un número entero.";
+    protected $message = "El campo :attribute debe ser un número entero.";
 
     /**
      * Check the $value is valid

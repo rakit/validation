@@ -8,7 +8,7 @@ class Alpha extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute solo permite caracteres alfabéticos.";
+    protected $message = "El campo :attribute solo permite caracteres alfabéticos.";
 
     /**
      * Check the $value is valid

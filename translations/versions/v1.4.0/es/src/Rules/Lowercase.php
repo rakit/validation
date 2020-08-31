@@ -8,7 +8,7 @@ class Lowercase extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute debe estar en minúsculas.";
+    protected $message = "El campo :attribute debe estar en minúsculas.";
 
     /**
      * Check the $value is valid

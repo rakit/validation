@@ -180,7 +180,7 @@ class Validator
     {
         if (!$this->allowRuleOverride && array_key_exists($ruleName, $this->validators)) {
             throw new RuleQuashException(
-                "You cannot override a built in rule. You have to rename your rule"
+                "No puede anular una regla incorporada. Tienes que cambiar el nombre de tu regla."
             );
         }
 

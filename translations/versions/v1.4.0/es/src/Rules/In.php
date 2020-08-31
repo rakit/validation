@@ -9,7 +9,7 @@ class In extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute solo permite :allowed_values.";
+    protected $message = "El campo :attribute solo permite :allowed_values.";
 
     /** @var bool */
     protected $strict = false;
@@ -52,7 +52,7 @@ class In extends Rule
 
         $allowedValues = $this->parameter('allowed_values');
 
-        $or = $this->validation ? $this->validation->getTranslation('or') : 'o';
+        $or = $this->validation ? $this->validation->getTranslation('o') : 'o';
         $allowedValuesText = Helper::join(Helper::wraps($allowedValues, "'"), ', ', ", {$or} ");
         $this->setParameterText('allowed_values', $allowedValuesText);
 

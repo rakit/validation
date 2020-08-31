@@ -12,7 +12,7 @@ class Required extends Rule
     protected $implicit = true;
 
     /** @var string */
-    protected $message = ":attribute es requerido.";
+    protected $message = "El campo :attribute es requerido.";
 
     /**
      * Check the $value is valid

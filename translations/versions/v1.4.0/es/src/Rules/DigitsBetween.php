@@ -8,7 +8,7 @@ class DigitsBetween extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute debe tener una longitud entre :min y :max.";
+    protected $message = "El campo :attribute debe tener una longitud entre :min y :max.";
 
     /** @var array */
     protected $fillableParams = ['min', 'max'];

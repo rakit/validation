@@ -9,7 +9,7 @@ class Extension extends Rule
 {
     
     /** @var string */
-    protected $message = ":attribute debe ser un :allowed_extensions archivo.";
+    protected $message = "El campo :attribute debe ser un :allowed_extensions archivo.";
 
      /**
      * Given $params and assign the $this->params
@@ -40,7 +40,7 @@ class Extension extends Rule
             $allowedExtensions[$key] = ltrim($ext, '.');
         }
 
-        $or = $this->validation ? $this->validation->getTranslation('or') : 'o';
+        $or = $this->validation ? $this->validation->getTranslation('o') : 'o';
         $allowedExtensionsText = Helper::join(Helper::wraps($allowedExtensions, ".", ""), ', ', ", {$or} ");
         $this->setParameterText('allowed_extensions', $allowedExtensionsText);
 

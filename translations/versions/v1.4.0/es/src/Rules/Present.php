@@ -10,7 +10,7 @@ class Present extends Rule
     protected $implicit = true;
 
     /** @var string */
-    protected $message = ":attribute debe estar presente.";
+    protected $message = "El campo :attribute debe estar presente.";
 
     /**
      * Check the $value is valid

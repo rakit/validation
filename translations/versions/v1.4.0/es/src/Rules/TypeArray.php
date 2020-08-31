@@ -8,7 +8,7 @@ class TypeArray extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute debe ser una matriz.";
+    protected $message = "El campo :attribute debe ser una matriz.";
 
     /**
      * Check the $value is valid

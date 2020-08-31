@@ -8,7 +8,7 @@ class AlphaNum extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute solo permite caracteres alfanuméricos.";
+    protected $message = "El campo :attribute solo permite caracteres alfanuméricos.";
 
     /**
      * Check the $value is valid

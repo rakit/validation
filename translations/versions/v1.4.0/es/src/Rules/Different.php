@@ -8,7 +8,7 @@ class Different extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute debe ser diferente de :field.";
+    protected $message = "El campo :attribute debe ser diferente de :field.";
 
     /** @var array */
     protected $fillableParams = ['field'];

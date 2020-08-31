@@ -9,7 +9,7 @@ class NotIn extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute no está permitiendo :disallowed_values.";
+    protected $message = "El campo :attribute no está permitiendo :disallowed_values.";
 
     /** @var bool */
     protected $strict = false;
@@ -52,7 +52,7 @@ class NotIn extends Rule
 
         $disallowedValues = (array) $this->parameter('disallowed_values');
 
-        $and = $this->validation ? $this->validation->getTranslation('and') : 'y';
+        $and = $this->validation ? $this->validation->getTranslation('y') : 'y';
         $disallowedValuesText = Helper::join(Helper::wraps($disallowedValues, "'"), ', ', ", {$and} ");
         $this->setParameterText('disallowed_values', $disallowedValuesText);
 

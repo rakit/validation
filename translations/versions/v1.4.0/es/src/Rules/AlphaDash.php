@@ -8,7 +8,7 @@ class AlphaDash extends Rule
 {
 
     /** @var string */
-    protected $message = ":attribute solo permite a-z, 0-9, _ y -.";
+    protected $message = "El campo :attribute solo permite a-z, 0-9, _ y -.";
 
     /**
      * Check the $value is valid

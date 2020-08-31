@@ -9,7 +9,7 @@ class Max extends Rule
     use Traits\SizeTrait;
 
     /** @var string */
-    protected $message = ":attribute el máximo es :max.";
+    protected $message = "El campo :attribute el máximo es :max.";
 
     /** @var array */
     protected $fillableParams = ['max'];

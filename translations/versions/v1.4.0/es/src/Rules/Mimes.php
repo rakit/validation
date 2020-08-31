@@ -11,7 +11,7 @@ class Mimes extends Rule
     use Traits\FileTrait;
 
     /** @var string */
-    protected $message = ":attribute el tipo de archivo debe ser :allowed_types.";
+    protected $message = "El campo :attribute el tipo de archivo debe ser :allowed_types.";
 
     /** @var string|int */
     protected $maxSize = null;
@@ -62,7 +62,7 @@ class Mimes extends Rule
         $allowedTypes = $this->parameter('allowed_types');
 
         if ($allowedTypes) {
-            $or = $this->validation ? $this->validation->getTranslation('or') : 'o';
+            $or = $this->validation ? $this->validation->getTranslation('o') : 'o';
             $this->setParameterText('allowed_types', Helper::join(Helper::wraps($allowedTypes, "'"), ', ', ", {$or} "));
         }
 
