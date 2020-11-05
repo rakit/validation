@@ -499,7 +499,7 @@ class Validation
             } else {
                 $ruleName = is_object($rule) ? get_class($rule) : gettype($rule);
                 $message = "Rule must be a string, Closure or '".Rule::class."' instance. ".$ruleName." given";
-                throw new \Exception();
+                throw new \Exception( $message );
             }
 
             $resolvedRules[] = $validator;
