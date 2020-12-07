@@ -1313,7 +1313,7 @@ class ValidatorTest extends TestCase
         ], $validData);
 
         $stuffs = $validData['stuffs'];
-        $this->assertFalse(isset($stuffs['three']));
+        $this->assertArrayNotHasKey('three', $stuffs);
     }
 
     public function testGetInvalidData()
@@ -1366,8 +1366,8 @@ class ValidatorTest extends TestCase
         ], $invalidData);
 
         $stuffs = $invalidData['stuffs'];
-        $this->assertFalse(isset($stuffs['one']));
-        $this->assertFalse(isset($stuffs['two']));
+        $this->assertArrayNotHasKey('one', $stuffs);
+        $this->assertArrayNotHasKey('two', $stuffs);
     }
 
     public function testRuleInInvalidMessages()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rakit\Validation\Tests;
+namespace Rakit\Validation\Tests\Rules;
 
 use Rakit\Validation\Rules\Integer;
 use PHPUnit\Framework\TestCase;
