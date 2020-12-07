@@ -1,6 +1,6 @@
 <?php
 
-namespace Rakit\Validation\Tests;
+namespace Rakit\Validation\Tests\Rules;
 
 use PHPUnit\Framework\TestCase;
 use Rakit\Validation\Rules\Boolean;

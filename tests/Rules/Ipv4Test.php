@@ -1,6 +1,6 @@
 <?php
 
-namespace Rakit\Validation\Tests;
+namespace Rakit\Validation\Tests\Rules;
 
 use Rakit\Validation\Rules\Ipv4;
 use PHPUnit\Framework\TestCase;
