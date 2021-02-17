@@ -162,7 +162,7 @@ class Validator
             'defaults'                  => new Rules\Defaults,
             'default'                   => new Rules\Defaults, // alias of defaults
             'nullable'                  => new Rules\Nullable,
-            'string'                    => new Rule\String,
+            'string'                    => new Rules\Stringy,
         ];
 
         foreach ($baseValidator as $key => $validator) {

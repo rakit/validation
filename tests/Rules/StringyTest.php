@@ -2,16 +2,16 @@
 
 namespace Rakit\Validation\Tests;
 
-use Rakit\Validation\Rules\String;
+use Rakit\Validation\Rules\Stringy;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class StringTest extends TestCase
+class StringyTest extends TestCase
 {
 
     public function setUp()
     {
-        $this->rule = new String;
+        $this->rule = new Stringy;
     }
 
     public function testValids()
