@@ -948,6 +948,12 @@ Field under this rule may be empty.
 
 </details>
 
+<details><summary><strong>string</strong></summary>
+
+Field under this rule must be a string.
+
+</details>
+
 ## Register/Override Rule
 
 Another way to use custom validation rule is to create a class extending `Rakit\Validation\Rule`.
