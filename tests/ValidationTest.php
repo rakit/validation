@@ -68,6 +68,13 @@ class ValidationTest extends TestCase
                     ['/^([a-zA-Z\,]*)$/'],
                 ],
             ],
+            [
+                "in:a,b\,c,d\,e",
+                [
+                    'in',
+                    ['a','b,c','d,e']
+                ]
+            ]
         ];
     }
 }

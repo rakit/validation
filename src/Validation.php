@@ -519,7 +519,8 @@ class Validation
         $exp = explode(':', $rule, 2);
         $rulename = $exp[0];
         if ($rulename !== 'regex') {
-            $params = isset($exp[1])? explode(',', $exp[1]) : [];
+            $params = isset($exp[1]) ?
+                str_replace("\,", ",", preg_split('~(?<!\\\)' . preg_quote(",", '~') . '~', $exp[1])) : [];
         } else {
             $params = [$exp[1]];
         }
