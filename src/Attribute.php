@@ -47,8 +47,10 @@ class Attribute
         $this->validation = $validation;
         $this->alias = $alias;
         $this->key = $key;
+        $rule_number = 0;
         foreach ($rules as $rule) {
-            $this->addRule($rule);
+            $this->addRule($rule, $rule_number);
+            $rule_number++;
         }
     }
 
@@ -125,11 +127,11 @@ class Attribute
      * @param \Rakit\Validation\Rule $rule
      * @return void
      */
-    public function addRule(Rule $rule)
+    public function addRule(Rule $rule, int $rule_number)
     {
         $rule->setAttribute($this);
         $rule->setValidation($this->validation);
-        $this->rules[$rule->getKey()] = $rule;
+        $this->rules[$rule->getKey() . (string)$rule_number] = $rule;
     }
 
     /**
