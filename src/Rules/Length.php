@@ -24,8 +24,6 @@ class Length extends Rule
     {
         $this->requireParameters($this->fillableParams);
 
-        $this->requireParameters($this->fillableParams);
-
         $length = (int) $this->parameter('length');
 
         return strlen((string) $value) == $length;
