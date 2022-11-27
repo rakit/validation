@@ -1282,6 +1282,7 @@ class ValidatorTest extends TestCase
             'thing' => 'exists',
         ], [
             'thing' => 'required',
+            'name' => '',
             'items.*.product_id' => 'required|numeric',
             'emails.*' => 'required|email',
             'items.*.qty' => 'required|numeric',
