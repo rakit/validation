@@ -699,15 +699,19 @@ class Validation
         return $this->validData;
     }
 
+
     /**
+     * Get valid data or throw exepction
      *
-     *
+     * @throws \Rakit\Validation\ValidationException
+     * @return array
      */
     public function validated(): array
     {
-        $this->inputs;
-        //check inputs and check if validData is not null
-        $this->validData;
+        if ($this->fails()) {
+            throw new ValidationException($this);
+        }
+        return $this->getValidData();
     }
 
     /**

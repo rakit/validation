@@ -6,6 +6,7 @@ use DateTime;
 use PHPUnit\Framework\TestCase;
 use Rakit\Validation\Rule;
 use Rakit\Validation\Rules\UploadedFile;
+use Rakit\Validation\ValidationException;
 use Rakit\Validation\Validator;
 
 class ValidatorTest extends TestCase
@@ -1369,6 +1370,85 @@ class ValidatorTest extends TestCase
         $stuffs = $invalidData['stuffs'];
         $this->assertFalse(isset($stuffs['one']));
         $this->assertFalse(isset($stuffs['two']));
+    }
+
+    public function testValidated()
+    {
+        $validation = $this->validator->validate([
+            'emails' => [
+                'foo@bar.com',
+                'foo@blah.com'
+            ],
+            'thing' => 'exists',
+        ], [
+            'thing' => 'required',
+            'emails.*' => 'required|email',
+        ]);
+
+        $validData = $validation->validated();
+
+        $this->assertEquals([
+            'emails' => [
+                0 => 'foo@bar.com',
+                1 => 'foo@blah.com'
+            ],
+            'thing' => 'exists',
+        ], $validData);
+    }
+
+    public function testValidatedException()
+    {
+        $this->expectException(ValidationException::class);
+        $validation = $this->validator->validate([
+            'items' => [
+                [
+                    'product_id' => 1,
+                    'qty' => 'invalid'
+                ]
+            ],
+            'emails' => [
+                'foo@bar.com',
+                'something',
+                'foo@blah.com'
+            ],
+            'stuffs' => [
+                'one' => '1',
+                'two' => '2',
+                'three' => 'three',
+            ],
+            'thing' => 'exists',
+        ], [
+            'thing' => 'required',
+            'items.*.product_id' => 'required|numeric',
+            'emails.*' => 'required|email',
+            'items.*.qty' => 'required|numeric',
+            'something' => 'required|in:on,off',
+            'stuffs' => 'required|array',
+            'stuffs.one' => 'numeric',
+            'stuffs.two' => 'numeric',
+            'stuffs.three' => 'numeric',
+        ]);
+        $validation->validated();
+    }
+
+    public function testValidatedExceptionData()
+    {
+        try {
+            $validation = $this->validator->validate([
+            ], [
+                'thing' => 'required'
+            ]);
+            $validation->validated();
+        } catch (ValidationException $e) {
+            $this->assertSame(
+                [
+                    'thing' => [
+                        'required'=> 'The Thing is required'
+                    ]
+                ],
+                $e->getErrors()
+            );
+        }
     }
 
     public function testRuleInInvalidMessages()
