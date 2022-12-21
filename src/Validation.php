@@ -138,6 +138,8 @@ class Validation
         $attributeKey = $attribute->getKey();
         $rules = $attribute->getRules();
 
+        $inputIsset = $this->inputIsset($attributeKey);
+
         $value = $this->getValue($attributeKey);
         $isEmptyValue = $this->isEmptyValue($value);
 
@@ -169,9 +171,9 @@ class Validation
             }
         }
 
-        if ($isValid) {
+        if ($isValid && ($value!==null || $inputIsset)) {
             $this->setValidData($attribute, $value);
-        } else {
+        } else if (!$isValid) {
             $this->setInvalidData($attribute, $value);
         }
     }
@@ -593,6 +595,17 @@ class Validation
     }
 
     /**
+     * Given $key and get value
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function inputIsset(string $key):bool
+    {
+        return Helper::arrayIsset($this->inputs, $key);
+    }
+
+    /**
      * Set input value
      *
      * @param string $key
@@ -684,6 +697,21 @@ class Validation
     public function getValidData(): array
     {
         return $this->validData;
+    }
+
+
+    /**
+     * Get valid data or throw exepction
+     *
+     * @throws \Rakit\Validation\ValidationException
+     * @return array
+     */
+    public function validated(): array
+    {
+        if ($this->fails()) {
+            throw new ValidationException($this);
+        }
+        return $this->getValidData();
     }
 
     /**

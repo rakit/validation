@@ -85,6 +85,31 @@ class Helper
     }
 
     /**
+     *
+     * @param  array       $array
+     * @param  string|null $key
+     * @return mixed
+     */
+    public static function arrayIsset(array $array, $key)
+    {
+        if (is_null($key)) {
+            return false;
+        }
+
+        if (array_key_exists($key, $array)) {
+            return true;
+        }
+
+        foreach (explode('.', $key) as $segment) {
+            if (is_array($array) && array_key_exists($segment, $array)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Flatten a multi-dimensional associative array with dots.
      * Adapted from: https://github.com/illuminate/support/blob/v5.3.23/Arr.php#L81
      *
