@@ -803,7 +803,7 @@ $validation = $validator->validate($inputs, [
 </details>
 
 <details><summary><strong>integer</strong></summary>
-The field under t rule must be integer.
+The field under this rule must be integer.
 
 </details>
 
